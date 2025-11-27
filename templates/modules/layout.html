@@ -10,7 +10,21 @@
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.cn" crossorigin />
-    <link rel="stylesheet" href="https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+SC:wght@100..900&display=swap" media="print" onload="this.media='all'" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.cn/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Noto+Sans+SC:wght@100..900&display=swap"
+      media="print"
+      onload="this.media='all'"
+    />
+
+    <!-- Custom Iconfont -->
+    <link
+      th:if="${not #strings.isEmpty(theme.config.custom.iconfont_url)}"
+      rel="stylesheet"
+      th:href="${theme.config.custom.iconfont_url}"
+      media="print"
+      onload="this.media='all'"
+    />
 
     <script type="application/json" id="theme-config" th:utext="${theme.config}"></script>
     <th:block th:if="${theme.config.development.enabled}">
@@ -23,40 +37,68 @@
       <script type="module" th:src="@{/assets/dist/main.js?v={version}(version=${theme.spec.version})}"></script>
     </th:block>
 
-    <!-- Theme Toggle Script -->
+    <!-- 主题初始化脚本 -->
     <script>
-      (function() {
-        const theme = localStorage.getItem('theme') || 'system';
-        if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-          document.documentElement.classList.add('dark');
+      (function () {
+        // 在页面加载前立即应用主题，防止闪烁
+        const theme = localStorage.getItem("theme") || "system";
+        const isDark =
+          theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (isDark) {
+          document.documentElement.classList.add("dark");
         }
       })();
-      function toggleTheme() {
-        const html = document.documentElement;
-        const isDark = html.classList.toggle('dark');
-        localStorage.setItem('theme', isDark ? 'dark' : 'light');
-      }
     </script>
   </head>
   <body id="clarity-root">
-    <!-- Left Sidebar -->
+    <!-- 左侧边栏背景遮罩（移动端） -->
+    <div
+      id="z-sidebar-bgmask"
+      class="hidden"
+      onclick="document.getElementById('z-sidebar').classList.remove('show'); this.classList.add('hidden')"
+    ></div>
+
+    <!-- 右侧边栏背景遮罩（平板端） -->
+    <div
+      id="z-aside-bgmask"
+      class="hidden"
+      onclick="document.getElementById('z-aside').classList.remove('show'); this.classList.add('hidden')"
+    ></div>
+
+    <!-- 左侧边栏 -->
     <th:block th:replace="~{modules/sidebar :: sidebar}" />
 
-    <!-- Main Content Area -->
+    <!-- 主内容区域 -->
     <div id="content">
       <main id="main-content">
         <div id="swup" class="transition-main">
           <th:block th:replace="${content}" />
         </div>
-        
-        <!-- Footer -->
-        <footer class="clarity-footer">
-          <p th:utext="${theme.config.footer.copyright}"></p>
-        </footer>
+
+        <!-- 页脚 -->
+        <th:block th:replace="~{modules/footer :: footer}" />
       </main>
 
-      <!-- Right Aside -->
+      <!-- 右侧边栏 -->
       <th:block th:replace="~{modules/aside :: aside}" />
+    </div>
+
+    <!-- 底部浮动面板 (ZPanel) -->
+    <div id="z-panel">
+      <button
+        id="toggle-sidebar"
+        aria-label="切换菜单"
+        onclick="(function(btn){var sb=document.getElementById('z-sidebar'),mk=document.getElementById('z-sidebar-bgmask');sb.classList.toggle('show');mk.classList.toggle('hidden');btn.classList.toggle('active')})(this)"
+      >
+        <span class="icon-[ph--sidebar-duotone] rtl-flip"></span>
+      </button>
+      <button
+        id="toggle-aside"
+        aria-label="切换侧边栏"
+        onclick="(function(btn){var as=document.getElementById('z-aside'),mk=document.getElementById('z-aside-bgmask');as.classList.toggle('show');mk.classList.toggle('hidden');btn.classList.toggle('active')})(this)"
+      >
+        <span class="icon-[ph--align-right-duotone] rtl-flip"></span>
+      </button>
     </div>
   </body>
 </html>

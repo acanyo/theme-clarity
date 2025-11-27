@@ -1,3 +1,4 @@
+$breakpoint-mobile: 768px !default;
 $breakpoint-widescreen: 1080px !default;
 
 // 三栏布局核心样式
@@ -9,16 +10,12 @@ $breakpoint-widescreen: 1080px !default;
 	min-height: 100vh;
 }
 
-// 左侧边栏
+// 左侧边栏（详细样式在 _sidebar.scss）
 #z-sidebar {
 	flex-shrink: 0;
-	position: sticky;
-	top: 0;
 	width: 280px;
-	height: 100vh;
-	height: 100dvh;
-	overflow-y: auto;
-	scrollbar-width: thin;
+	// 桌面端 sticky 等样式在 _sidebar.scss 中定义（如果需要）
+	// blog-v3 默认没有 sticky，但可以通过内容滚动实现
 }
 
 // 中间内容区
@@ -33,9 +30,15 @@ $breakpoint-widescreen: 1080px !default;
 		flex-grow: 1;
 		min-width: 0;
 	}
+
+	// 移动端：单列全宽
+	@media (max-width: $breakpoint-mobile) {
+		flex-direction: column;
+		width: 100%;
+	}
 }
 
-// 右侧边栏
+// 右侧边栏（详细样式在 _aside.scss）
 #z-aside {
 	flex-shrink: 0;
 	position: sticky;
@@ -43,8 +46,12 @@ $breakpoint-widescreen: 1080px !default;
 	width: 280px;
 	height: 100vh;
 	height: 100dvh;
-	overflow-y: auto;
-	scrollbar-width: thin;
+
+	// 宽屏以下不占据布局空间（fixed 定位在 _aside.scss 中）
+	@media (max-width: $breakpoint-widescreen) {
+		width: 0;
+		height: 0;
+	}
 }
 
 // 页脚样式

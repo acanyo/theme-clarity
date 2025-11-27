@@ -1,0 +1,68 @@
+<div class="toolbar mb-4 flex items-center justify-between" th:fragment="toolbar" x-data="{ catOpen: false }">
+  <!-- Left side placeholder or existing text -->
+  <div>
+    <!-- <div class="text-sm opacity-70">文章列表</div> -->
+  </div>
+
+  <!-- Order Toggle -->
+  <div class="order-toggle flex items-center gap-4 text-sm">
+    <!-- Category Dropdown -->
+    <div class="relative">
+      <button
+        @click="catOpen = !catOpen"
+        @click.outside="catOpen = false"
+        class="hover:text-primary flex items-center gap-1 text-gray-500 transition-colors"
+      >
+        <span class="icon-[ph--folder-bold]"></span>
+        <span class="order-text">全部分类</span>
+      </button>
+
+      <!-- Dropdown Content -->
+      <div
+        x-show="catOpen"
+        style="display: none"
+        x-transition.opacity.duration.200ms
+        class="absolute right-0 z-50 mt-2 flex w-48 flex-col rounded-lg border border-gray-100 bg-white py-2 shadow-xl dark:border-gray-700 dark:bg-gray-800"
+      >
+        <a
+          href="/"
+          class="flex items-center gap-2 px-4 py-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+        >
+          <span class="icon-[ph--squares-four-bold]"></span>
+          <span>全部分类</span>
+        </a>
+        <th:block th:each="category : ${categoryFinder.listAll()}">
+          <a
+            th:href="${category.status.permalink}"
+            class="flex items-center gap-2 px-4 py-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+          >
+            <span class="icon-[ph--folder]"></span>
+            <span th:text="${category.spec.displayName}"></span>
+          </a>
+        </th:block>
+      </div>
+    </div>
+
+    <!-- Sort Toggle (Simulated links) -->
+    <div class="flex items-center gap-2">
+      <a th:href="@{/(sort='publishTime,asc')}" class="hover:text-primary text-gray-500 transition-colors" title="升序">
+        <span class="icon-[ph--sort-ascending-bold]"></span>
+      </a>
+
+      <!-- Field -->
+      <a
+        th:href="@{/(sort='publishTime,desc')}"
+        class="hover:text-primary flex items-center gap-1 text-gray-500 transition-colors"
+        title="默认排序"
+      >
+        <span class="order-text">发布时间</span>
+      </a>
+    </div>
+  </div>
+
+  <style>
+    .toolbar {
+      margin: 0 1rem;
+    }
+  </style>
+</div>

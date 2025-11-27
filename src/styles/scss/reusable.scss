@@ -5,7 +5,6 @@ $breakpoint-widescreen: 1080px !default;
 .card {
 	display: block;
 	overflow: hidden;
-	overflow: clip;
 	border-radius: 0.5em;
 	box-shadow: 0 0.1em 0.2em var(--ld-shadow);
 	background-color: var(--ld-bg-card);
@@ -44,11 +43,10 @@ $breakpoint-widescreen: 1080px !default;
 }
 
 .mobile-only {
-	display: none;
+	display: none !important;
 
 	@media (max-width: $breakpoint-mobile) {
-		display: revert;
-		overflow: hidden;
+		display: flex !important;
 	}
 }
 
@@ -62,4 +60,200 @@ $breakpoint-widescreen: 1080px !default;
 
 .proper-height {
 	min-height: 70vh;
+}
+
+.pagination-wrapper {
+	margin: 1rem;
+}
+
+.pagination {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.5rem;
+	border-radius: 0.5rem;
+	background-color: var(--ld-bg-card);
+	box-shadow: 0 0.1em 0.2em var(--ld-shadow);
+}
+
+.page-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 2rem;
+	height: 2rem;
+	padding: 0 0.5rem;
+	border-radius: 0.25rem;
+	font-size: 0.9rem;
+	color: var(--c-text-2);
+	transition: all 0.2s;
+
+	&:hover:not(.disabled) {
+		background-color: var(--c-bg-soft);
+		color: var(--c-text);
+	}
+
+	&.active {
+		background-color: var(--c-primary);
+		color: white;
+		font-weight: 600;
+	}
+
+	&.disabled {
+		opacity: 0.3;
+		pointer-events: none;
+	}
+}
+
+// 文字效果
+.text-creative {
+	font-family: var(--font-creative);
+	font-weight: 550;
+}
+
+
+.zhilu-header {
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+	position: relative;
+	margin: clamp(1rem, 2rem, 5vh) 1rem min(1rem, 5vh);
+	line-height: 1.4;
+	color: var(--c-text);
+	user-select: none;
+
+	&:hover {
+		.emoji-tail {
+			opacity: 0.5;
+		}
+
+		.split-char {
+			animation-play-state: running;
+		}
+	}
+}
+
+.zhilu-logo {
+	width: 3em;
+	height: 3em;
+	object-fit: cover;
+
+	&.circle {
+		border-radius: 50%;
+		box-shadow: 2px 4px 1rem var(--ld-shadow);
+	}
+}
+
+.zhilu-text {
+	display: flex;
+	flex-direction: column;
+
+	.header-title {
+		font-size: 1.5em;
+		font-weight: 600;
+
+		> .split-char {
+			display: inline-block;
+		}
+	}
+
+	.header-subtitle {
+		opacity: 0.5;
+		font-size: 0.8em;
+	}
+}
+
+// Emoji 尾巴漂浮效果（移动端头部）
+.zhilu-header .emoji-tail {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
+	align-content: center;
+	justify-items: center;
+	position: absolute;
+	opacity: 0.2;
+	inset: 0;
+	font-size: 3rem;
+	transition: opacity 1s;
+	filter: blur(2px);
+	pointer-events: none;
+	z-index: -2;
+
+	> .split-char {
+		animation: 5s infinite alternate emoji-floating;
+		animation-delay: var(--delay);
+		animation-play-state: paused;
+	}
+}
+
+@keyframes emoji-floating {
+	50% {
+		transform: translate(-12px, -4px) scale(1.2);
+		filter: blur(4px);
+	}
+
+	100% {
+		transform: translate(-4px, -12px) scale(0.9);
+		filter: blur(1px);
+	}
+}
+
+#z-panel {
+	display: flex;
+	flex-direction: column;
+	position: fixed;
+	bottom: min(2rem, 5%);
+	inset-inline-end: min(1rem, 5%);
+	border-radius: 0.5rem;
+	background-color: var(--c-bg-a50);
+	backdrop-filter: blur(0.5rem);
+	font-size: 1.4rem;
+	transition: transform 0.1s, box-shadow 0.2s;
+	z-index: 100;
+	
+	// 隐藏滚动条
+	overflow: hidden;
+	scrollbar-width: none;
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	// 宽屏隐藏
+	@media (min-width: $breakpoint-widescreen) {
+		display: none;
+	}
+
+	// 有激活按钮时显示阴影
+	&:has(.active) {
+		box-shadow: 0 0 0.5rem var(--ld-shadow);
+	}
+
+	button {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 2.5rem;
+		height: 2.5rem;
+		padding: 0;
+		transition: all 0.2s;
+
+		&:hover {
+			background-color: var(--c-bg-a80);
+			color: var(--c-primary);
+		}
+
+		&.active {
+			background-color: var(--ld-bg-active);
+			color: var(--c-primary);
+		}
+	}
+
+	// 侧边栏按钮只在移动端显示
+	#toggle-sidebar {
+		display: none;
+
+		@media (max-width: $breakpoint-mobile) {
+			display: block;
+		}
+	}
 }

@@ -29,5 +29,3 @@ $breakpoint-widescreen: 1080px;
   $breakpoint-phone: $breakpoint-phone
 );
 @use "./scss/components/slide";
-
-@include meta.load-css("tailwindcss");

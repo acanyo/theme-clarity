@@ -1,3 +1,6 @@
+// ========================================
+// 侧边栏头部区域
+// ========================================
 .clarity-header {
 	display: flex;
 	align-items: center;
@@ -8,6 +11,7 @@
 	color: var(--c-text);
 	user-select: none;
 
+	// 悬停时触发动画
 	&:hover {
 		.emoji-tail {
 			opacity: 0.5;
@@ -19,9 +23,13 @@
 	}
 }
 
+// ========================================
+// Logo 图片
+// ========================================
 .clarity-logo {
 	height: 3em;
 
+	// 圆形样式（显示标题时使用）
 	&.circle {
 		width: 3em;
 		border-radius: 2em;
@@ -29,29 +37,51 @@
 	}
 }
 
+// ========================================
+// 自定义字体（阿里妈妈方圆体）
+// ========================================
 @font-face {
 	font-family: AlimamaFangYuanTi;
 	src: url("/fonts/AlimamaFangYuanTi.woff2");
 }
 
+// ========================================
+// 文字区域容器
+// ========================================
+.clarity-text {
+	display: flex;
+	flex-direction: column;
+}
+
+// ========================================
+// 标题文字
+// ========================================
 .header-title {
 	font-family: AlimamaFangYuanTi, "Noto Sans SC", sans-serif;
 	font-size: 1.5em;
 	font-synthesis: none;
 	font-variation-settings: "wght" 600, "BEVL" 100;
 
+	// 字符动画（悬停时播放）
 	> .split-char {
+		display: inline-block;
 		animation: 3.14s infinite alternate vf-weight, 2.72s infinite alternate vf-bevel;
 		animation-delay: var(--delay);
 		animation-play-state: paused;
 	}
 }
 
+// ========================================
+// 副标题
+// ========================================
 .header-subtitle {
 	opacity: 0.5;
 	font-size: 0.8em;
 }
 
+// ========================================
+// 可变字体动画关键帧
+// ========================================
 @keyframes vf-weight {
 	0% { font-weight: 600; }
 	38.2% { font-weight: 300; }
@@ -63,6 +93,9 @@
 	to { font-variation-settings: "BEVL" 1; }
 }
 
+// ========================================
+// Emoji 尾巴装饰
+// ========================================
 .emoji-tail {
 	display: grid;
 	grid-template-columns: repeat(auto-fit, minmax(0, 1fr));
@@ -77,6 +110,7 @@
 	pointer-events: none;
 	z-index: -2;
 
+	// Emoji 浮动动画
 	> .split-char {
 		animation: 5s infinite alternate emoji-floating;
 		animation-delay: var(--delay);
@@ -84,6 +118,9 @@
 	}
 }
 
+// ========================================
+// Emoji 浮动动画关键帧
+// ========================================
 @keyframes emoji-floating {
 	50% {
 		transform: translate(-12px, -4px) scale(1.2);

@@ -1,0 +1,88 @@
+<div
+  class="z-slide"
+  th:fragment="slide"
+  th:if="${posts.page == 1 and theme.config.post.featured_posts != null and not #lists.isEmpty(theme.config.post.featured_posts)}"
+>
+  <div class="z-slide-header">
+    <span class="title text-creative">精选文章</span>
+    <div class="at-slide-hover">
+      <span class="icon-[ph--mouse-simple-bold]"></span>
+      <span>按住 Shift 横向滚动</span>
+    </div>
+  </div>
+
+  <div class="z-slide-body">
+    <!-- Scroll Container -->
+    <div class="slide-list" id="slide-scroll-container">
+      <th:block th:each="postName : ${theme.config.post.featured_posts}">
+        <th:block th:with="post = ${postFinder.getByName(postName)}">
+          <a
+            th:if="${post != null}"
+            th:href="${post.status.permalink}"
+            class="slide-item gradient-card"
+            th:title="${post.status.excerpt}"
+          >
+            <img
+              th:if="${post.spec.cover}"
+              th:src="${post.spec.cover}"
+              class="cover"
+              loading="lazy"
+              th:alt="${post.spec.title}"
+            />
+            <!-- Fallback bg if no cover -->
+            <div
+              th:unless="${post.spec.cover}"
+              class="cover flex items-center justify-center bg-gray-200 dark:bg-gray-700"
+            >
+              <span class="icon-[ph--image-broken] text-4xl opacity-20"></span>
+            </div>
+
+            <div class="info">
+              <div class="title text-creative" th:text="${post.spec.title}"></div>
+              <div class="desc" th:if="${post.spec.publishTime}">
+                <span class="icon-[ph--calendar-dots-bold]"></span>
+                <span th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></span>
+              </div>
+            </div>
+          </a>
+        </th:block>
+      </th:block>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <button
+      class="carousel-action prev at-slide-hover"
+      aria-label="上一页"
+      onclick="document.getElementById('slide-scroll-container').scrollBy({left: -300, behavior: 'smooth'})"
+    >
+      <span class="icon-[ph--caret-left-bold]"></span>
+    </button>
+    <button
+      class="carousel-action next at-slide-hover"
+      aria-label="下一页"
+      onclick="document.getElementById('slide-scroll-container').scrollBy({left: 300, behavior: 'smooth'})"
+    >
+      <span class="icon-[ph--caret-right-bold]"></span>
+    </button>
+  </div>
+
+  <!-- Scroll Script for Shift+Wheel -->
+  <script>
+    (function () {
+      const container = document.getElementById("slide-scroll-container");
+      if (container) {
+        container.addEventListener(
+          "wheel",
+          (e) => {
+            // If vertical scroll (deltaY) is dominant and no shift key, convert to horizontal
+            if (!e.shiftKey && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+              e.preventDefault();
+              container.scrollLeft += e.deltaY;
+            }
+          },
+          { passive: false },
+        );
+      }
+    })();
+  </script>
+</div>

@@ -1,0 +1,76 @@
+<footer th:fragment="footer" class="z-footer">
+  <nav class="footer-nav">
+    <!-- 探索 -->
+    <div class="footer-nav-group">
+      <h3>探索</h3>
+      <menu>
+        <li>
+          <a href="/atom.xml" target="_blank">
+            <span class="icon-[ph--rss-simple-bold]"></span>
+            <span class="nav-text">Atom 订阅</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://www.travellings.cn/go.html" target="_blank">
+            <span class="icon-[ph--train-regional-bold]"></span>
+            <span class="nav-text">开往</span>
+          </a>
+        </li>
+      </menu>
+    </div>
+
+    <!-- 社交 -->
+    <div class="footer-nav-group">
+      <h3>社交</h3>
+      <menu>
+        <li th:each="link : ${theme.config.footer.social_links}">
+          <a th:href="${link.url}" target="_blank">
+            <span th:class="'iconfont ' + ${link.icon}"></span>
+            <span class="nav-text" th:text="${link.text}"></span>
+          </a>
+        </li>
+      </menu>
+    </div>
+
+    <!-- 信息 -->
+    <div class="footer-nav-group">
+      <h3>信息</h3>
+      <menu>
+        <li>
+          <a href="https://halo.run" target="_blank">
+            <span class="icon-[ph--cube-bold]"></span>
+            <span class="nav-text">架构于 Halo</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/acanyo/theme-clarity" target="_blank">
+            <span class="icon-[ph--mountains-bold]"></span>
+            <span class="nav-text" th:text="'驱动 Clarity ' + ${theme.spec.version}"></span>
+          </a>
+        </li>
+        <li th:if="${not #strings.isEmpty(theme.config.footer.beian)}">
+          <a href="https://beian.miit.gov.cn/" target="_blank">
+            <img th:src="@{/assets/images/icp.webp}" alt="ICP" class="beian-icon" />
+            <span class="nav-text" th:text="${theme.config.footer.beian}"></span>
+          </a>
+        </li>
+        <li th:if="${not #strings.isEmpty(theme.config.footer.gongan_beian)}">
+          <a
+            th:href="'https://www.beian.gov.cn/portal/registerSystemInfo?recordcode=' + ${theme.config.footer.gongan_beian_code}"
+            target="_blank"
+          >
+            <img th:src="@{/assets/images/gonganbeian.png}" alt="公安备案" class="beian-icon" />
+            <span class="nav-text" th:text="${theme.config.footer.gongan_beian}"></span>
+          </a>
+        </li>
+      </menu>
+    </div>
+  </nav>
+
+  <!-- 自定义页脚注入区域 -->
+  <div class="footer-inject">
+    <halo:footer />
+  </div>
+
+  <p>© <span th:text="${#temporals.year(#temporals.createNow())}"></span> <span th:text="${site.title}"></span></p>
+</footer>

@@ -15,6 +15,7 @@
     ]
   },
   "dependencies": {
+    "@alpinejs/collapse": "^3.15.2",
     "@swup/head-plugin": "^2.3.1",
     "@swup/preload-plugin": "^3.2.11",
     "@swup/scripts-plugin": "^2.1.0",

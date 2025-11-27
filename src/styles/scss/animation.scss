@@ -34,3 +34,48 @@
 .float-in-move {
 	transition: transform 0.2s !important;
 }
+
+/* View Transitions API 主题切换动画 */
+::view-transition-old(root),
+::view-transition-new(root) {
+	animation: none;
+	mix-blend-mode: normal;
+}
+
+@keyframes circle-expand {
+	from {
+		clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+	}
+	to {
+		clip-path: circle(150% at var(--x, 50%) var(--y, 50%));
+	}
+}
+
+/* 默认（浅色 -> 深色）：新视图（深色）从上层圆形展开 */
+::view-transition-new(root) {
+	z-index: 9999;
+	animation: 0.5s ease-out circle-expand;
+}
+
+::view-transition-old(root) {
+	z-index: 1;
+}
+
+:root:not(.dark)::view-transition-new(root) {
+	z-index: 9999;
+	animation: 0.5s ease-out circle-expand;
+}
+
+:root:not(.dark)::view-transition-old(root) {
+	z-index: 1;
+}
+
+/* 深色模式下（即切到深色时），新视图（深色）从上层展开 */
+:root.dark::view-transition-new(root) {
+	z-index: 9999;
+	animation: 0.5s ease-out circle-expand;
+}
+
+:root.dark::view-transition-old(root) {
+	z-index: 1;
+}

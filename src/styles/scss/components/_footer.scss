@@ -34,4 +34,22 @@
 	p {
 		margin: 0.5em;
 	}
+
+	// 备案图标
+	.beian-icon {
+		width: 1.2em;
+		height: 1.2em;
+		object-fit: contain;
+		vertical-align: middle;
+	}
+
+	// 自定义注入区域
+	.footer-inject {
+		padding: 1rem 0;
+		text-align: center;
+
+		&:empty {
+			display: none;
+		}
+	}
 }

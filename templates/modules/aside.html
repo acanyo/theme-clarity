@@ -1,124 +1,272 @@
-<aside th:fragment="aside" id="z-aside" class="widescreen-only">
-    <div class="widget-list">
-        
-        <!-- 1. 博客统计 (BlogStats) -->
-        <div class="widget card" th:if="${theme.config.aside.show_user_info}">
-            <div class="widget-title">博客统计</div>
-            <div class="widget-content">
-                <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">运营时长</div>
-                        <div class="stat-value" id="site-runtime">-</div>
-                    </div>
-                    
-                    <th:block th:with="latestPosts = ${postFinder.list(1, 1)}">
-                        <div class="stat-box" th:if="${not #lists.isEmpty(latestPosts.items)}">
-                            <div class="stat-label">上次更新</div>
-                            <div class="stat-value time-ago" 
-                                 th:data-time="${latestPosts.items[0].spec.publishTime}">
-                                -
-                            </div>
-                        </div>
-                    </th:block>
+<!-- 右侧边栏背景遮罩（移动端） -->
+<div
+  th:fragment="aside-bgmask"
+  id="z-aside-bgmask"
+  class="hidden"
+  onclick="document.getElementById('z-aside').classList.remove('show'); this.classList.add('hidden')"
+></div>
 
-                    <div class="stat-box">
-                        <div class="stat-label">文章数目</div>
-                        <div class="stat-value" th:text="${postFinder.archives(1, 1).total}">0</div>
-                    </div>
-                </div>
-            </div>
+<aside th:fragment="aside" id="z-aside">
+  <section class="widget" th:if="${theme.config.aside.show_user_info}">
+    <hgroup class="widget-title text-creative">博客统计</hgroup>
+    <div class="widget-body widget-card">
+      <dl class="dl-group small">
+        <div>
+          <dt>运营时长</dt>
+          <dd id="site-runtime" th:title="'博客于' + ${theme.config.aside.site_start_time} + '上线'">-</dd>
         </div>
-
-        <!-- 2. 技术信息 (BlogTech) -->
-        <div class="widget card">
-            <div class="widget-title">技术信息</div>
-            <div class="widget-content">
-                <dl class="tech-info-list">
-                    <div class="tech-item">
-                        <dt>构建平台</dt>
-                        <dd>
-                            <span class="icon-[ph--triangle-fill]"></span> Halo
-                        </dd>
-                    </div>
-                    <div class="tech-item">
-                        <dt>图片存储</dt>
-                        <dd th:text="${theme.config.aside.image_hosting}">本地存储</dd>
-                    </div>
-                    <div class="tech-item">
-                        <dt>软件协议</dt>
-                        <dd>GPL-3.0</dd>
-                    </div>
-                    <div class="tech-item">
-                        <dt>文章许可</dt>
-                        <dd th:text="${theme.config.aside.license}">CC BY-NC-SA 4.0</dd>
-                    </div>
-                    <div class="tech-item">
-                        <dt>规范域名</dt>
-                        <dd th:text="${site.url}"></dd>
-                    </div>
-                </dl>
-                
-                <!-- 可折叠的详细信息 (Optional) -->
-                <details class="tech-details">
-                    <summary>展开构建信息</summary>
-                    <dl class="tech-info-list small">
-                        <div class="tech-item"><dt>Theme</dt><dd>Clarity</dd></div>
-                        <div class="tech-item"><dt>Framework</dt><dd>Halo 2.x</dd></div>
-                    </dl>
-                </details>
-            </div>
+        <th:block th:with="latestPosts = ${postFinder.list(1, 1)}">
+          <div th:if="${not #lists.isEmpty(latestPosts.items)}">
+            <dt>上次更新</dt>
+            <dd class="time-ago" th:data-time="${latestPosts.items[0].spec.publishTime}">-</dd>
+          </div>
+        </th:block>
+        <div>
+          <dt>文章数目</dt>
+          <dd th:text="${postFinder.archives(1, 1).total}">0</dd>
         </div>
-
-        <!-- 3. 博客/技术社区 (CommGroup) -->
-        <div class="widget card comm-group" 
-             th:if="${not #strings.isEmpty(theme.config.aside.community_group_image)}"
-             th:style="'background-image: url(' + ${theme.config.aside.community_group_image} + ')'">
-            <div class="comm-content">
-                <div class="comm-title text-creative" th:text="${theme.config.aside.community_group_title}">技术交流群</div>
-                <div class="comm-desc">
-                    <span class="icon-[ph--chat-circle-dots-bold]"></span>
-                    <span th:text="${theme.config.aside.community_group_desc}"></span>
-                </div>
-            </div>
-        </div>
-
-        <!-- TOC Widget -->
-        <div class="widget card toc-widget" th:if="${theme.config.aside.show_toc and post != null}">
-            <div class="widget-title">目录</div>
-            <div class="widget-content toc-content" id="toc"></div>
-        </div>
+      </dl>
     </div>
+  </section>
 
-    <script th:inline="javascript">
-        // 计算运营时长
-        const startTime = /*[[${theme.config.aside.site_start_time}]]*/ '';
-        if (startTime) {
-            const start = new Date(startTime).getTime();
-            const now = new Date().getTime();
-            const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-            
-            const years = Math.floor(days / 365);
-            const remainingDays = days % 365;
-            const months = Math.floor(remainingDays / 30);
-            
-            let text = '';
-            if (years > 0) text += years + '年';
-            if (months > 0) text += months + '个月';
-            if (years === 0 && months === 0) text = days + '天';
-            
-            document.getElementById('site-runtime').innerText = text;
+  <!-- ==================== -->
+  <!-- 2. 技术信息 (BlogTech) -->
+  <!-- ==================== -->
+  <section class="widget">
+    <hgroup class="widget-title text-creative">技术信息</hgroup>
+    <div class="widget-body widget-card">
+      <dl class="dl-group medium">
+        <div>
+          <dt>构建平台</dt>
+          <dd class="platform-halo"><img th:src="@{/assets/images/logo.png}" alt="Halo" /> Halo</dd>
+        </div>
+        <div>
+          <dt>图片存储</dt>
+          <dd th:text="${theme.config.aside.image_hosting}">本地存储</dd>
+        </div>
+        <div>
+          <dt>软件协议</dt>
+          <dd>GPL-3.0</dd>
+        </div>
+        <div>
+          <dt>文章许可</dt>
+          <dd th:text="${theme.config.aside.license}">CC BY-NC-SA 4.0</dd>
+        </div>
+        <div>
+          <dt>规范域名</dt>
+          <dd class="domain-text" th:text="${site.url}"></dd>
+        </div>
+      </dl>
+
+      <!-- 可展开的构建信息 -->
+      <div class="z-expand" x-data="{ expand: false }">
+        <div class="expand-content" x-show="expand" x-collapse>
+          <dl class="dl-group small build-info">
+            <div>
+              <dt>Theme</dt>
+              <dd>Clarity</dd>
+            </div>
+            <div>
+              <dt>Version</dt>
+              <dd th:text="${theme.spec.version}">1.0.0</dd>
+            </div>
+            <div>
+              <dt>Framework</dt>
+              <dd>Halo 2.x</dd>
+            </div>
+          </dl>
+        </div>
+        <button class="toggle-btn in-place" @click="expand = !expand">
+          <span class="icon-[ph--caret-double-down-bold] toggle-icon" :class="{ 'expand': expand }"></span>
+          <span x-text="expand ? '收起构建信息' : '展开构建信息'"></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ==================== -->
+  <!-- 3. 博客/技术社区 (CommGroup) -->
+  <!-- ==================== -->
+  <section class="widget dim" th:if="${not #strings.isEmpty(theme.config.aside.community_group_image)}">
+    <hgroup class="widget-title text-creative" th:text="${theme.config.aside.community_group_title}">
+      博客/技术社区
+    </hgroup>
+    <div class="widget-body widget-card with-bg">
+      <img class="bg-img bg-right" th:src="${theme.config.aside.community_group_image}" alt="" loading="lazy" />
+      <div class="comm-title text-creative" th:text="${theme.config.aside.community_group_name}">技术交流群</div>
+      <p class="comm-tip">
+        <span class="icon-[ph--chat-circle-dots-bold]"></span>
+        <span th:text="${theme.config.aside.community_group_desc}">169994096</span>
+      </p>
+    </div>
+  </section>
+
+  <!-- ==================== -->
+  <!-- 4. 文章目录 (Toc) -->
+  <!-- ==================== -->
+  <section class="widget toc-widget" th:if="${theme.config.aside.show_toc and post != null}">
+    <hgroup class="widget-title text-creative">
+      <span class="title-text">文章目录</span>
+      <a href="#main-content" aria-label="返回开头" title="返回开头">
+        <span class="icon-[ph--arrow-circle-up-bold]"></span>
+      </a>
+      <a th:if="${haloCommentEnabled}" href="#comment" aria-label="评论区" title="评论区">
+        <span class="icon-[ph--chat-circle-text-bold]"></span>
+      </a>
+    </hgroup>
+    <div class="widget-body toc-body">
+      <nav id="toc" class="toc-nav">
+        <!-- TOC 由 JS 动态生成 -->
+        <p class="no-toc">暂无目录信息</p>
+      </nav>
+    </div>
+  </section>
+
+  <!-- ==================== -->
+  <!-- 右侧栏脚本 -->
+  <!-- ==================== -->
+  <script th:inline="javascript">
+    (function () {
+      // 计算运营时长
+      const startTime = /*[[${theme.config.aside.site_start_time}]]*/ "";
+      if (startTime) {
+        const start = new Date(startTime).getTime();
+        const now = Date.now();
+        const days = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+        const years = Math.floor(days / 365);
+        const remainingDays = days % 365;
+        const months = Math.floor(remainingDays / 30);
+
+        let text = "";
+        if (years > 0) text += years + "年";
+        if (months > 0) text += months + "个月";
+        if (years === 0 && months === 0) text = days + "天";
+
+        const el = document.getElementById("site-runtime");
+        if (el) el.textContent = text;
+      }
+
+      // 计算相对时间
+      document.querySelectorAll(".time-ago").forEach((el) => {
+        const timeStr = el.getAttribute("data-time");
+        if (timeStr) {
+          const time = new Date(timeStr).getTime();
+          const now = Date.now();
+          const diff = now - time;
+          const minutes = Math.floor(diff / (1000 * 60));
+          const hours = Math.floor(diff / (1000 * 60 * 60));
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+          let text = "";
+          if (days > 0) text = days + "天前";
+          else if (hours > 0) text = hours + "小时前";
+          else if (minutes > 0) text = minutes + "分钟前";
+          else text = "刚刚";
+
+          el.textContent = text;
+          el.title = "更新于 " + new Date(timeStr).toLocaleString("zh-CN");
         }
+      });
 
-        // 计算上次更新时间 (简单版)
-        document.querySelectorAll('.time-ago').forEach(el => {
-            const timeStr = el.getAttribute('data-time');
-            if (timeStr) {
-                const time = new Date(timeStr).getTime();
-                const now = new Date().getTime();
-                const diff = now - time;
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                el.innerText = days > 0 ? days + '天前' : '今天';
+      // 生成文章目录 (TOC)
+      function generateToc() {
+        const tocContainer = document.getElementById("toc");
+        const article = document.querySelector("article");
+        if (!tocContainer || !article) return;
+
+        const headings = article.querySelectorAll("h1, h2, h3, h4");
+        if (headings.length === 0) return;
+
+        // 清空默认提示
+        tocContainer.innerHTML = "";
+
+        const ol = document.createElement("ol");
+        let currentLevel = 0;
+        let currentOl = ol;
+        const stack = [ol];
+
+        headings.forEach((heading, index) => {
+          // 确保标题有 ID
+          if (!heading.id) {
+            heading.id = "heading-" + index;
+          }
+
+          const level = parseInt(heading.tagName.charAt(1));
+          const li = document.createElement("li");
+          const a = document.createElement("a");
+          a.href = "#" + heading.id;
+          a.textContent = heading.textContent;
+          a.title = heading.textContent;
+          li.appendChild(a);
+
+          // 处理层级
+          if (level > currentLevel) {
+            // 进入更深层级
+            while (currentLevel < level) {
+              const newOl = document.createElement("ol");
+              if (currentOl.lastElementChild) {
+                currentOl.lastElementChild.appendChild(newOl);
+              } else {
+                currentOl.appendChild(newOl);
+              }
+              stack.push(newOl);
+              currentOl = newOl;
+              currentLevel++;
             }
+          } else if (level < currentLevel) {
+            // 返回上层
+            while (currentLevel > level && stack.length > 1) {
+              stack.pop();
+              currentOl = stack[stack.length - 1];
+              currentLevel--;
+            }
+          }
+
+          currentOl.appendChild(li);
         });
-    </script>
+
+        tocContainer.appendChild(ol);
+
+        // TOC 高亮当前标题
+        const tocLinks = tocContainer.querySelectorAll("a");
+        const observerOptions = {
+          rootMargin: "-10% 0px -80% 0px",
+          threshold: 0,
+        };
+
+        let activeId = null;
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              activeId = entry.target.id;
+              tocLinks.forEach((link) => {
+                const li = link.parentElement;
+                const isActive = link.getAttribute("href") === "#" + activeId;
+                li.classList.toggle("active", isActive);
+
+                // 检查是否有激活的子项
+                const hasActiveChild = li.querySelector("li.active");
+                li.classList.toggle("has-active", hasActiveChild !== null || isActive);
+              });
+            }
+          });
+        }, observerOptions);
+
+        headings.forEach((heading) => observer.observe(heading));
+      }
+
+      // 页面加载完成后生成目录
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", generateToc);
+      } else {
+        generateToc();
+      }
+
+      // Swup 页面切换后重新生成目录
+      if (window.swup) {
+        window.swup.hooks.on("content:replace", generateToc);
+      }
+    })();
+  </script>
 </aside>

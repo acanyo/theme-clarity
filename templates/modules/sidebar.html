@@ -1,79 +1,110 @@
 <aside th:fragment="sidebar" id="z-sidebar">
-    <!-- Header -->
-    <th:block th:replace="~{modules/header :: header}" />
+  <!-- 头部区域（Logo + 标题） -->
+  <th:block th:replace="~{modules/header :: header}" />
 
-    <!-- Navigation -->
-    <nav class="sidebar-nav scrollcheck-y">
-        <!-- Search Button -->
-        <div class="search-btn sidebar-nav-item gradient-card" onclick="window.dispatchEvent(new CustomEvent('open-search'))">
-            <span class="icon-[ph--magnifying-glass-bold]"></span>
-            <span class="nav-text">搜索</span>
-        </div>
+  <!-- 导航菜单区域 -->
+  <nav class="sidebar-nav scrollcheck-y">
+    <!-- 搜索按钮 -->
+    <div
+      class="search-btn sidebar-nav-item gradient-card"
+      onclick="window.dispatchEvent(new CustomEvent('open-search'))"
+    >
+      <span class="icon-[ph--magnifying-glass-bold]"></span>
+      <span class="nav-text">搜索</span>
+    </div>
 
-        <!-- Menu from Halo -->
-        <th:block th:with="menu = ${menuFinder.getByName(theme.config.nav.primary)}">
-            <menu th:if="${menu != null and menu.menuItems != null}">
-                <li th:each="menuItem : ${menu.menuItems}">
-                    <a th:href="${menuItem.status.href}" class="sidebar-nav-item">
-                        <span class="icon-[ph--files-bold]"></span>
-                        <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
-                        <span th:if="${menuItem.spec.target == '_blank'}" class="icon-[ph--arrow-up-right] external-tip"></span>
-                    </a>
-                    
-                    <!-- Children -->
-                    <menu th:if="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}">
-                        <li th:each="child : ${menuItem.children}">
-                            <a th:href="${child.status.href}" class="sidebar-nav-item sub-item">
-                                <span class="nav-text" th:text="${child.status.displayName}"></span>
-                            </a>
-                        </li>
-                    </menu>
-                </li>
-            </menu>
-        </th:block>
-        
-        <!-- Fallback menu if no menu configured -->
-        <menu th:if="${theme.config.nav.primary == null}">
-            <li>
-                <a href="/" class="sidebar-nav-item">
-                    <span class="icon-[ph--house-bold]"></span>
-                    <span class="nav-text">首页</span>
-                </a>
-            </li>
-            <li>
-                <a href="/archives" class="sidebar-nav-item">
-                    <span class="icon-[ph--archive-bold]"></span>
-                    <span class="nav-text">归档</span>
-                </a>
-            </li>
-            <li>
-                <a href="/links" class="sidebar-nav-item">
-                    <span class="icon-[ph--link-bold]"></span>
-                    <span class="nav-text">友链</span>
-                </a>
-            </li>
-        </menu>
-    </nav>
+    <!-- 从 Halo 后台读取的菜单 -->
+    <th:block th:with="menu = ${menuFinder.getByName(theme.config.nav.primary)}">
+      <menu th:if="${menu != null and menu.menuItems != null}">
+        <li
+          th:each="menuItem : ${menu.menuItems}"
+          th:class="${menuItem.children != null and not #lists.isEmpty(menuItem.children)} ? 'has-submenu' : ''"
+        >
+          <th:block th:if="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}">
+            <div class="sidebar-nav-item has-dropdown">
+              <span
+                th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+                th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"
+              >
+              </span>
+              <span
+                th:unless="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+                class="iconfont icon-file"
+              >
+              </span>
+              <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
+              <span class="icon-[ph--caret-down-bold] dropdown-arrow"></span>
+            </div>
 
-    <!-- Footer -->
-    <footer class="sidebar-footer">
-        <!-- Theme Toggle -->
-        <div class="theme-toggle">
-            <button onclick="toggleTheme()" class="toggle-btn">
-                <span class="icon-[ph--sun-bold] light-icon"></span>
-                <span class="icon-[ph--moon-bold] dark-icon"></span>
-            </button>
-        </div>
-        
-        <!-- Social Icons -->
-        <div class="social-icons" th:if="${theme.config.footer.social_links != null}">
-            <a th:each="link : ${theme.config.footer.social_links}" 
-               th:href="${link.url}" 
-               th:title="${link.text}"
-               target="_blank"
-               rel="noopener noreferrer">
-               <span th:class="'icon-[' + ${#strings.replace(link.icon, ':', '--')} + ']'"></span>
-            </a>
-        </div>
-    </footer>
+            <!-- 悬浮下拉子菜单 -->
+            <div class="dropdown-menu">
+              <a
+                th:each="child : ${menuItem.children}"
+                th:href="${child.status.href}"
+                class="dropdown-item"
+                th:target="${child.spec.target}"
+              >
+                <span
+                  th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}"
+                  th:class="'iconfont ' + ${child.metadata.annotations.get('icon')}"
+                >
+                </span>
+                <span class="nav-text" th:text="${child.status.displayName}"></span>
+              </a>
+            </div>
+          </th:block>
+
+          <!-- 无子菜单：可直接点击 -->
+          <a
+            th:unless="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}"
+            th:href="${menuItem.status.href}"
+            class="sidebar-nav-item"
+            th:target="${menuItem.spec.target}"
+          >
+            <span
+              th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+              th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"
+            >
+            </span>
+            <span
+              th:unless="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+              class="iconfont icon-file"
+            >
+            </span>
+            <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
+            <span th:if="${menuItem.spec.target == '_blank'}" class="iconfont icon-link external-tip"></span>
+          </a>
+        </li>
+      </menu>
+    </th:block>
+  </nav>
+
+  <!-- 页脚区域 -->
+  <footer class="sidebar-footer">
+    <!-- 主题切换（三按钮：浅色/深色/跟随系统） -->
+    <div class="theme-toggle" x-data="themeToggle()">
+      <button :class="{ active: theme === 'light' }" @click="setTheme('light', $event)" title="浅色模式">
+        <span class="icon-[ph--sun-bold]"></span>
+      </button>
+      <button :class="{ active: theme === 'system' }" @click="setTheme('system', $event)" title="跟随系统">
+        <span class="icon-[ph--monitor-bold]"></span>
+      </button>
+      <button :class="{ active: theme === 'dark' }" @click="setTheme('dark', $event)" title="深色模式">
+        <span class="icon-[ph--moon-bold]"></span>
+      </button>
+    </div>
+
+    <!-- 社交图标 -->
+    <div class="social-icons" th:if="${theme.config.footer.social_links != null}">
+      <a
+        th:each="link : ${theme.config.footer.social_links}"
+        th:href="${link.url}"
+        th:title="${link.text}"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        <span th:class="'iconfont ' + ${link.icon}"></span>
+      </a>
+    </div>
+  </footer>
 </aside>

@@ -4,119 +4,140 @@ metadata:
   name: theme-clarity-setting
 spec:
   forms:
-  - group: header
-    label: 侧边栏头部
-    formSchema:
-    - $formkit: attachment
-      name: logo
-      label: Logo
-      accepts:
-      - "image/*"
-    - $formkit: checkbox
-      name: show_title
-      label: 显示标题
-      value: true
-    - $formkit: text
-      name: subtitle
-      label: 副标题
-      placeholder: 一句话介绍
-    - $formkit: text
-      name: emoji_tail
-      label: Emoji 尾巴
-      help: 使用英文逗号分隔，例如：📄,🦌,🙌,🐟,🏖️
-  - group: nav
-    label: 导航菜单
-    formSchema:
-    - $formkit: menuRadio
-      name: primary
-      label: 主导航菜单
-  - group: footer
-    label: 页脚
-    formSchema:
-    - $formkit: textarea
-      name: copyright
-      label: 版权信息
-      value: "© 2025 Powered by Halo"
-    - $formkit: repeater
-      name: social_links
-      label: 社交链接
-      value: []
-      children:
-      - $formkit: text
-        name: icon
-        label: 图标
-        help: "Iconify 图标名称，如：ph:github-logo-bold"
-        placeholder: ph:github-logo-bold
-      - $formkit: text
-        name: text
-        label: 文本
-        placeholder: GitHub
-      - $formkit: url
-        name: url
-        label: 链接
-        placeholder: https://github.com
-  - group: aside
-    label: 右侧边栏
-    formSchema:
-    - $formkit: date
-      name: site_start_time
-      label: 建站时间
-      help: 用于计算运营时长
-    - $formkit: text
-      name: image_hosting
-      label: 图片存储服务
-      value: "本地存储"
-    - $formkit: text
-      name: license
-      label: 文章许可协议
-      value: "CC BY-NC-SA 4.0"
-    - $formkit: checkbox
-      name: show_user_info
-      label: 显示用户信息
-      value: true
-    - $formkit: checkbox
-      name: show_toc
-      label: 文章页显示目录
-      value: true
-    - $formkit: text
-      name: community_group_image
-      label: 社区群组图片
-      help: "例如：https://p.qlogo.cn/gh/..."
-    - $formkit: text
-      name: community_group_title
-      label: 社区群组标题
-      value: "技术交流群"
-    - $formkit: text
-      name: community_group_desc
-      label: 社区群组描述
-      value: "123456789"
-  - group: post
-    label: 文章
-    formSchema:
-    - $formkit: number
-      name: per_page
-      label: 每页文章数
-      value: 10
-      min: 1
-      max: 50
-    - $formkit: select
-      name: content_size
-      label: 字体大小
-      value: prose-base
-      options:
-      - value: prose-sm
-        label: 小
-      - value: prose-base
-        label: 默认
-      - value: prose-lg
-        label: 大
-      - value: prose-xl
-        label: 特大
-  - group: development
-    label: 开发设置
-    formSchema:
-    - $formkit: checkbox
-      name: enabled
-      label: 启用开发模式
-      value: false
-      help: 仅供开发环境使用，开启此设置后，所有静态资源由 Vite 开发服务器提供，需要在本地启动 Vite 服务（pnpm dev）
+    - group: header
+      label: 侧边栏头部
+      formSchema:
+        - $formkit: attachment
+          name: logo
+          label: Logo
+          accepts:
+            - "image/*"
+        - $formkit: checkbox
+          name: show_title
+          label: 显示标题
+          value: true
+        - $formkit: text
+          name: subtitle
+          label: 副标题
+          placeholder: 一句话介绍
+        - $formkit: text
+          name: emoji_tail
+          label: Emoji 尾巴
+          help: 使用英文逗号分隔，例如：📄,🦌,🙌,🐟,🏖️
+    - group: nav
+      label: 导航菜单
+      formSchema:
+        - $formkit: menuRadio
+          name: primary
+          label: 主导航菜单
+    - group: footer
+      label: 页脚
+      formSchema:
+        - $formkit: textarea
+          name: copyright
+          label: 版权信息
+          value: "© 2025 Powered by Halo"
+        - $formkit: text
+          name: beian
+          label: ICP 备案号
+          placeholder: 陕ICP备2025082251号
+        - $formkit: text
+          name: gongan_beian
+          label: 公安备案号
+          placeholder: 陕公网安备61010302001234号
+        - $formkit: text
+          name: gongan_beian_code
+          label: 公安备案编号
+          help: 用于跳转链接，只需填写数字部分
+          placeholder: 61010302001234
+        - $formkit: repeater
+          name: social_links
+          label: 社交链接
+          value: []
+          children:
+            - $formkit: text
+              name: icon
+              label: 图标
+              help: "Iconfont 类名，如：iconfont icon-github"
+              placeholder: iconfont icon-github
+            - $formkit: text
+              name: text
+              label: 文本
+              placeholder: GitHub
+            - $formkit: url
+              name: url
+              label: 链接
+              placeholder: https://github.com
+    - group: aside
+      label: 右侧边栏
+      formSchema:
+        - $formkit: date
+          name: site_start_time
+          label: 建站时间
+          help: 用于计算运营时长
+        - $formkit: text
+          name: image_hosting
+          label: 图片存储服务
+          value: "本地存储"
+        - $formkit: text
+          name: license
+          label: 文章许可协议
+          value: "CC BY-NC-SA 4.0"
+        - $formkit: checkbox
+          name: show_user_info
+          label: 显示用户信息
+          value: true
+        - $formkit: checkbox
+          name: show_toc
+          label: 文章页显示目录
+          value: true
+        - $formkit: text
+          name: community_group_image
+          label: 社区群组背景图
+          help: "例如：https://p.qlogo.cn/gh/169994096/169994096/100/"
+          placeholder: https://p.qlogo.cn/gh/169994096/169994096/100/
+        - $formkit: text
+          name: community_group_title
+          label: 社区群组小标题
+          value: "博客/技术社区"
+          help: "显示在小部件标题位置"
+        - $formkit: text
+          name: community_group_name
+          label: 社区群组名称
+          value: "技术交流群"
+          help: "显示在卡片内的大标题"
+        - $formkit: text
+          name: community_group_desc
+          label: 社区群组描述
+          value: "169994096"
+          help: "例如 QQ 群号"
+    - group: post
+      label: 文章
+      formSchema:
+        - $formkit: postSelect
+          name: featured_posts
+          label: 精选文章
+          multiple: true
+          help: 选择要在首页轮播展示的文章
+        - $formkit: number
+          name: per_page
+          label: 每页文章数
+          value: 10
+          min: 1
+          max: 50
+    - group: custom
+      label: 自定义
+      formSchema:
+        - $formkit: url
+          name: iconfont_url
+          label: Iconfont CSS 链接
+          placeholder: //at.alicdn.com/t/c/font_xxxxxxx.css
+          help: "输入 Iconfont 或其他图标库的 CSS 链接，用于支持自定义图标"
+    - group: development
+      label: 开发设置
+      formSchema:
+        - $formkit: checkbox
+          name: enabled
+          label: 启用开发模式
+          value: false
+          help: 仅供开发环境使用，开启此设置后，所有静态资源由 Vite 开发服务器提供，需要在本地启动 Vite 服务（pnpm dev）

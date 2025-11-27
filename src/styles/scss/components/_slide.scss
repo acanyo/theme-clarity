@@ -35,7 +35,7 @@
 
 	position: relative;
 	overflow: hidden;
-	mask-image: linear-gradient(to var(--end), transparent, #FFF var(--fadeout-width), #FFF calc(100% - var(--fadeout-width)), transparent);
+	mask-image: linear-gradient(to right, transparent, #FFF var(--fadeout-width), #FFF calc(100% - var(--fadeout-width)), transparent);
 	cursor: grab;
 	user-select: none;
 }
@@ -43,18 +43,39 @@
 .carousel-action {
 	position: absolute;
 	top: 50%;
-	padding: 0.5em 0.2em;
+	padding: 0.5em;
 	font-size: 1.5em;
 	transform: translateY(-50%);
 	transition: all 0.2s;
+	background: rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(4px);
+	border-radius: 50%;
+	border: none;
+	cursor: pointer;
+	color: var(--c-text);
+	z-index: 10;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	
+	&:hover {
+		background: rgba(255, 255, 255, 0.5);
+	}
 
-	&.prev { inset-inline-start: 1rem; }
-	&.next { inset-inline-end: 1rem; }
+	&.prev { inset-inline-start: 0.5rem; }
+	&.next { inset-inline-end: 0.5rem; }
 }
 
 .slide-list {
 	display: flex;
+	overflow-x: auto;
 	scroll-snap-type: x mandatory;
+	scrollbar-width: none; // Firefox
+	-ms-overflow-style: none; // IE 10+
+	
+	&::-webkit-scrollbar {
+		display: none; // Chrome Safari
+	}
 
 	> .slide-item {
 		flex-shrink: 0;

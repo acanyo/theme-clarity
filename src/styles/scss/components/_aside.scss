@@ -1,164 +1,363 @@
 $breakpoint-widescreen: 1080px !default;
 
+
 #z-aside {
+	overflow: auto;
 	padding: 0.5rem;
 
+	// 桌面端：固定定位
+	position: sticky;
+	top: 0;
+	flex-shrink: 0;
+	width: 280px;
+	height: 100vh;
+	height: 100dvh;
+	scrollbar-width: thin;
+
+	// 宽屏以下：默认隐藏，通过 .show 类显示
 	@media (max-width: $breakpoint-widescreen) {
+		display: none;
+		position: fixed;
+		top: 0;
+		inset-inline-end: 0;
+		width: 320px;
+		height: 100%;
+		max-width: 100%;
+		background-color: var(--c-bg);
+		box-shadow: -0.5rem 0 2rem var(--ld-shadow);
+		z-index: 100;
+
+		// 显示状态
+		&.show {
+			display: block;
+		}
+
+		// 滑入时的 widget 样式
+		.widget-body.widget-card {
+			padding: 0.5rem;
+			border-radius: 1rem;
+			box-shadow: 0 0 1rem var(--ld-shadow);
+			background-color: var(--ld-bg-blur);
+			backdrop-filter: blur(0.5rem);
+		}
+	}
+}
+
+// 右侧边栏背景遮罩
+#z-aside-bgmask {
+	position: fixed;
+	inset: 0;
+	background-color: rgba(0, 0, 0, 0.2);
+	transition: opacity 0.2s;
+	z-index: 99;
+
+	&.hidden {
+		display: none;
+	}
+
+	@media (min-width: $breakpoint-widescreen) {
 		display: none;
 	}
 }
-
-.widget-list {
-	display: flex;
-	flex-direction: column;
-	gap: 1rem;
-}
-
 .widget {
-	padding: 1rem;
-	border-radius: 0.8rem;
+	font-size: 0.9em;
 
-	.widget-title {
-		margin-bottom: 0.8rem;
-		font-weight: 600;
-		color: var(--c-text);
-	}
-}
-
-// 博客统计样式
-.stats-grid {
-	display: grid;
-	grid-template-columns: repeat(3, 1fr);
-	gap: 0.5rem;
-	text-align: center;
-
-	.stat-box {
-		display: flex;
-		flex-direction: column;
-		gap: 0.2rem;
+	& + .widget {
+		margin-top: 1rem;
 	}
 
-	.stat-label {
-		font-size: 0.75rem;
-		color: var(--c-text-3);
-	}
+	// 淡入效果
+	&.dim {
+		opacity: 0.3;
+		transition: opacity 0.2s;
 
-	.stat-value {
-		font-size: 1rem;
-		font-weight: 600;
-		color: var(--c-text);
-	}
-}
-
-// 技术信息样式
-.tech-info-list {
-	display: grid;
-	gap: 0.5rem;
-	font-size: 0.85rem;
-
-	.tech-item {
-		display: flex;
-		justify-content: space-between;
-		align-items: center;
-
-		dt {
-			color: var(--c-text-2);
-		}
-
-		dd {
-			font-weight: 500;
-			color: var(--c-text);
+		#z-aside:hover &,
+		#z-aside.show & {
+			opacity: 1;
 		}
 	}
+}
 
-	&.small {
-		font-size: 0.75rem;
-		margin-top: 0.5rem;
-		padding-top: 0.5rem;
-		border-top: 1px dashed var(--c-border);
+// Widget 标题
+.widget-title {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5rem;
+	margin: 0.5rem;
+	color: var(--c-text-2);
+
+	a {
+		transition: color 0.2s;
+	}
+
+	> [onclick]:hover,
+	> [href]:hover {
+		color: var(--c-primary);
+	}
+
+	.title-text {
+		flex-grow: 1;
 	}
 }
 
-.tech-details {
-	margin-top: 0.8rem;
-	
-	summary {
-		font-size: 0.75rem;
-		color: var(--c-text-3);
-		cursor: pointer;
-		text-align: center;
-		list-style: none;
-		
-		&::before {
-			content: "DATA";
-			margin-right: 0.3em;
-			font-family: var(--font-monospace);
+// Widget 内容区
+.widget-body {
+	// 带背景图
+	&.with-bg {
+		position: relative;
+		overflow: hidden;
+		overflow: clip;
+		z-index: 0;
+
+		> .bg-img {
+			position: absolute;
+			opacity: 0.2;
+			inset: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			pointer-events: none;
+			z-index: -1;
+
+			&.bg-right {
+				inset-inline-start: 50%;
+				width: 50%;
+				mask-image: linear-gradient(to var(--end), transparent, #FFF 50%);
+			}
+		}
+
+		// 悬停时背景图更明显
+		.widget:hover & > .bg-img {
 			opacity: 0.5;
 		}
 	}
+
+	// 卡片样式
+	&.widget-card {
+		padding: 0.5rem 0.8rem;
+		border-radius: 0.8rem;
+		background-color: var(--c-bg-2);
+
+		p {
+			padding: 0.2em 0;
+		}
+	}
 }
 
-// 社区群组样式
-.comm-group {
-	position: relative;
-	min-height: 100px;
-	background-size: cover;
-	background-position: center;
+// ========================================
+// DlGroup 组件样式
+// ========================================
+.dl-group {
+	> div {
+		padding: 0.2em 0;
+
+		> dt {
+			font-size: 0.9em;
+			color: var(--c-text-2);
+		}
+	}
+}
+
+// Small 尺寸 (水平排列)
+.dl-group.small {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5em 1em;
+	text-align: center;
+
+	> div {
+		flex: 1;
+		white-space: nowrap;
+	}
+}
+
+// Medium 尺寸 (两列网格)
+.dl-group.medium {
+	> div {
+		display: grid;
+		grid-template-columns: 1fr 2fr;
+		gap: 8%;
+		padding: 0.2em 0;
+
+		> dt {
+			font-size: inherit;
+			text-align: end;
+		}
+	}
+}
+
+// 构建信息
+.build-info {
+	margin-top: 0.5rem;
+	padding-top: 0.5rem;
+	border-top: 1px dashed var(--c-border);
+}
+
+// 域名文字溢出处理
+.domain-text {
 	overflow: hidden;
-	
-	&::before {
-		content: "";
-		position: absolute;
-		inset: 0;
-		background: linear-gradient(90deg, var(--ld-bg-card) 30%, transparent);
-	}
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
 
-	.comm-content {
-		position: relative;
-		z-index: 1;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		height: 100%;
-	}
+// Halo 平台图标
+.platform-halo {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
 
-	.comm-title {
-		font-size: 1.2rem;
-		font-weight: 800;
-		background: linear-gradient(45deg, var(--c-primary), var(--c-accent));
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-		margin-bottom: 0.2rem;
-	}
-
-	.comm-desc {
-		font-size: 0.8rem;
-		color: var(--c-text-2);
-		display: flex;
-		align-items: center;
-		gap: 0.3em;
+	img {
+		width: 1.2em;
+		height: 1.2em;
+		border-radius: 0.2em;
+		object-fit: cover;
 	}
 }
 
-// 目录样式
+// ========================================
+// Expand 组件样式
+// ========================================
+.z-expand {
+	display: flex;
+	flex-direction: column;
+	margin-top: 0.2em;
+}
+
+.toggle-btn {
+	display: block;
+	width: fit-content;
+	margin: 0 auto;
+	padding: 0.3em;
+	font-size: 0.9em;
+	color: var(--c-text-2);
+	cursor: pointer;
+	transition: color 0.2s;
+
+	&:hover {
+		color: var(--c-primary);
+	}
+
+	&.in-place {
+		order: -1;
+	}
+}
+
+.toggle-icon {
+	display: inline-block;
+	transition: transform 0.2s;
+
+	&.expand {
+		transform: scaleY(-1);
+	}
+}
+
+// ========================================
+// CommGroup 社区群组样式
+// ========================================
+.comm-title {
+	background-clip: text;
+	background-image: linear-gradient(60deg, var(--c-accent) -30%, var(--c-primary), var(--c-text-1));
+	background-position: 100% 0;
+	background-size: 200%;
+	font-size: 1.8em;
+	font-weight: 800;
+	letter-spacing: 0.05em;
+	color: transparent;
+	transition: background-position 0.2s;
+
+	.widget:hover & {
+		background-position: 0 0;
+	}
+}
+
+.comm-tip {
+	display: flex;
+	align-items: center;
+	gap: 0.3em;
+	font-size: 0.9em;
+	line-height: 2;
+	color: var(--c-text-2);
+}
+
+// ========================================
+// TOC 文章目录样式
+// ========================================
 .toc-widget {
-	.toc-content {
-		font-size: 0.85rem;
-		
-		ul {
-			padding-left: 1em;
+	.toc-body {
+		position: relative;
+
+		// 左侧进度条背景
+		&::before {
+			content: "";
+			position: absolute;
+			inset: 0.3rem;
+			width: 3px;
+			border-radius: 1rem;
+			background-color: var(--c-bg-3);
+		}
+	}
+
+	.toc-nav {
+		ol {
+			list-style: none;
+			padding: 0;
+			margin: 0;
 		}
 
-		a {
-			display: block;
-			padding: 0.3em 0;
-			color: var(--c-text-2);
-			transition: color 0.2s;
+		li {
+			position: relative;
+			opacity: 0.6;
+			margin-inline-start: 0.8rem;
+			font-size: 0.94em;
+			color: var(--c-text);
+			transition: opacity 0.2s;
 
 			&:hover {
-				color: var(--c-primary);
+				opacity: 0.94;
+			}
+
+			&.has-active,
+			&.active {
+				opacity: 1;
+				font-size: 1em;
+			}
+
+			// 激活指示器
+			&.active::before {
+				content: "";
+				position: absolute;
+				inset-inline-start: -0.5rem;
+				margin: 0.2rem 0;
+				padding: 0.6rem 1.5px;
+				border-radius: 1rem;
+				background-color: var(--c-primary);
+			}
+
+			a {
+				display: block;
+				overflow: hidden;
+				padding: 0.2em 0.5em;
+				border-radius: 0.5em;
+				white-space: nowrap;
+				text-overflow: ellipsis;
+				transition: all 0.2s;
+
+				&:hover {
+					background-color: var(--c-bg-soft);
+				}
+			}
+
+			// 嵌套列表
+			ol {
+				margin-inline-start: 0.5rem;
 			}
 		}
+	}
+
+	.no-toc {
+		padding: 1em;
+		text-align: center;
+		color: var(--c-text-3);
 	}
 }
