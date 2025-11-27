@@ -1,0 +1,10 @@
+prose-sm
+prose-base
+prose-lg
+prose-xl
+prose-2xl
+prose-gray
+prose-slate
+prose-zinc
+prose-neutral
+prose-stone

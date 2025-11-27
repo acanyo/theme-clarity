@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en" th:fragment="html (content)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${site.title}"></title>
+
+    <script type="application/json" id="theme-config" th:utext="${theme.config}"></script>
+    <th:block th:if="${theme.config.development.enabled}">
+      <script type="module" src="http://localhost:5173/@vite/client"></script>
+      <script type="module" src="http://localhost:5173/main.ts"></script>
+    </th:block>
+
+    <th:block th:unless="${theme.config.development.enabled}">
+      <link rel="stylesheet" th:href="@{/assets/dist/main.css?v={version}(version=${theme.spec.version})}" />
+      <link rel="manifest" th:href="@{/assets/dist/.vite/manifest.json}" />
+      <script type="module" th:src="@{/assets/dist/main.js?v={version}(version=${theme.spec.version})}"></script>
+    </th:block>
+  </head>
+  <body>
+    <header class="w-full">
+      <div class="flex flex-col items-center justify-center pt-3">
+        <div>
+          <span class="text-3xl font-bold">Head</span>
+        </div>
+
+        <div id="counter"></div>
+      </div>
+    </header>
+    <main id="swup" class="transition-main">
+      <th:block th:replace="${content}" />
+    </main>
+  </body>
+</html>

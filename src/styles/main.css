@@ -1,0 +1,17 @@
+body {
+  background: #f2f2f2;
+}
+
+ul {
+  list-style: decimal;
+}
+
+
+/* swup */
+html.is-changing .transition-main {
+  transition: opacity 250ms ease-in-out;
+}
+
+html.is-animating .transition-main {
+  opacity: 0;
+}
