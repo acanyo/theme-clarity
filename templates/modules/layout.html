@@ -1,12 +1,8 @@
 <!doctype html>
 <html lang="zh-CN" th:fragment="html (content, showAside)">
   <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title th:text="${site.title}"></title>
-    <meta name="description" th:content="${site.subtitle}" />
-    <link rel="icon" th:href="${site.logo}" />
+    <!-- SEO 标准化模板（Open Graph / Twitter Card / JSON-LD） -->
+    <th:block th:replace="~{modules/seo :: seo}" />
 
     <!-- Fonts -->
     <link

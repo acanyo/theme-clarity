@@ -1,0 +1,118 @@
+// ========================================
+// 错误页面样式（参考 blog-v3-source）
+// ========================================
+
+.error-page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 2rem;
+  margin: 1rem;
+}
+
+// 错误图标
+.error-icon {
+  font-size: 5rem;
+  color: var(--c-text-3);
+}
+
+// 错误标题
+.error-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  word-break: break-all;
+  color: var(--c-text-2);
+  text-align: center;
+}
+
+// 友好提示
+.error-hint {
+  font-size: 1rem;
+  color: var(--c-text-3);
+  text-align: center;
+  line-height: 1.6;
+}
+
+// 错误代码块
+.error-codeblock {
+  max-width: 100%;
+  width: 100%;
+  max-width: 600px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--c-bg-2);
+
+  .codeblock-header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 1rem;
+    background-color: var(--c-bg-soft);
+    border-bottom: 1px solid var(--c-border);
+  }
+
+  .codeblock-filename {
+    font-family: var(--font-monospace);
+    font-size: 0.8rem;
+    color: var(--c-text-3);
+  }
+
+  .codeblock-content {
+    margin: 0;
+    padding: 1rem;
+    font-family: var(--font-monospace);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    color: var(--c-text-2);
+    white-space: pre-wrap;
+    word-break: break-all;
+    overflow-x: auto;
+    text-align: start;
+
+    code {
+      display: block;
+    }
+  }
+}
+
+// 操作按钮组
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: center;
+}
+
+// 按钮
+.error-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1.5em;
+  border: none;
+  border-radius: 0.5em;
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  background-color: var(--c-primary);
+  color: #fff;
+  transition: all 0.2s;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+  }
+
+  &.error-btn-secondary {
+    background-color: var(--c-bg-soft);
+    color: var(--c-text-2);
+
+    &:hover {
+      background-color: var(--c-bg-2);
+      color: var(--c-text);
+      opacity: 1;
+    }
+  }
+}

@@ -1,0 +1,89 @@
+<!-- SEO 标准化模板：支持首页、文章页、单页、归档页等 -->
+<th:block th:fragment="seo">
+  <!-- 基础 Meta -->
+  <meta charset="UTF-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title th:if="${post != null}" th:text="${post.spec.title} + ' | ' + ${site.title}"></title>
+  <title th:if="${singlePage != null and post == null}" th:text="${singlePage.spec.title} + ' | ' + ${site.title}"></title>
+  <title th:if="${post == null and singlePage == null}" th:text="${site.title} + ' | ' + ${site.subtitle}"></title>
+  <!-- 页面描述 -->
+  <meta name="description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
+  <meta name="description" th:if="${singlePage != null and post == null}" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
+  <meta name="description" th:if="${post == null and singlePage == null}" th:content="${site.subtitle}" />
+  <th:block th:if="${post != null and not #lists.isEmpty(post.tags)}">
+    <!-- 关键词（文章标签） -->
+    <meta name="keywords" th:content="${#strings.listJoin(post.tags.![spec.displayName], ', ')}" />
+  </th:block>
+  <!-- 作者 -->
+  <meta name="author" th:if="${post != null and post.owner != null}" th:content="${post.owner.displayName}" />
+  <meta name="author" th:unless="${post != null and post.owner != null}" th:content="${site.title}" />
+  <!-- Canonical URL -->
+  <link rel="canonical" th:if="${post != null}" th:href="${site.url + post.status.permalink}" />
+  <link rel="canonical" th:if="${singlePage != null and post == null}" th:href="${site.url + singlePage.status.permalink}" />
+  <link rel="canonical" th:if="${post == null and singlePage == null}" th:href="${site.url}" />
+  <!-- Favicon -->
+  <link rel="icon" th:href="${site.logo}" />
+  <link rel="apple-touch-icon" th:href="${site.logo}" />
+  <link rel="alternate" type="application/rss+xml" th:href="${site.url + '/rss.xml'}" th:title="${site.title + ' - RSS Feed'}" />
+  <!-- ==================== Open Graph ==================== -->
+  <meta property="og:site_name" th:content="${site.title}" />
+  <meta property="og:locale" content="zh_CN" />
+  <th:block th:if="${post != null}">
+    <!-- 文章页 OG -->
+    <meta property="og:type" content="article" />
+    <meta property="og:title" th:content="${post.spec.title}" />
+    <meta property="og:description" th:content="${post.status.excerpt ?: site.subtitle}" />
+    <meta property="og:url" th:content="${site.url + post.status.permalink}" />
+    <meta property="og:image" th:if="${post.spec.cover}" th:content="${post.spec.cover}" />
+    <meta property="og:image" th:unless="${post.spec.cover}" th:content="${site.logo}" />
+    <meta property="article:published_time" th:if="${post.spec.publishTime}" th:content="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}" />
+    <meta property="article:modified_time" th:if="${post.status.lastModifyTime}" th:content="${#temporals.format(post.status.lastModifyTime, 'yyyy-MM-dd''T''HH:mm:ssXXX')}" />
+    <meta property="article:author" th:if="${post.owner != null}" th:content="${post.owner.displayName}" />
+    <meta property="article:section" th:if="${not #lists.isEmpty(post.categories)}" th:content="${post.categories[0].spec.displayName}" />
+    <th:block th:if="${not #lists.isEmpty(post.tags)}">
+      <meta th:each="tag : ${post.tags}" property="article:tag" th:content="${tag.spec.displayName}" />
+    </th:block>
+  </th:block>
+  <th:block th:if="${singlePage != null and post == null}">
+    <!-- 单页 OG -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" th:content="${singlePage.spec.title}" />
+    <meta property="og:description" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
+    <meta property="og:url" th:content="${site.url + singlePage.status.permalink}" />
+    <meta property="og:image" th:if="${singlePage.spec.cover}" th:content="${singlePage.spec.cover}" />
+    <meta property="og:image" th:unless="${singlePage.spec.cover}" th:content="${site.logo}" />
+  </th:block>
+  <th:block th:if="${post == null and singlePage == null}">
+    <!-- 首页/其他页 OG -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" th:content="${site.title}" />
+    <meta property="og:description" th:content="${site.subtitle}" />
+    <meta property="og:url" th:content="${site.url}" />
+    <meta property="og:image" th:content="${site.logo}" />
+  </th:block>
+  <!-- ==================== Twitter Card ==================== -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" th:if="${post != null}" th:content="${post.spec.title}" />
+  <meta name="twitter:title" th:if="${singlePage != null and post == null}" th:content="${singlePage.spec.title}" />
+  <meta name="twitter:title" th:if="${post == null and singlePage == null}" th:content="${site.title}" />
+  
+  <meta name="twitter:description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
+  <meta name="twitter:description" th:if="${singlePage != null and post == null}" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
+  <meta name="twitter:description" th:if="${post == null and singlePage == null}" th:content="${site.subtitle}" />
+  
+  <th:block th:if="${post != null}">
+    <!-- 文章页 Twitter Image -->
+    <meta name="twitter:image" th:if="${post.spec.cover}" th:content="${post.spec.cover}" />
+    <meta name="twitter:image" th:unless="${post.spec.cover}" th:content="${site.logo}" />
+  </th:block>
+  <th:block th:if="${singlePage != null and post == null}">
+    <!-- 单页 Twitter Image -->
+    <meta name="twitter:image" th:if="${singlePage.spec.cover}" th:content="${singlePage.spec.cover}" />
+    <meta name="twitter:image" th:unless="${singlePage.spec.cover}" th:content="${site.logo}" />
+  </th:block>
+  <th:block th:if="${post == null and singlePage == null}">
+    <!-- 首页/其他页 Twitter Image -->
+    <meta name="twitter:image" th:content="${site.logo}" />
+  </th:block>
+</th:block>
