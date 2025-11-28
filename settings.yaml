@@ -174,31 +174,6 @@ spec:
           min: 1
           max: 50
           validation: required
-    - group: auth
-      label: 登录注册
-      formSchema:
-        - $formkit: attachment
-          name: background_image
-          label: 背景图片
-          accepts:
-            - "image/*"
-          help: 登录/注册页面的背景图片
-        - $formkit: attachment
-          name: logo
-          label: 页面 Logo
-          accepts:
-            - "image/*"
-          help: 登录页面显示的 Logo，留空使用站点 Logo
-        - $formkit: text
-          name: title
-          label: 欢迎标题
-          value: "Welcome Back"
-          placeholder: Welcome Back
-        - $formkit: text
-          name: subtitle
-          label: 欢迎描述
-          value: "登录以继续访问"
-          placeholder: 登录以继续访问
     - group: custom
       label: 自定义
       formSchema:
