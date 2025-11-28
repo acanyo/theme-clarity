@@ -87,7 +87,7 @@ $breakpoint-widescreen: 1080px !default;
 	transition: transform 0.1s;
 	z-index: 100;
 
-	// 宽于移动端隐藏（仅手机显示）
+	// 宽于移动端
 	@media (min-width: $breakpoint-mobile) {
 		display: none;
 	}

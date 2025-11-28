@@ -342,9 +342,6 @@ function initBackToTop() {
     }
     clearTimer();
   };
-  // 移除未使用参数 e，避免 TS 警告
-  // const onPointerUp = () => { /* ... */ }
-
   btn.addEventListener("pointerdown", onPointerDown);
   btn.addEventListener("pointerup", onPointerUp);
   btn.addEventListener("pointerleave", clearTimer);
