@@ -12,3 +12,18 @@ spec:
       label: 图标
       placeholder: iconfont icon-home
       help: 支持 Iconfont 类名
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: category-annotation-setting
+spec:
+  targetRef:
+    group: "content.halo.run"
+    kind: Category
+  formSchema:
+    - $formkit: text
+      name: categoryIicon
+      label: 图标
+      placeholder: iconfont icon-home
+      help: 支持 Iconfont 类名

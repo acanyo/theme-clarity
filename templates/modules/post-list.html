@@ -1,0 +1,79 @@
+<div class="post-list" th:fragment="list(posts)">
+  <!-- Toolbar (排序与分类) -->
+  <th:block th:replace="~{modules/order-toggle :: toolbar}" />
+
+  <!-- Posts Container -->
+  <menu class="posts-container proper-height">
+    <th:block th:each="post,iterStat : ${posts.items}">
+      <article class="article-card card" th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'">
+        <a th:href="${post.status.permalink}">
+          <img
+            th:if="${post.spec.cover}"
+            th:src="${post.spec.cover}"
+            class="article-cover"
+            loading="lazy"
+            th:alt="${post.spec.title}"
+          />
+        </a>
+
+        <div class="article-body">
+          <h2 class="article-title text-creative">
+            <a th:href="${post.status.permalink}" th:text="${post.spec.title}"></a>
+          </h2>
+
+          <p th:if="${post.status.excerpt}" class="article-description" th:text="${post.status.excerpt}"></p>
+
+          <div class="article-info">
+            <span class="info-item">
+              <span class="icon-[ph--calendar-dots-bold]"></span>
+              <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+            </span>
+
+            <span th:if="${not #lists.isEmpty(post.categories)}" class="info-item article-category">
+              <span class="icon-[ph--folder-bold]"></span>
+              <a
+                th:href="${post.categories[0].status.permalink}"
+                th:text="${post.categories[0].spec.displayName}"
+              ></a>
+            </span>
+
+            <span class="info-item">
+              <span class="icon-[ph--eye-bold]"></span>
+              <span th:text="${post.stats.visit}">0</span>
+            </span>
+          </div>
+        </div>
+      </article>
+    </th:block>
+  </menu>
+
+  <!-- Pagination -->
+  <div
+    class="pagination-wrapper"
+    th:if="${posts.totalPages > 1}"
+    th:attr="x-data=|pagination(${posts.page ?: 1}, ${posts.totalPages ?: 1})|"
+  >
+    <div class="pagination">
+      <!-- 上一页 -->
+      <a :href="getPageUrl(page - 1)" class="page-btn" :class="{ 'disabled': page <= 1 }">
+        <span class="icon-[ph--caret-left-bold]"></span>
+      </a>
+
+      <!-- 数字页码 -->
+      <template x-for="p in pageArr" :key="p">
+        <a
+          :href="p === '...' ? 'javascript:void(0)' : getPageUrl(p)"
+          class="page-btn"
+          :class="{ 'active': p === page, 'disabled': p === '...' }"
+          x-text="p"
+        >
+        </a>
+      </template>
+
+      <!-- 下一页 -->
+      <a :href="getPageUrl(page + 1)" class="page-btn" :class="{ 'disabled': page >= total }">
+        <span class="icon-[ph--caret-right-bold]"></span>
+      </a>
+    </div>
+  </div>
+</div>

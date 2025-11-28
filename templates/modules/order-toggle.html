@@ -1,8 +1,12 @@
-<div class="toolbar mb-4 flex items-center justify-between" th:fragment="toolbar" x-data="{ catOpen: false }">
-  <!-- Left side placeholder or existing text -->
-  <div>
-    <!-- <div class="text-sm opacity-70">文章列表</div> -->
-  </div>
+<!--
+  order-toggle toolbar
+  - 在首页显示"全部分类"，在分类页显示当前分类名
+  - 下拉菜单高亮当前分类
+  - 排序链接保持当前路径
+-->
+<div class="toolbar flex items-center justify-between" th:fragment="toolbar" x-data="{ catOpen: false }">
+  <!-- Left side placeholder -->
+  <div></div>
 
   <!-- Order Toggle -->
   <div class="order-toggle flex items-center gap-4 text-sm">
@@ -13,56 +17,62 @@
         @click.outside="catOpen = false"
         class="hover:text-primary flex items-center gap-1 text-gray-500 transition-colors"
       >
-        <span class="icon-[ph--folder-bold]"></span>
-        <span class="order-text">全部分类</span>
+        <!-- 当前分类图标：优先使用自定义图标 -->
+        <th:block th:with="catIcon = ${category?.metadata?.annotations != null ? category.metadata.annotations['categoryIicon'] : null}">
+          <i th:if="${not #strings.isEmpty(catIcon)}" th:class="'iconfont ' + ${catIcon}"></i>
+          <span th:if="${#strings.isEmpty(catIcon)}" class="icon-[ph--folder-bold]"></span>
+        </th:block>
+        <span class="order-text" th:text="${category != null} ? ${category.spec.displayName} : '全部分类'">全部分类</span>
+        <span class="icon-[ph--caret-down-bold] text-xs"></span>
       </button>
 
       <!-- Dropdown Content -->
       <div
         x-show="catOpen"
-        style="display: none"
-        x-transition.opacity.duration.200ms
-        class="absolute right-0 z-50 mt-2 flex w-48 flex-col rounded-lg border border-gray-100 bg-white py-2 shadow-xl dark:border-gray-700 dark:bg-gray-800"
+        x-cloak
+        x-transition:enter="transition ease-out duration-150"
+        x-transition:enter-start="opacity-0 scale-95"
+        x-transition:enter-end="opacity-100 scale-100"
+        x-transition:leave="transition ease-in duration-100"
+        x-transition:leave-start="opacity-100 scale-100"
+        x-transition:leave-end="opacity-0 scale-95"
+        class="absolute right-0 z-50 mt-2 flex w-48 origin-top-right flex-col rounded-lg border border-gray-100 bg-white py-2 shadow-xl dark:border-gray-700 dark:bg-gray-800"
       >
+        <!-- 全部分类 -->
         <a
           href="/"
           class="flex items-center gap-2 px-4 py-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+          th:classappend="${category == null} ? 'text-primary font-medium' : ''"
         >
           <span class="icon-[ph--squares-four-bold]"></span>
           <span>全部分类</span>
         </a>
-        <th:block th:each="category : ${categoryFinder.listAll()}">
+        <!-- 各分类 -->
+        <th:block th:each="cat : ${categoryFinder.listAll()}">
           <a
-            th:href="${category.status.permalink}"
+            th:href="${cat.status.permalink}"
             class="flex items-center gap-2 px-4 py-2 transition-colors hover:bg-gray-100 dark:hover:bg-gray-700"
+            th:classappend="${category != null and category.metadata.name == cat.metadata.name} ? 'text-primary font-medium' : ''"
           >
-            <span class="icon-[ph--folder]"></span>
-            <span th:text="${category.spec.displayName}"></span>
+            <!-- 分类图标：优先使用自定义图标 -->
+            <th:block th:with="icon = ${cat.metadata.annotations != null ? cat.metadata.annotations['categoryIicon'] : null}">
+              <i th:if="${not #strings.isEmpty(icon)}" th:class="'iconfont ' + ${icon}"></i>
+              <span th:if="${#strings.isEmpty(icon)}" class="icon-[ph--folder]"></span>
+            </th:block>
+            <span th:text="${cat.spec.displayName}"></span>
           </a>
         </th:block>
       </div>
     </div>
 
-    <!-- Sort Toggle (Simulated links) -->
-    <div class="flex items-center gap-2">
-      <a th:href="@{/(sort='publishTime,asc')}" class="hover:text-primary text-gray-500 transition-colors" title="升序">
-        <span class="icon-[ph--sort-ascending-bold]"></span>
-      </a>
-
-      <!-- Field -->
-      <a
-        th:href="@{/(sort='publishTime,desc')}"
-        class="hover:text-primary flex items-center gap-1 text-gray-500 transition-colors"
-        title="默认排序"
-      >
-        <span class="order-text">发布时间</span>
-      </a>
-    </div>
   </div>
-
-  <style>
-    .toolbar {
-      margin: 0 1rem;
-    }
-  </style>
 </div>
+
+<style>
+  .toolbar {
+    margin: 0 1rem 0.5rem;
+  }
+  [x-cloak] {
+    display: none !important;
+  }
+</style>

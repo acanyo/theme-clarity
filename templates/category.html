@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(~{::content}, true)}"
+>
+  <th:block th:fragment="content">
+    <!-- Post List -->
+    <th:block th:replace="~{modules/post-list :: list(posts=${posts})}" />
+  </th:block>
+</html>
