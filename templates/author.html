@@ -1,0 +1,79 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true)}">
+  <th:block th:fragment="content">
+    <!-- 作者页面 -->
+    <div class="archive proper-height">
+      <!-- 作者信息卡片 -->
+      <section class="author-profile">
+        <div class="author-avatar-wrapper">
+          <img 
+            th:if="${author.spec.avatar}" 
+            th:src="${author.spec.avatar}" 
+            th:alt="${author.spec.displayName}"
+            class="author-avatar"
+          />
+          <div th:unless="${author.spec.avatar}" class="author-avatar-placeholder">
+            <span class="icon-[ph--user-circle-bold]"></span>
+          </div>
+        </div>
+        
+        <div class="author-info">
+          <h1 class="author-name text-creative" th:text="${author.spec.displayName}"></h1>
+          
+          <p th:if="${author.spec.bio}" class="author-bio" th:text="${author.spec.bio}"></p>
+          
+          <div class="author-meta">
+            <span th:if="${author.spec.registeredAt}" class="meta-item">
+              <span class="icon-[ph--calendar-dots-bold]"></span>
+              <span>加入于 </span>
+              <time th:text="${#temporals.format(author.spec.registeredAt, 'yyyy-MM-dd')}"></time>
+            </span>
+            
+            <span class="meta-item">
+              <span class="icon-[ph--article-bold]"></span>
+              <span th:text="${posts.total}"></span>
+              <span> 篇文章</span>
+            </span>
+            
+            <a th:if="${author.spec.email}" th:href="'mailto:' + ${author.spec.email}" class="meta-item meta-link">
+              <span class="icon-[ph--envelope-simple-bold]"></span>
+              <span th:text="${author.spec.email}"></span>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- 复用归档页的文章列表 -->
+      <menu class="archive-list">
+        <li th:each="post,iterStat : ${posts.items}" class="article-item" th:style="'--delay: ' + ${iterStat.index * 0.03} + 's'">
+          <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
+          <a th:href="${post.status.permalink}" class="article-link gradient-card" th:title="${post.status.excerpt}">
+            <span class="article-title" th:text="${post.spec.title}"></span>
+            <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="article-cover" loading="lazy" th:alt="${post.spec.title}" />
+          </a>
+        </li>
+      </menu>
+
+      <!-- 空状态 -->
+      <div th:if="${#lists.isEmpty(posts.items)}" class="empty-state">
+        <span class="icon-[ph--note-blank-bold]"></span>
+        <p>该作者暂无文章</p>
+      </div>
+
+      <!-- 分页 -->
+      <div class="pagination-wrapper" th:if="${posts.totalPages > 1}">
+        <div class="pagination">
+          <a th:href="${posts.prevUrl}" class="page-btn" th:classappend="${!posts.hasPrevious} ? 'disabled'">
+            <span class="icon-[ph--caret-left-bold]"></span>
+          </a>
+          <span class="page-info">
+            <span th:text="${posts.page}"></span> / <span th:text="${posts.totalPages}"></span>
+          </span>
+          <a th:href="${posts.nextUrl}" class="page-btn" th:classappend="${!posts.hasNext} ? 'disabled'">
+            <span class="icon-[ph--caret-right-bold]"></span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </th:block>
+</html>

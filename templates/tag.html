@@ -1,8 +1,8 @@
 <!doctype html>
 <html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true)}">
   <th:block th:fragment="content">
-    <!-- 标签归档页面（单个标签的文章列表） -->
-    <div class="tag-archive proper-height">
+    <!-- 标签归档页面 -->
+    <div class="archive proper-height">
       <!-- 标签信息头部 -->
       <header class="tag-header">
         <a href="/tags" class="tag-back" title="返回标签云">
@@ -19,10 +19,10 @@
         </div>
       </header>
 
-      <!-- 文章列表 -->
-      <menu class="tag-posts">
+      <!-- 复用归档页的文章列表 -->
+      <menu class="archive-list">
         <li th:each="post,postStat : ${posts.items}" class="article-item" th:style="'--delay: ' + ${postStat.index * 0.03} + 's'">
-          <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy/MM/dd')}"></time>
+          <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
           <a th:href="${post.status.permalink}" class="article-link gradient-card" th:title="${post.status.excerpt}">
             <span class="article-title" th:text="${post.spec.title}"></span>
             <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="article-cover" loading="lazy" th:alt="${post.spec.title}" />
@@ -31,7 +31,7 @@
       </menu>
 
       <!-- 空状态 -->
-      <div th:if="${#lists.isEmpty(posts.items)}" class="tag-empty">
+      <div th:if="${#lists.isEmpty(posts.items)}" class="empty-state">
         <span class="icon-[ph--article-bold]"></span>
         <p>该标签下暂无文章</p>
       </div>

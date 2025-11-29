@@ -1,3 +1,6 @@
+// ========================================
+// 作者胶囊组件 (用于文章列表等)
+// ========================================
 .author-capsule {
   display: inline-flex;
   align-items: center;
@@ -16,5 +19,127 @@
     height: 1.25rem;
     border-radius: 50%;
     object-fit: cover;
+  }
+}
+
+// ========================================
+// 作者页面信息卡片
+// ========================================
+.author-profile {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 1rem;
+  background: linear-gradient(135deg, var(--c-bg-2), var(--c-bg-3));
+  box-shadow: 0 0.2rem 0.5rem var(--ld-shadow);
+
+  @media (max-width: 640px) {
+    flex-direction: column;
+    text-align: center;
+    padding: 1.25rem;
+  }
+}
+
+.author-avatar-wrapper {
+  flex-shrink: 0;
+}
+
+.author-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid var(--c-bg);
+  box-shadow: 0 0.2rem 0.5rem var(--ld-shadow);
+  transition: transform 0.3s;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.author-avatar-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: var(--c-bg-soft);
+  border: 3px solid var(--c-bg);
+
+  > span {
+    font-size: 3rem;
+    color: var(--c-text-3);
+  }
+}
+
+.author-info {
+  flex: 1;
+  min-width: 180px;
+}
+
+.author-name {
+  margin: 0 0 0.25rem;
+  font-size: 1.5rem;
+  color: var(--c-text);
+}
+
+.author-bio {
+  margin: 0 0 0.75rem;
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  line-height: 1.5;
+}
+
+.author-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  font-size: 0.8rem;
+  color: var(--c-text-3);
+
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+}
+
+.meta-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.meta-link {
+  color: var(--c-text-3);
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--c-primary);
+  }
+}
+
+// 空状态 (复用)
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  color: var(--c-text-3);
+  text-align: center;
+
+  > span:first-child {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+
+  > p {
+    margin: 0;
+    font-size: 1rem;
   }
 }

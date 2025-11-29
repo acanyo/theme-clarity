@@ -101,8 +101,7 @@
 }
 
 // 空状态
-.tags-empty,
-.tag-empty {
+.tags-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -124,11 +123,8 @@
 
 // ========================================
 // 单个标签归档页面样式（tag.html）
+// 文章列表复用 _archives.scss 的 .archive-list
 // ========================================
-
-.tag-archive {
-  padding: 1rem;
-}
 
 // 标签头部
 .tag-header {
@@ -138,9 +134,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 0.5rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-bottom: 1px solid var(--c-border);
+  margin-bottom: 1.5rem;
 }
 
 // 返回标签云
@@ -184,65 +178,6 @@
   strong {
     color: var(--c-text);
     font-weight: 600;
-  }
-}
-
-// 文章列表（复用 archives 样式）
-.tag-posts {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
-}
-
-.tag-posts .article-item {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  animation: float-in 0.3s ease-out backwards;
-  animation-delay: var(--delay, 0s);
-
-  time {
-    flex-shrink: 0;
-    width: 5.5rem;
-    font-family: var(--font-monospace);
-    font-size: 0.85rem;
-    color: var(--c-text-3);
-  }
-
-  .article-link {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    padding: 0.75rem 1rem;
-    border-radius: 0.5rem;
-    background-color: var(--c-bg-soft);
-    text-decoration: none;
-    transition: all 0.2s;
-
-    &:hover {
-      background-color: var(--c-bg-2);
-      transform: translateX(4px);
-    }
-  }
-
-  .article-title {
-    flex: 1;
-    font-size: 0.95rem;
-    color: var(--c-text);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .article-cover {
-    width: 3rem;
-    height: 2rem;
-    border-radius: 0.25rem;
-    object-fit: cover;
   }
 }
 

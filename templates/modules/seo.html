@@ -1,4 +1,4 @@
-<!-- SEO 标准化模板：支持首页、文章页、单页、归档页等 -->
+<!-- SEO 标准化模板：支持首页、文章页、单页、作者页、归档页等 -->
 <th:block th:fragment="seo">
   <!-- 基础 Meta -->
   <meta charset="UTF-8" />
@@ -6,22 +6,26 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title th:if="${post != null}" th:text="${post.spec.title} + ' | ' + ${site.title}"></title>
   <title th:if="${singlePage != null and post == null}" th:text="${singlePage.spec.title} + ' | ' + ${site.title}"></title>
-  <title th:if="${post == null and singlePage == null}" th:text="${site.title} + ' | ' + ${site.subtitle}"></title>
+  <title th:if="${author != null and post == null and singlePage == null}" th:text="${author.spec.displayName} + ' 的文章 | ' + ${site.title}"></title>
+  <title th:if="${post == null and singlePage == null and author == null}" th:text="${site.title} + ' | ' + ${site.subtitle}"></title>
   <!-- 页面描述 -->
   <meta name="description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
   <meta name="description" th:if="${singlePage != null and post == null}" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
-  <meta name="description" th:if="${post == null and singlePage == null}" th:content="${site.subtitle}" />
+  <meta name="description" th:if="${author != null and post == null and singlePage == null}" th:content="${author.spec.bio ?: (author.spec.displayName + ' 的文章归档')}" />
+  <meta name="description" th:if="${post == null and singlePage == null and author == null}" th:content="${site.subtitle}" />
   <th:block th:if="${post != null and not #lists.isEmpty(post.tags)}">
     <!-- 关键词（文章标签） -->
     <meta name="keywords" th:content="${#strings.listJoin(post.tags.![spec.displayName], ', ')}" />
   </th:block>
   <!-- 作者 -->
   <meta name="author" th:if="${post != null and post.owner != null}" th:content="${post.owner.displayName}" />
-  <meta name="author" th:unless="${post != null and post.owner != null}" th:content="${site.title}" />
+  <meta name="author" th:if="${author != null and post == null}" th:content="${author.spec.displayName}" />
+  <meta name="author" th:if="${post == null and author == null}" th:content="${site.title}" />
   <!-- Canonical URL -->
   <link rel="canonical" th:if="${post != null}" th:href="${site.url + post.status.permalink}" />
   <link rel="canonical" th:if="${singlePage != null and post == null}" th:href="${site.url + singlePage.status.permalink}" />
-  <link rel="canonical" th:if="${post == null and singlePage == null}" th:href="${site.url}" />
+  <link rel="canonical" th:if="${author != null and post == null and singlePage == null}" th:href="${site.url + author.status.permalink}" />
+  <link rel="canonical" th:if="${post == null and singlePage == null and author == null}" th:href="${site.url}" />
   <!-- Favicon -->
   <link rel="icon" th:href="${site.logo}" />
   <link rel="apple-touch-icon" th:href="${site.logo}" />
@@ -54,7 +58,17 @@
     <meta property="og:image" th:if="${singlePage.spec.cover}" th:content="${singlePage.spec.cover}" />
     <meta property="og:image" th:unless="${singlePage.spec.cover}" th:content="${site.logo}" />
   </th:block>
-  <th:block th:if="${post == null and singlePage == null}">
+  <th:block th:if="${author != null and post == null and singlePage == null}">
+    <!-- 作者页 OG -->
+    <meta property="og:type" content="profile" />
+    <meta property="og:title" th:content="${author.spec.displayName} + ' 的文章'" />
+    <meta property="og:description" th:content="${author.spec.bio ?: (author.spec.displayName + ' 的文章归档')}" />
+    <meta property="og:url" th:content="${site.url + author.status.permalink}" />
+    <meta property="og:image" th:if="${author.spec.avatar}" th:content="${author.spec.avatar}" />
+    <meta property="og:image" th:unless="${author.spec.avatar}" th:content="${site.logo}" />
+    <meta property="profile:username" th:content="${author.metadata.name}" />
+  </th:block>
+  <th:block th:if="${post == null and singlePage == null and author == null}">
     <!-- 首页/其他页 OG -->
     <meta property="og:type" content="website" />
     <meta property="og:title" th:content="${site.title}" />
@@ -66,11 +80,13 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:title" th:if="${post != null}" th:content="${post.spec.title}" />
   <meta name="twitter:title" th:if="${singlePage != null and post == null}" th:content="${singlePage.spec.title}" />
-  <meta name="twitter:title" th:if="${post == null and singlePage == null}" th:content="${site.title}" />
+  <meta name="twitter:title" th:if="${author != null and post == null and singlePage == null}" th:content="${author.spec.displayName} + ' 的文章'" />
+  <meta name="twitter:title" th:if="${post == null and singlePage == null and author == null}" th:content="${site.title}" />
   
   <meta name="twitter:description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
   <meta name="twitter:description" th:if="${singlePage != null and post == null}" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
-  <meta name="twitter:description" th:if="${post == null and singlePage == null}" th:content="${site.subtitle}" />
+  <meta name="twitter:description" th:if="${author != null and post == null and singlePage == null}" th:content="${author.spec.bio ?: (author.spec.displayName + ' 的文章归档')}" />
+  <meta name="twitter:description" th:if="${post == null and singlePage == null and author == null}" th:content="${site.subtitle}" />
   
   <th:block th:if="${post != null}">
     <!-- 文章页 Twitter Image -->
@@ -82,7 +98,12 @@
     <meta name="twitter:image" th:if="${singlePage.spec.cover}" th:content="${singlePage.spec.cover}" />
     <meta name="twitter:image" th:unless="${singlePage.spec.cover}" th:content="${site.logo}" />
   </th:block>
-  <th:block th:if="${post == null and singlePage == null}">
+  <th:block th:if="${author != null and post == null and singlePage == null}">
+    <!-- 作者页 Twitter Image -->
+    <meta name="twitter:image" th:if="${author.spec.avatar}" th:content="${author.spec.avatar}" />
+    <meta name="twitter:image" th:unless="${author.spec.avatar}" th:content="${site.logo}" />
+  </th:block>
+  <th:block th:if="${post == null and singlePage == null and author == null}">
     <!-- 首页/其他页 Twitter Image -->
     <meta name="twitter:image" th:content="${site.logo}" />
   </th:block>
