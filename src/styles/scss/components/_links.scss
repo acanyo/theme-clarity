@@ -1,0 +1,503 @@
+// ========================================
+// 友链页面样式 (Links Page)
+// 移植自 blog-v3-source
+// ========================================
+
+$breakpoint-phone: 528px !default;
+
+// ========================================
+// 友链页面容器
+// ========================================
+.links-page {
+  min-height: 70vh;
+}
+
+// ========================================
+// 通用工具类
+// ========================================
+.hidden {
+  display: none !important;
+}
+
+// ========================================
+// 友链分组 (FeedGroup)
+// ========================================
+.feed-group {
+  container-type: inline-size;
+  margin: 2rem 1rem;
+}
+
+.feed-title {
+  position: sticky;
+  opacity: 0.5;
+  top: 0;
+  margin-bottom: -0.3em;
+  mask-image: linear-gradient(#fff 50%, transparent);
+  font-family: var(--font-stroke-free, var(--font-creative));
+  font-size: 5em;
+  font-weight: 800;
+  line-height: 1;
+  text-align: center;
+  color: transparent;
+  transition: color 0.2s;
+  z-index: -1;
+  -webkit-text-stroke: 1px var(--c-text-3);
+
+  &::selection,
+  .feed-group:hover > & {
+    color: var(--c-text-3);
+  }
+}
+
+.feed-desc {
+  text-align: center;
+  color: var(--c-text-2);
+}
+
+// ========================================
+// 友链列表 (FeedList)
+// ========================================
+.feed-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(12rem, 1fr));
+  gap: 0.2rem 0.5rem;
+  margin: 1rem auto;
+  list-style: none;
+  padding: 0;
+
+  @mixin feed-narrow {
+    grid-template-columns: repeat(auto-fill, minmax(5rem, 1fr));
+    font-size: 0.9em;
+
+    .feed-card {
+      flex-direction: column;
+      text-align: center;
+
+      .avatar {
+        margin: 0 0 0.2rem;
+      }
+    }
+  }
+
+  @media (max-width: $breakpoint-phone) {
+    @include feed-narrow;
+  }
+
+  @container (max-width: #{$breakpoint-phone}) {
+    @include feed-narrow;
+  }
+}
+
+// ========================================
+// 友链卡片包装器 (用于 Tooltip)
+// ========================================
+.feed-card-wrapper {
+  position: relative;
+  animation: float-in 0.2s var(--delay, 0s) backwards;
+
+  &:hover .feed-tooltip {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+// ========================================
+// 友链卡片 (FeedCard)
+// ========================================
+.feed-card {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  width: auto;
+  margin: 0;
+  padding: 0.5rem;
+  line-height: 1.4;
+  transition: transform 0.2s;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &[data-error] {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  .avatar {
+    position: relative;
+    margin: 0 0.5rem 0 0;
+    flex-shrink: 0;
+
+    img {
+      display: block;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 2px 4px 0.5em var(--ld-shadow);
+      background-color: white;
+      object-fit: contain;
+    }
+
+    .no-feed {
+      position: absolute;
+      inset-inline-end: -0.5em;
+      bottom: 0;
+    }
+  }
+
+  .author {
+    flex-grow: 1;
+  }
+
+  .title {
+    opacity: 0.5;
+    font-size: 0.8em;
+    max-width: 10em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .no-feed {
+    opacity: 0.6;
+    font-size: 0.8em;
+  }
+}
+
+// ========================================
+// 友链悬浮提示 (Feed Tooltip)
+// ========================================
+.feed-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%) translateY(10px);
+  opacity: 0;
+  visibility: hidden;
+  width: max-content;
+  max-width: 280px;
+  margin-bottom: 0.5rem;
+  border-radius: 0.5em;
+  box-shadow: 0 0 1rem var(--ld-shadow);
+  background-color: var(--ld-bg-card);
+  font-size: 0.8rem;
+  line-height: 1.4;
+  color: var(--c-text-2);
+  transition: all 0.2s;
+  z-index: 100;
+  overflow: hidden;
+
+  // 箭头
+  &::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 8px solid transparent;
+    border-top-color: var(--c-bg-1);
+  }
+
+  .site-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5em 1em;
+
+    .site-icon {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 0.2em;
+      object-fit: contain;
+    }
+
+    .site-info {
+      flex: 1;
+      margin-inline-end: 0.5em;
+
+      h4 {
+        margin: 0;
+        font-size: 1em;
+        color: var(--c-text);
+      }
+
+      .domain {
+        font-size: 0.9em;
+        color: var(--c-text-3);
+      }
+    }
+  }
+
+  .desc-content {
+    position: relative;
+    padding: 0.5em 1em;
+    background-color: var(--c-bg-1);
+
+    p {
+      margin: 0;
+    }
+
+    p + p {
+      margin-top: 0.5em;
+    }
+
+    .remark {
+      display: flex;
+      align-items: center;
+      gap: 0.3em;
+      color: var(--c-text-3);
+      font-style: italic;
+    }
+
+    .date {
+      position: absolute;
+      opacity: 0.1;
+      inset-inline-end: -0.1em;
+      bottom: -0.3em;
+      font-size: 3em;
+      font-weight: bold;
+      white-space: nowrap;
+      pointer-events: none;
+    }
+  }
+}
+
+// ========================================
+// Tab 切换组件 (自定义实现)
+// ========================================
+.custom-tabs-container {
+  width: fit-content;
+  max-width: 100%;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.custom-tabs-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5em;
+  position: relative;
+  width: fit-content;
+  margin: 0 auto;
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.custom-tab-item {
+  position: relative;
+  margin-bottom: 0.5em;
+  padding: 0.3em 0.5em;
+  border: none;
+  border-radius: 0.4em;
+  background: none;
+  color: var(--c-text-2);
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: var(--c-bg-soft);
+    color: var(--c-text);
+  }
+
+  &::before,
+  &::after {
+    display: block;
+    position: absolute;
+    bottom: -0.5em;
+    inset-inline: 0.8em;
+    height: 2px;
+    border-radius: 1em;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: "";
+    inset-inline: -0.8em;
+    background-color: var(--c-border);
+  }
+
+  &.active {
+    box-shadow: 0 1px 0.5em var(--ld-shadow);
+    background-color: var(--ld-bg-card);
+    color: var(--c-text);
+
+    &::before {
+      content: "";
+      background-color: var(--c-primary);
+      z-index: 1;
+    }
+  }
+}
+
+.custom-tabs-content {
+  padding: 0.5em 0;
+}
+
+.custom-tab-pane {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+.link-tab {
+  margin: 1rem;
+}
+
+// ========================================
+// 我的博客卡片 (用于 Tab 内)
+// ========================================
+.my-feed-card {
+  display: flex;
+  align-items: center;
+  gap: 0.2rem;
+  width: fit-content;
+  margin: 1rem auto;
+  padding: 0.5rem;
+  line-height: 1.4;
+
+  .avatar {
+    position: relative;
+    margin: 0 0.5rem 0 0;
+
+    img {
+      display: block;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      box-shadow: 2px 4px 0.5em var(--ld-shadow);
+      background-color: white;
+      object-fit: contain;
+    }
+  }
+
+  .info {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .author {
+    font-weight: 600;
+  }
+
+  .title {
+    opacity: 0.5;
+    font-size: 0.85em;
+  }
+}
+
+// ========================================
+// 复制字段组件 (Copy) - 原版样式
+// ========================================
+.copy-fields {
+  margin-top: 0.5rem;
+}
+
+.copy-item {
+  display: flex;
+  overflow: clip;
+  margin: 0.5rem 0;
+  border: 1px solid var(--c-border);
+  border-radius: 4px;
+  background-color: var(--ld-bg-card);
+  font-size: 0.8rem;
+  line-height: 2.5;
+  transition: border-color 0.2s;
+
+  &:focus-within {
+    border-color: var(--c-primary);
+    outline: 0.2em solid var(--c-primary-soft);
+
+    .prompt {
+      border-inline-end-color: var(--c-primary);
+      background-color: var(--c-primary-soft);
+      color: var(--c-primary);
+    }
+  }
+
+  .prompt {
+    flex-shrink: 0;
+    padding: 0 1em;
+    border-inline-end: 1px solid var(--c-border);
+    background-color: var(--c-bg-2);
+    color: var(--c-text-2);
+    transition: all 0.2s;
+  }
+
+  .code {
+    flex-grow: 1;
+    position: relative;
+    overflow-x: auto;
+    padding: 0 1em;
+    outline: none;
+    white-space: nowrap;
+    scrollbar-width: thin;
+
+    &::-webkit-scrollbar {
+      height: 4px;
+      background-color: transparent;
+    }
+  }
+
+  .operation {
+    flex-shrink: 0;
+    height: 2.5em;
+    margin-inline-start: -0.5em;
+    padding: 0.5em;
+    background: none;
+    color: var(--c-text-2);
+    cursor: pointer;
+    transition: color 0.2s;
+
+    &:hover {
+      color: var(--c-primary);
+    }
+  }
+}
+
+// ========================================
+// 申请友链内容
+// ========================================
+.apply-content {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--c-bg-2);
+
+  p {
+    margin: 0.5em 0;
+  }
+
+  ul {
+    margin: 1em 0;
+    padding-inline-start: 1.5em;
+    list-style: disc;
+
+    li {
+      margin: 0.3em 0;
+
+      &::marker {
+        color: var(--c-primary);
+      }
+    }
+  }
+}
+
+// ========================================
+// 评论区标题
+// ========================================
+.links-page .comment-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 3rem 1rem 1rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--c-text);
+}
+
+.links-page .z-comment {
+  margin: 1rem;
+}

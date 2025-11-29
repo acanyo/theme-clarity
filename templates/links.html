@@ -1,0 +1,253 @@
+<!doctype html>
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false)}">
+  <th:block th:fragment="content">
+    <!-- Mobile Header -->
+    <div class="clarity-header mobile-only">
+      <!-- Emoji 尾巴漂浮效果 -->
+      <div th:if="${theme.config.header.emoji_tail}" class="emoji-tail">
+        <span
+          th:each="emoji,iterStat : ${#strings.arraySplit(theme.config.header.emoji_tail, ',')}"
+          class="split-char"
+          th:style="'--delay: ' + ${iterStat.index * 0.6 - 3} + 's'"
+          th:text="${emoji}"
+        >
+        </span>
+      </div>
+
+      <!-- Logo -->
+      <a href="/">
+        <img
+          th:if="${theme.config.header.logo}"
+          th:src="${theme.config.header.logo}"
+          class="clarity-logo"
+          th:classappend="${theme.config.header.show_title} ? 'circle' : ''"
+          th:alt="${site.title}"
+        />
+      </a>
+
+      <!-- 标题文字 -->
+      <div th:if="${theme.config.header.show_title}" class="clarity-text">
+        <div class="header-title">
+          <span
+            th:each="char,iterStat : ${#strings.arraySplit(site.title, '')}"
+            class="split-char"
+            th:style="'--delay: ' + ${(iterStat.index + 1) * 0.1} + 's'"
+            th:text="${char}"
+          >
+          </span>
+        </div>
+        <div class="header-subtitle">友链</div>
+      </div>
+    </div>
+
+    <!-- 友链分组列表 -->
+    <div class="links-page">
+      <th:block th:each="group,groupStat : ${groups}">
+        <section class="feed-group">
+          <h3 class="feed-title" th:text="${group.spec.displayName}"></h3>
+          <!-- 分组描述通过 annotations 获取 -->
+          <p th:if="${group.metadata.annotations?.get('description')}" class="feed-desc" th:text="${group.metadata.annotations.get('description')}"></p>
+          
+          <menu class="feed-list">
+            <li th:each="link,linkStat : ${group.links}">
+              <div class="feed-card-wrapper" th:data-link="${link.spec.url}">
+                <a 
+                  th:href="${link.spec.url}" 
+                  class="feed-card gradient-card"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <div class="avatar">
+                    <img 
+                      th:src="${link.spec.logo}" 
+                      th:alt="${link.spec.displayName}"
+                      loading="lazy"
+                    />
+                  </div>
+                  <span class="author" th:text="${link.spec.displayName}"></span>
+                </a>
+                
+                <!-- Tooltip 悬浮卡片 -->
+                <div class="feed-tooltip">
+                  <div class="site-content">
+                    <img 
+                      class="site-icon" 
+                      th:src="${link.spec.logo}" 
+                      th:alt="${link.spec.displayName}"
+                    />
+                    <div class="site-info">
+                      <h4 class="text-creative" th:text="${link.spec.displayName}"></h4>
+                      <code class="domain" th:text="${#strings.replace(#strings.replace(link.spec.url, 'https://', ''), 'http://', '')}"></code>
+                    </div>
+                  </div>
+                  <div class="desc-content">
+                    <p th:text="${link.spec.description}"></p>
+                  </div>
+                </div>
+              </div>
+            </li>
+          </menu>
+        </section>
+      </th:block>
+
+      <!-- 我的博客信息 / 申请友链 Tab -->
+      <div class="custom-tabs-container" id="link-tabs">
+        <!-- Tab 导航 -->
+        <div class="custom-tabs-nav">
+          <button class="custom-tab-item active" data-tab="tab-info" onclick="switchTab(this)">
+            我的博客信息
+          </button>
+          <button class="custom-tab-item" data-tab="tab-apply" onclick="switchTab(this)">
+            申请友链
+          </button>
+        </div>
+        
+        <!-- Tab 内容 -->
+        <div class="custom-tabs-content">
+          <!-- Tab 1: 我的博客信息 -->
+          <div id="tab-info" class="custom-tab-pane active">
+            <div class="link-tab"
+              th:with="
+                myTitle = ${theme.config.links.my_info?.title} ?: ${site.title},
+                myUrl = ${theme.config.links.my_info?.url} ?: ${site.url},
+                myLogo = ${theme.config.links.my_info?.logo} ?: ${theme.config.header.logo},
+                myDesc = ${theme.config.links.my_info?.description} ?: ${theme.config.header.subtitle},
+                myRss = ${theme.config.links.my_info?.rss} ?: '/rss.xml'
+              ">
+              <div class="my-feed-card gradient-card">
+                <div class="avatar">
+                  <img 
+                    th:src="${myLogo}" 
+                    th:alt="${myTitle}"
+                  />
+                </div>
+                <div class="info">
+                  <span class="author" th:text="${myTitle}"></span>
+                  <span class="title" th:text="${myDesc}"></span>
+                </div>
+              </div>
+              
+              <!-- 复制信息 -->
+              <div class="copy-fields">
+                <div class="copy-item">
+                  <span class="prompt">名称</span>
+                  <div class="code" th:text="${myTitle}"></div>
+                  <button class="operation copy-btn" aria-label="复制" th:data-copy="${myTitle}">
+                    <span class="icon-[ph--copy-bold]"></span>
+                  </button>
+                </div>
+                <div class="copy-item">
+                  <span class="prompt">网址</span>
+                  <div class="code" th:text="${myUrl}"></div>
+                  <button class="operation copy-btn" aria-label="复制" th:data-copy="${myUrl}">
+                    <span class="icon-[ph--copy-bold]"></span>
+                  </button>
+                </div>
+                <div class="copy-item">
+                  <span class="prompt">Logo</span>
+                  <div class="code" th:text="${myLogo}"></div>
+                  <button class="operation copy-btn" aria-label="复制" th:data-copy="${myLogo}">
+                    <span class="icon-[ph--copy-bold]"></span>
+                  </button>
+                </div>
+                <div class="copy-item">
+                  <span class="prompt">描述</span>
+                  <div class="code" th:text="${myDesc}"></div>
+                  <button class="operation copy-btn" aria-label="复制" th:data-copy="${myDesc}">
+                    <span class="icon-[ph--copy-bold]"></span>
+                  </button>
+                </div>
+                <div class="copy-item">
+                  <span class="prompt">RSS</span>
+                  <div class="code" th:text="${myRss}"></div>
+                  <button class="operation copy-btn" aria-label="复制" th:data-copy="${myRss}">
+                    <span class="icon-[ph--copy-bold]"></span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Tab 2: 申请友链 -->
+          <div id="tab-apply" class="custom-tab-pane">
+            <div class="link-tab">
+              <div class="apply-content article">
+                <th:block th:if="${theme.config.links?.apply_content}" th:utext="${theme.config.links.apply_content}"></th:block>
+                <th:block th:unless="${theme.config.links?.apply_content}">
+                  <p>欢迎与我交换友链！请在评论区留下你的博客信息：</p>
+                  <ul>
+                    <li><strong>博客名称</strong>：你的博客标题</li>
+                    <li><strong>博客地址</strong>：你的博客 URL</li>
+                    <li><strong>博客描述</strong>：一句话介绍</li>
+                    <li><strong>博客头像</strong>：Logo 或头像链接</li>
+                  </ul>
+                  <p>我会尽快审核并添加你的友链。</p>
+                </th:block>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 评论区 -->
+      <h3 th:if="${haloCommentEnabled}" class="comment-title">
+        <span class="icon-[ph--chat-circle-text-bold]"></span>
+        评论区
+      </h3>
+      <section th:if="${haloCommentEnabled}" class="z-comment" id="comment">
+        <halo:comment group="plugin.halo.run" kind="Plugin" th:attr="name=${pluginName}" />
+      </section>
+    </div>
+
+    <!-- 复制功能脚本 & Tab 切换脚本 -->
+    <script>
+      function switchTab(btn) {
+        const targetId = btn.getAttribute('data-tab');
+        const tabsContainer = btn.closest('.custom-tabs-container');
+        
+        // 更新按钮状态
+        tabsContainer.querySelectorAll('.custom-tab-item').forEach(t => t.classList.remove('active'));
+        btn.classList.add('active');
+        
+        // 更新内容状态
+        tabsContainer.querySelectorAll('.custom-tab-pane').forEach(content => {
+          if (content.id === targetId) {
+            content.classList.add('active');
+          } else {
+            content.classList.remove('active');
+          }
+        });
+      }
+
+      (function() {
+        // 复制功能
+        document.querySelectorAll('.copy-btn').forEach(btn => {
+          btn.addEventListener('click', async function() {
+            const text = this.getAttribute('data-copy');
+            try {
+              await navigator.clipboard.writeText(text);
+              const icon = this.querySelector('span');
+              icon.className = 'icon-[ph--check-bold]';
+              setTimeout(() => {
+                icon.className = 'icon-[ph--copy-bold]';
+              }, 2000);
+            } catch (err) {
+              console.error('复制失败:', err);
+            }
+          });
+        });
+
+        // 友链卡片随机延迟动画
+        document.querySelectorAll('.feed-card-wrapper').forEach(wrapper => {
+          const link = wrapper.getAttribute('data-link') || '';
+          let hash = 0;
+          for (const char of link) {
+            hash = hash * 31 + char.charCodeAt(0);
+          }
+          const delay = (Math.abs(hash) % 1000) / 1000;
+          wrapper.style.setProperty('--delay', delay + 's');
+        });
+      })();
+    </script>
+  </th:block>
+</html>

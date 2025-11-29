@@ -27,3 +27,18 @@ spec:
       label: 图标
       placeholder: iconfont icon-home
       help: 支持 Iconfont 类名
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  name: link-group-annotation-setting
+spec:
+  targetRef:
+    group: "core.halo.run"
+    kind: LinkGroup
+  formSchema:
+    - $formkit: text
+      name: description
+      label: 分组描述
+      placeholder: 这是我的好友们
+      help: 显示在分组标题下方的描述文字

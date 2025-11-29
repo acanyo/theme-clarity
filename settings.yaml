@@ -174,6 +174,50 @@ spec:
           min: 1
           max: 50
           validation: required
+    - group: links
+      label: 友链页面
+      formSchema:
+        - $formkit: group
+          name: my_info
+          label: 我的博客信息
+          help: 用于友链页面展示，留空则使用站点默认信息
+          children:
+            - $formkit: text
+              name: title
+              label: 博客名称
+              placeholder: 留空则使用站点标题
+            - $formkit: url
+              name: url
+              label: 网址
+              placeholder: 留空则使用站点地址
+            - $formkit: attachment
+              name: logo
+              label: Logo
+              accepts:
+                - "image/*"
+              help: 留空则使用站点 Logo
+            - $formkit: text
+              name: description
+              label: 描述
+              placeholder: 留空则使用站点副标题
+            - $formkit: url
+              name: rss
+              label: RSS 地址
+              placeholder: 如 /rss.xml
+        - $formkit: textarea
+          name: apply_content
+          label: 申请友链说明
+          value: |
+            <p>欢迎与我交换友链！请在评论区留下你的博客信息：</p>
+            <ul>
+              <li><strong>博客名称</strong>：你的博客标题</li>
+              <li><strong>博客地址</strong>：你的博客 URL</li>
+              <li><strong>博客描述</strong>：一句话介绍</li>
+              <li><strong>博客头像</strong>：Logo 或头像链接</li>
+            </ul>
+            <p>我会尽快审核并添加你的友链。</p>
+          rows: 8
+          help: 支持 HTML 格式
     - group: custom
       label: 自定义
       formSchema:
