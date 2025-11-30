@@ -285,11 +285,6 @@ spec:
             - value: tencent
               label: QQ音乐
             - value: kugou
-              label: 酷狗音乐
-            - value: xiami
-              label: 虾米音乐
-            - value: baidu
-              label: 百度音乐
           help: 选择歌单所属的音乐平台
         - $formkit: select
           name: type

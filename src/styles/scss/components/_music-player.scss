@@ -7,28 +7,86 @@ $capsule-radius: 24px;
 $cover-size: 40px;
 
 .music-capsule {
-  position: relative;
-  margin: 0 auto; // 居中
-  width: fit-content; // 宽度适应内容
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  width: fit-content;
   max-width: 100%;
   border-radius: $capsule-radius;
   background: var(--c-bg-2);
   border: 1px solid var(--c-border);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  z-index: 10;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 999; // 确保在最上层
+  box-shadow: 0 4px 12px var(--ld-shadow);
 
-  // 展开状态：向上展开
+  // 移动端适配（收起状态）
+  @media (max-width: 768px) {
+    right: auto;
+    left: 1rem;
+    bottom: 1rem;
+    max-width: calc(100% - 4rem);
+  }
+
+  // 未播放且未展开时：自动收缩成圆点
+  &:not(.playing):not(.expanded):not(:hover) {
+    .capsule-body {
+      max-width: 48px; // 只显示封面宽度
+      padding-inline-end: 4px; // 调整右边距
+      gap: 0;
+    }
+    
+    .song-info-mini, 
+    .expand-arrow,
+    .quick-play-btn {
+      opacity: 0;
+      width: 0;
+      margin: 0;
+      pointer-events: none;
+    }
+  }
+
+  // 展开状态：变成卡片
   &.expanded {
-    width: 100%; // 展开时占满
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    border-radius: 1rem;
-    box-shadow: 0 8px 32px var(--ld-shadow);
+    width: 320px; // 固定宽度
+    right: 1.5rem;
+    bottom: 1.5rem;
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
     background: var(--ld-bg-card);
     max-height: 80vh;
     overflow: hidden;
+    border-color: var(--c-primary-soft);
+
+    // 移动端适配
+    @media (max-width: 768px) {
+      right: 1rem;
+      left: 1rem;
+      bottom: 5rem; // 避开移动端底部导航（如果有）
+      width: auto;
+    }
+
+    // 展开时主体样式调整
+    .capsule-body {
+      max-width: none;
+      width: 100%;
+      justify-content: space-between;
+      padding-inline-end: 1rem;
+      background: transparent !important; 
+
+      &:hover {
+        background: transparent !important;
+      }
+    }
+
+    // 隐藏快捷播放按钮
+    .quick-play-btn {
+      display: none;
+    }
+    
+    // 展开箭头旋转
+    .expand-arrow {
+      transform: rotate(180deg);
+    }
   }
 }
 
@@ -43,7 +101,7 @@ $cover-size: 40px;
   padding: 4px;
   padding-inline-end: 0.8rem;
   cursor: pointer;
-  transition: background-color 0.2s;
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
   max-width: 220px; // 限制主体最大宽度
 
   &:hover {
@@ -112,6 +170,8 @@ $cover-size: 40px;
   min-width: 0;
   overflow: hidden;
   mask-image: linear-gradient(to right, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  transition: all 0.3s; // 添加过渡
+  opacity: 1; // 默认可见
 
   .song-marquee {
     white-space: nowrap;
@@ -149,6 +209,8 @@ $cover-size: 40px;
   color: white;
   font-size: 0.9rem;
   transition: all 0.2s;
+  opacity: 1;
+  overflow: hidden;
 
   &:hover {
     transform: scale(1.1);
@@ -158,6 +220,11 @@ $cover-size: 40px;
   &:active {
     transform: scale(0.95);
   }
+}
+
+// 展开箭头
+.expand-arrow {
+  transition: transform 0.3s;
 }
 
 // ========================================

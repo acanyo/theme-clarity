@@ -92,4 +92,7 @@
 
   <!-- 版权信息 -->
   <p>© <span th:text="${#temporals.year(#temporals.createNow())}"></span> <span th:text="${site.title}"></span></p>
+
+  <!-- 音乐播放器 -->
+  <th:block th:replace="~{modules/music-player :: player}" />
 </footer>

@@ -34,21 +34,19 @@
       </div>
     </div>
 
-    <!-- 歌曲信息（收起时显示滚动文字） -->
+    <!-- 歌曲信息 -->
     <div class="song-info-mini">
       <div class="song-marquee">
-        <span x-text="currentSong ? `${currentSong.title} - ${currentSong.artist}` : '暂无歌曲'"></span>
+        <span x-text="(currentSong?.title || '未播放') + ' - ' + (currentSong?.artist || '无信息')"></span>
       </div>
     </div>
 
-    <!-- 快捷播放按钮 -->
-    <button
-      class="quick-play-btn"
-      @click.stop="togglePlay()"
-      :aria-label="playing ? '暂停' : '播放'"
-    >
-      <span x-show="!playing" class="icon-[ph--play-fill]"></span>
-      <span x-show="playing" class="icon-[ph--pause-fill]"></span>
+    <!-- 展开指示器（展开时显示） -->
+    <span class="icon-[ph--caret-up-bold] expand-arrow text-sm opacity-50" x-show="expanded"></span>
+
+    <!-- 快捷播放/暂停（仅收起时显示） -->
+    <button class="quick-play-btn" @click.stop="togglePlay()">
+      <span :class="playing ? 'icon-[ph--pause-fill]' : 'icon-[ph--play-fill]'"></span>
     </button>
   </div>
 

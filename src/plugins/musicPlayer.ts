@@ -104,8 +104,6 @@ export function musicPlayer() {
           lrc: item.lrc,
         }));
 
-        console.log("Playlist loaded:", this.playlist.length, "songs");
-
         if (this.orderMode === "random") {
           this.shufflePlaylist();
         }

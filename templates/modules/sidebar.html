@@ -137,11 +137,6 @@
       </button>
     </div>
 
-    <!-- 音乐播放器容器 -->
-    <div class="music-player-container" style="position: relative; min-height: 50px; margin: 0.5rem 0;">
-      <th:block th:replace="~{modules/music-player :: player}" />
-    </div>
-
     <!-- 社交图标 -->
     <div class="social-icons" th:if="${theme.config.footer.social?.items != null and !theme.config.footer.social.items.isEmpty()}">
       <a
