@@ -374,14 +374,16 @@
 	overflow: hidden;
 
 	&.single .media-item {
-		max-height: 320px;
+		max-height: 500px;
+		border-radius: 0.5rem;
+		overflow: hidden;
 
 		img, video {
 			width: 100%;
-			max-height: 320px;
-			object-fit: contain;
-			background-color: var(--c-bg-soft);
-			border-radius: 0.4rem;
+			height: 100%;
+			max-height: 500px;
+			object-fit: cover;
+			border-radius: 0.5rem;
 		}
 	}
 
@@ -423,7 +425,6 @@
 			width: 100%;
 			height: 100%;
 			transition: transform 0.3s, filter 0.3s;
-			cursor: zoom-in;
 		}
 
 		&:hover img,

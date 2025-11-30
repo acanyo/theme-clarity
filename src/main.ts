@@ -8,11 +8,10 @@ import SwupHeadPlugin from "@swup/head-plugin";
 import SwupPreloadPlugin from "@swup/preload-plugin";
 import SwupScrollPlugin from "@swup/scroll-plugin";
 import SwupScriptsPlugin from "@swup/scripts-plugin";
-import { Fancybox } from "@fancyapps/ui";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 import { mountCounter } from "./preact";
 import { musicPlayer } from "./plugins/musicPlayer";
+import { initFancybox } from "./utils/fancybox";
 
 // 注册音乐播放器组件
 Alpine.data("musicPlayer", musicPlayer);
@@ -243,14 +242,6 @@ swup.hooks.on("content:replace", () => {
   initBackToTop(); // 更新返回顶部按钮状态
 });
 
-// 初始化 Fancybox 灯箱
-function initFancybox() {
-  // 销毁之前的绑定（避免 swup 切换页面后重复绑定）
-  Fancybox.destroy();
-
-  // 自动绑定文章内的图片
-  Fancybox.bind(".article img:not(.no-lightbox)");
-}
 
 // 页面初始加载
 document.addEventListener("DOMContentLoaded", () => {

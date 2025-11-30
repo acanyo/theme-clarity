@@ -1,0 +1,275 @@
+// 全局图片光标样式
+.article img:not(.no-lightbox),
+.moment-media img,
+.moment-text img,
+.comment-content img,
+.link-info img,
+.gallery-item img {
+  cursor: url("/themes/theme-clarity/assets/images/zoom-in.cur"), zoom-in;
+}
+
+// Fancybox 灯箱样式
+.fancybox__container {
+	--fancybox-bg: transparent;
+	--fancybox-accent-color: var(--c-primary, #3b82f6);
+
+	// 强制背景层样式
+	.fancybox__backdrop {
+		background: rgba(0, 0, 0, 0.65) !important;
+		backdrop-filter: blur(20px) saturate(180%) !important;
+		-webkit-backdrop-filter: blur(20px) saturate(180%) !important;
+		opacity: 1 !important;
+	}
+
+	// 打开动画
+	&.is-animated {
+		animation: none; // 禁用容器动画，由 backdrop 处理
+		
+		.fancybox__backdrop {
+			animation: fancybox-fade-in 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+	}
+}
+
+@keyframes fancybox-fade-in {
+	from {
+		opacity: 0;
+		backdrop-filter: blur(0);
+	}
+	to {
+		opacity: 1;
+		backdrop-filter: blur(24px);
+	}
+}
+
+// 工具栏
+.fancybox__toolbar {
+	position: absolute !important;
+	top: 0;
+	right: 0;
+	left: auto;
+	display: flex;
+	gap: 0.5rem;
+	padding: 1rem !important;
+	background: transparent !important;
+	z-index: 20;
+}
+
+// 按钮通用样式
+.fancybox__button {
+	width: 44px !important;
+	height: 44px !important;
+	display: flex !important;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.1) !important;
+	border: 1px solid rgba(255, 255, 255, 0.15) !important;
+	border-radius: 12px !important;
+	color: rgba(255, 255, 255, 0.9) !important;
+	backdrop-filter: blur(12px);
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+	cursor: pointer;
+
+	&:hover {
+		background: rgba(255, 255, 255, 0.2) !important;
+		border-color: rgba(255, 255, 255, 0.3) !important;
+		color: #fff !important;
+		transform: scale(1.05);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+
+	svg {
+		width: 22px !important;
+		height: 22px !important;
+		stroke-width: 1.5;
+		filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.3));
+	}
+}
+
+// 关闭按钮
+.fancybox__button--close {
+	&:hover {
+		background: rgba(239, 68, 68, 0.25) !important;
+		border-color: rgba(239, 68, 68, 0.4) !important;
+		color: #fca5a5 !important;
+	}
+}
+
+// 缩放按钮
+.fancybox__button--zoom {
+	&:hover {
+		background: rgba(var(--c-primary-rgb, 59, 130, 246), 0.25) !important;
+		border-color: rgba(var(--c-primary-rgb, 59, 130, 246), 0.4) !important;
+	}
+}
+
+// 图片幻灯片
+.fancybox__slide {
+	padding: 3rem 2rem !important;
+	
+	@media (max-width: 640px) {
+		padding: 1rem !important;
+	}
+}
+
+// 图片容器
+.fancybox__content {
+	background: transparent !important;
+	border-radius: 16px !important;
+	overflow: hidden;
+	box-shadow: 
+		0 0 0 1px rgba(255, 255, 255, 0.1),
+		0 8px 32px rgba(0, 0, 0, 0.4),
+		0 32px 64px rgba(0, 0, 0, 0.3) !important;
+	animation: fancybox-image-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes fancybox-image-in {
+	from {
+		opacity: 0;
+		transform: scale(0.9) translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1) translateY(0);
+	}
+}
+
+// 图片本身
+.fancybox__image {
+	border-radius: 16px !important;
+	transition: transform 0.3s ease;
+}
+
+// 图片说明
+.fancybox__caption {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 4rem 2rem 1.5rem !important;
+	background: linear-gradient(to top, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0.4) 50%, transparent 100%) !important;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: rgba(255, 255, 255, 0.95) !important;
+	text-align: center;
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+	pointer-events: none;
+	animation: fancybox-caption-in 0.5s 0.2s ease both;
+}
+
+@keyframes fancybox-caption-in {
+	from {
+		opacity: 0;
+		transform: translateY(10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+// 导航箭头
+.fancybox__nav {
+	.fancybox__button {
+		width: 52px !important;
+		height: 52px !important;
+		border-radius: 50% !important;
+		background: rgba(255, 255, 255, 0.1) !important;
+		
+		&:hover {
+			background: rgba(255, 255, 255, 0.2) !important;
+		}
+	}
+}
+
+// 计数器/信息栏
+.fancybox__infobar {
+	position: absolute;
+	top: 1rem;
+	left: 1rem;
+	padding: 0.6rem 1.2rem !important;
+	background: rgba(255, 255, 255, 0.1) !important;
+	border: 1px solid rgba(255, 255, 255, 0.15);
+	border-radius: 2rem !important;
+	backdrop-filter: blur(12px);
+	font-size: 0.8rem;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: rgba(255, 255, 255, 0.85) !important;
+	letter-spacing: 0.05em;
+}
+
+// 缩略图面板
+.fancybox__thumbs {
+	background: rgba(0, 0, 0, 0.7) !important;
+	backdrop-filter: blur(16px);
+	padding: 1rem !important;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
+
+	.fancybox__thumb {
+		border-radius: 10px !important;
+		border: 2px solid transparent !important;
+		opacity: 0.5;
+		transition: all 0.25s ease !important;
+		overflow: hidden;
+
+		&::after {
+			content: "";
+			position: absolute;
+			inset: 0;
+			background: rgba(0, 0, 0, 0.3);
+			transition: background 0.25s;
+		}
+
+		&:hover {
+			opacity: 0.85;
+			transform: scale(1.05);
+
+			&::after {
+				background: transparent;
+			}
+		}
+
+		&.is-selected {
+			opacity: 1;
+			border-color: var(--c-primary) !important;
+			box-shadow: 0 0 0 2px rgba(var(--c-primary-rgb, 59, 130, 246), 0.3);
+
+			&::after {
+				background: transparent;
+			}
+		}
+	}
+}
+
+// 加载动画
+.fancybox__spinner {
+	width: 48px !important;
+	height: 48px !important;
+
+	circle {
+		stroke: var(--c-primary) !important;
+		stroke-width: 2.5;
+	}
+}
+
+// 全屏按钮
+.fancybox__button--fullscreen {
+	&:hover {
+		background: rgba(59, 130, 246, 0.25) !important;
+		border-color: rgba(59, 130, 246, 0.4) !important;
+	}
+}
+
+// 下载按钮
+.fancybox__button--download {
+	&:hover {
+		background: rgba(34, 197, 94, 0.25) !important;
+		border-color: rgba(34, 197, 94, 0.4) !important;
+		color: #86efac !important;
+	}
+}

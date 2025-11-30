@@ -77,7 +77,7 @@
           <div 
             th:if="${not #lists.isEmpty(content.medium)}" 
             class="moment-media"
-            th:classappend="${#lists.size(content.medium) == 1} ? 'single' : (#lists.size(content.medium) == 2 ? 'double' : 'grid')"
+            th:classappend="${#lists.size(content.medium) == 1 ? 'single' : (#lists.size(content.medium) == 2 ? 'double' : 'grid')}"
           >
             <th:block th:each="mediaItem : ${content.medium}">
               <!-- 图片 -->
