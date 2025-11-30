@@ -280,6 +280,11 @@ spec:
           label: Meting API 代理地址
           placeholder: "https://api.i-meto.com/meting/api"
           help: "自定义 Meting API 地址，留空则使用默认公共接口"
+        - $formkit: text
+          name: custom_params
+          label: 自定义参数
+          placeholder: "canshu=1&other=value"
+          help: "额外的 URL 参数，会拼接到 API 请求后面（不需要加 & 前缀）"
         - $formkit: select
           name: server
           label: 音乐平台

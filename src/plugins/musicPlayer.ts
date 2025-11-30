@@ -21,6 +21,7 @@ interface MusicConfig {
   type: string;
   id: string;
   api_url?: string;
+  custom_params?: string;
   order: "list" | "random";
   volume: number;
   autoplay: boolean;
@@ -43,6 +44,7 @@ interface MusicPlayerState {
   currentLyricIndex: number;
   lyricsOffset: number;
   api_url?: string;
+  custom_params?: string;
   
   currentSong: Song | null;
   progress: number;
@@ -114,6 +116,7 @@ export function musicPlayer() {
       this.volume = config.volume || 70;
       this.orderMode = config.order || "list";
       this.api_url = config.api_url;
+      this.custom_params = config.custom_params;
 
       // 加载歌单
       await this.loadPlaylist(config.server, config.type, config.id, config.api_url);
@@ -138,9 +141,13 @@ export function musicPlayer() {
       this.loading = true;
       try {
         // 使用配置的 API 地址，如果没有则使用默认地址
-        debugger
         const baseUrl = api_url || "https://api.i-meto.com/meting/api";
-        const apiUrl = `${baseUrl}?server=${server}&type=${type}&id=${id}`;
+        let apiUrl = `${baseUrl}?server=${server}&type=${type}&id=${id}`;
+        
+        // 拼接自定义参数
+        if (this.custom_params) {
+          apiUrl += `&${this.custom_params}`;
+        }
         const response = await fetch(apiUrl);
 
         if (!response.ok) throw new Error("Failed to fetch playlist");
@@ -207,8 +214,11 @@ export function musicPlayer() {
 
       if (needsResolve) {
         try {
-          // 添加时间戳防止缓存
-          const fetchUrl = url.includes("?") ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
+          // 添加时间戳防止缓存，并拼接自定义参数
+          let fetchUrl = url.includes("?") ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
+          if (this.custom_params) {
+            fetchUrl += `&${this.custom_params}`;
+          }
           const response = await fetch(fetchUrl);
           
           // 如果返回的是 JSON
@@ -233,7 +243,14 @@ export function musicPlayer() {
     // 加载歌词
     async loadLyrics(this: MusicPlayerState, lrcUrl: string) {
       try {
-        const response = await fetch(lrcUrl);
+        // 拼接自定义参数
+        let fetchUrl = lrcUrl;
+        if (this.custom_params && lrcUrl.includes("?")) {
+          fetchUrl += `&${this.custom_params}`;
+        } else if (this.custom_params) {
+          fetchUrl += `?${this.custom_params}`;
+        }
+        const response = await fetch(fetchUrl);
         const lrcText = await response.text();
         this.lyrics = this.parseLrc(lrcText);
       } catch {
@@ -392,8 +409,7 @@ export function musicPlayer() {
     async onError(this: MusicPlayerState) {
       const audio = this.$refs?.audio;
       const err = audio?.error;
-      
-      // 忽略空 src 或当前页面 URL 的错误（初始化状态）
+    
       if (!this.currentAudioUrl || this.currentAudioUrl === window.location.href) {
         return;
       }
