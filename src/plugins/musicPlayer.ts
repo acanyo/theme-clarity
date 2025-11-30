@@ -20,10 +20,60 @@ interface MusicConfig {
   server: string;
   type: string;
   id: string;
+  api_url?: string;
   order: "list" | "random";
   volume: number;
   autoplay: boolean;
   showLrc: boolean;
+}
+
+interface MusicPlayerState {
+  expanded: boolean;
+  playing: boolean;
+  loading: boolean;
+  showPlaylist: boolean;
+  currentAudioUrl: string;
+  playlist: Song[];
+  currentIndex: number;
+  currentTime: number;
+  duration: number;
+  volume: number;
+  orderMode: "list" | "random";
+  lyrics: Lyric[];
+  currentLyricIndex: number;
+  lyricsOffset: number;
+  api_url?: string;
+  
+  currentSong: Song | null;
+  progress: number;
+
+  init(this: MusicPlayerState): Promise<void>;
+  loadPlaylist(this: MusicPlayerState, server: string, type: string, id: string, api_url?: string): Promise<void>;
+  resolveSongUrl(this: MusicPlayerState, index: number): Promise<void>;
+  loadLyrics(this: MusicPlayerState, lrcUrl: string): Promise<void>;
+  parseLrc(lrcText: string): Lyric[];
+  togglePlay(this: MusicPlayerState): void;
+  play(this: MusicPlayerState): void;
+  pause(this: MusicPlayerState): void;
+  prev(this: MusicPlayerState): void;
+  next(this: MusicPlayerState): void;
+  playSong(this: MusicPlayerState, index: number): void;
+  onSongChange(this: MusicPlayerState): Promise<void>;
+  toggleOrder(this: MusicPlayerState): void;
+  shufflePlaylist(this: MusicPlayerState): void;
+  seek(this: MusicPlayerState, event: MouseEvent): void;
+  setVolume(this: MusicPlayerState, value: string | number): void;
+  toggleExpand(this: MusicPlayerState): void;
+  formatTime(seconds: number): string;
+  onTimeUpdate(this: MusicPlayerState): void;
+  onLoaded(this: MusicPlayerState): void;
+  onEnded(this: MusicPlayerState): void;
+  onError(this: MusicPlayerState): Promise<void>;
+  updateLyrics(this: MusicPlayerState): void;
+  setupMediaSession(this: MusicPlayerState): void;
+  updateMediaSession(this: MusicPlayerState): void;
+  $refs?: { audio: HTMLAudioElement };
+  $nextTick?(callback: () => void): void;
 }
 
 export function musicPlayer() {
@@ -58,17 +108,18 @@ export function musicPlayer() {
     },
 
     // 初始化
-    async init() {
+    async init(this: MusicPlayerState) {
       const config = (window as any).MUSIC_CONFIG as MusicConfig | undefined;
       if (!config || !config.id) return;
       this.volume = config.volume || 70;
       this.orderMode = config.order || "list";
+      this.api_url = config.api_url;
 
       // 加载歌单
-      await this.loadPlaylist(config.server, config.type, config.id);
+      await this.loadPlaylist(config.server, config.type, config.id, config.api_url);
 
       // 设置音量
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+      const audio = this.$refs?.audio;
       if (audio) {
         audio.volume = this.volume / 100;
       }
@@ -83,11 +134,13 @@ export function musicPlayer() {
     },
 
     // 加载歌单
-    async loadPlaylist(server: string, type: string, id: string) {
+    async loadPlaylist(this: MusicPlayerState, server: string, type: string, id: string, api_url?: string) {
       this.loading = true;
       try {
-        // 使用 Meting API
-        const apiUrl = `https://api.i-meto.com/meting/api?server=${server}&type=${type}&id=${id}`;
+        // 使用配置的 API 地址，如果没有则使用默认地址
+        debugger
+        const baseUrl = api_url || "https://api.i-meto.com/meting/api";
+        const apiUrl = `${baseUrl}?server=${server}&type=${type}&id=${id}`;
         const response = await fetch(apiUrl);
 
         if (!response.ok) throw new Error("Failed to fetch playlist");
@@ -128,10 +181,13 @@ export function musicPlayer() {
       }
     },
 
-    // 解析真实歌曲 URL (仅在需要时使用，目前暂不主动调用)
-    async resolveSongUrl(index: number) {
+    // 解析真实歌曲 URL
+    async resolveSongUrl(this: MusicPlayerState, index: number) {
       const song = this.playlist[index];
       if (!song) return;
+
+      // 标记已尝试解析，防止 onError 死循环
+      (song as any)._resolved = true;
 
       // 如果已经解析过且有效，直接使用
       if ((song as any)._realUrl) {
@@ -140,10 +196,30 @@ export function musicPlayer() {
       }
 
       let url = song.url;
-      if (url && url.includes("api.i-meto.com")) {
+      const defaultApi = "api.i-meto.com";
+      
+      // 判断是否需要解析：如果是 Meting API 的链接（默认或自定义）
+      const needsResolve = url && (
+        url.includes(defaultApi) || 
+        (this.api_url && url.includes(new URL(this.api_url).hostname)) ||
+        url.includes("server=")
+      );
+
+      if (needsResolve) {
         try {
-          const urlResponse = await fetch(url, { redirect: "follow" });
-          url = urlResponse.url;
+          // 添加时间戳防止缓存
+          const fetchUrl = url.includes("?") ? `${url}&t=${Date.now()}` : `${url}?t=${Date.now()}`;
+          const response = await fetch(fetchUrl);
+          
+          // 如果返回的是 JSON
+          const contentType = response.headers.get("content-type");
+          if (contentType && contentType.includes("application/json")) {
+            const data = await response.json();
+            if (data.url) url = data.url;
+          } else {
+            // 否则假设是重定向后的 URL
+            url = response.url;
+          }
         } catch (e) {
           console.warn("Failed to resolve URL for:", song.title, e);
         }
@@ -155,7 +231,7 @@ export function musicPlayer() {
     },
 
     // 加载歌词
-    async loadLyrics(lrcUrl: string) {
+    async loadLyrics(this: MusicPlayerState, lrcUrl: string) {
       try {
         const response = await fetch(lrcUrl);
         const lrcText = await response.text();
@@ -166,7 +242,7 @@ export function musicPlayer() {
     },
 
     // 解析 LRC 歌词
-    parseLrc(lrcText: string): Lyric[] {
+    parseLrc(this: MusicPlayerState, lrcText: string): Lyric[] {
       const lines = lrcText.split("\n");
       const result: Lyric[] = [];
       const timeRegex = /\[(\d{2}):(\d{2})(?:\.(\d{2,3}))?\]/g;
@@ -190,33 +266,33 @@ export function musicPlayer() {
     },
 
     // 播放控制
-    togglePlay() {
+    togglePlay(this: MusicPlayerState) {
       this.playing ? this.pause() : this.play();
     },
 
-    play() {
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+    play(this: MusicPlayerState) {
+      const audio = this.$refs?.audio;
       if (audio && this.currentSong) {
         audio.play().catch(() => console.warn("Autoplay blocked"));
         this.playing = true;
       }
     },
 
-    pause() {
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+    pause(this: MusicPlayerState) {
+      const audio = this.$refs?.audio;
       if (audio) {
         audio.pause();
         this.playing = false;
       }
     },
 
-    prev() {
+    prev(this: MusicPlayerState) {
       if (this.playlist.length === 0) return;
       this.currentIndex = (this.currentIndex - 1 + this.playlist.length) % this.playlist.length;
       this.onSongChange();
     },
 
-    next() {
+    next(this: MusicPlayerState) {
       if (this.playlist.length === 0) return;
       if (this.orderMode === "random") {
         this.currentIndex = Math.floor(Math.random() * this.playlist.length);
@@ -226,16 +302,16 @@ export function musicPlayer() {
       this.onSongChange();
     },
 
-    playSong(index: number) {
+    playSong(this: MusicPlayerState, index: number) {
       this.currentIndex = index;
       this.onSongChange();
     },
 
-    async onSongChange() {
+    async onSongChange(this: MusicPlayerState) {
+      this.pause(); // 切换时先暂停
       this.currentTime = 0;
       this.currentLyricIndex = 0;
       this.lyricsOffset = 0;
-      this.currentAudioUrl = ""; // 切换时清空，避免播放旧链接
 
       // 解析真实 URL 并赋值给 currentAudioUrl
       await this.resolveSongUrl(this.currentIndex);
@@ -246,47 +322,47 @@ export function musicPlayer() {
         this.lyrics = [];
       }
 
-      (this as any).$nextTick(() => {
-        if (this.playing) this.play();
+      this.$nextTick?.(() => {
+        this.play();
       });
 
       this.updateMediaSession();
     },
 
-    toggleOrder() {
+    toggleOrder(this: MusicPlayerState) {
       this.orderMode = this.orderMode === "list" ? "random" : "list";
     },
 
-    shufflePlaylist() {
+    shufflePlaylist(this: MusicPlayerState) {
       for (let i = this.playlist.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [this.playlist[i], this.playlist[j]] = [this.playlist[j], this.playlist[i]];
       }
     },
 
-    seek(event: MouseEvent) {
+    seek(this: MusicPlayerState, event: MouseEvent) {
       const bar = event.currentTarget as HTMLElement;
       const rect = bar.getBoundingClientRect();
       const percent = (event.clientX - rect.left) / rect.width;
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+      const audio = this.$refs?.audio;
       if (audio && this.duration > 0) {
         audio.currentTime = percent * this.duration;
       }
     },
 
-    setVolume(value: string | number) {
+    setVolume(this: MusicPlayerState, value: string | number) {
       this.volume = Number(value);
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+      const audio = this.$refs?.audio;
       if (audio) {
         audio.volume = this.volume / 100;
       }
     },
 
-    toggleExpand() {
+    toggleExpand(this: MusicPlayerState) {
       this.expanded = !this.expanded;
     },
 
-    formatTime(seconds: number): string {
+    formatTime(this: MusicPlayerState, seconds: number): string {
       if (!seconds || isNaN(seconds)) return "0:00";
       const mins = Math.floor(seconds / 60);
       const secs = Math.floor(seconds % 60);
@@ -294,44 +370,58 @@ export function musicPlayer() {
     },
 
     // 音频事件
-    onTimeUpdate() {
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+    onTimeUpdate(this: MusicPlayerState) {
+      const audio = this.$refs?.audio;
       if (audio) {
         this.currentTime = audio.currentTime;
         this.updateLyrics();
       }
     },
 
-    onLoaded() {
-      const audio = (this as any).$refs.audio as HTMLAudioElement;
+    onLoaded(this: MusicPlayerState) {
+      const audio = this.$refs?.audio;
       if (audio) {
         this.duration = audio.duration;
       }
     },
 
-    onEnded() {
+    onEnded(this: MusicPlayerState) {
       this.next();
     },
 
-    async onError() {
+    async onError(this: MusicPlayerState) {
+      const audio = this.$refs?.audio;
+      const err = audio?.error;
+      
+      // 忽略空 src 或当前页面 URL 的错误（初始化状态）
+      if (!this.currentAudioUrl || this.currentAudioUrl === window.location.href) {
+        return;
+      }
+
+      console.error("Audio playback error:", {
+        code: err?.code,
+        message: err?.message,
+        src: audio?.src,
+        currentUrl: this.currentAudioUrl
+      });
+
       const song = this.currentSong;
       if (song && !(song as any)._resolved) {
-        console.warn("Audio error, trying to resolve URL...");
+        console.warn("Trying to resolve URL again...");
         await this.resolveSongUrl(this.currentIndex);
         
         // 重新加载音频
-        const audio = (this as any).$refs.audio as HTMLAudioElement;
         if (audio) {
           audio.load();
-          if (this.playing) audio.play();
+          if (this.playing) audio.play().catch(e => console.error("Replay failed:", e));
         }
       } else {
-        console.error("Audio error, skipping to next song");
+        console.error("Skipping to next song due to error");
         setTimeout(() => this.next(), 1000);
       }
     },
 
-    updateLyrics() {
+    updateLyrics(this: MusicPlayerState) {
       if (this.lyrics.length === 0) return;
 
       let index = 0;
@@ -350,7 +440,7 @@ export function musicPlayer() {
     },
 
     // 媒体会话
-    setupMediaSession() {
+    setupMediaSession(this: MusicPlayerState) {
       if ("mediaSession" in navigator) {
         navigator.mediaSession.setActionHandler("play", () => this.play());
         navigator.mediaSession.setActionHandler("pause", () => this.pause());
@@ -359,7 +449,7 @@ export function musicPlayer() {
       }
     },
 
-    updateMediaSession() {
+    updateMediaSession(this: MusicPlayerState) {
       if ("mediaSession" in navigator && this.currentSong) {
         navigator.mediaSession.metadata = new MediaMetadata({
           title: this.currentSong.title,

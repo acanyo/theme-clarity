@@ -275,6 +275,11 @@ spec:
           label: 启用音乐播放器
           value: false
           help: 在左侧边栏底部显示音乐胶囊播放器
+        - $formkit: text
+          name: api_url
+          label: Meting API 代理地址
+          placeholder: "https://api.i-meto.com/meting/api"
+          help: "自定义 Meting API 地址，留空则使用默认公共接口"
         - $formkit: select
           name: server
           label: 音乐平台
