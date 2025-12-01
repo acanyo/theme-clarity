@@ -58,8 +58,8 @@
   >
     <div class="pagination">
       <!-- 上一页 -->
-      <a :href="getPageUrl(page - 1)" class="page-btn" :class="{ 'disabled': page <= 1 }">
-        <span class="icon-[ph--caret-left-bold]"></span>
+      <a :href="getPageUrl(page - 1)" class="page-btn rtl-flip" :class="{ 'disabled': page <= 1 }">
+        <span class="icon-[ph--arrow-fat-left-duotone]"></span>
       </a>
 
       <!-- 数字页码 -->
@@ -67,15 +67,15 @@
         <a
           :href="p === '...' ? 'javascript:void(0)' : getPageUrl(p)"
           class="page-btn"
-          :class="{ 'active': p === page, 'disabled': p === '...' }"
+          :class="{ 'active': p === page, 'page-ellipsis': p === '...' }"
           x-text="p"
         >
         </a>
       </template>
 
       <!-- 下一页 -->
-      <a :href="getPageUrl(page + 1)" class="page-btn" :class="{ 'disabled': page >= total }">
-        <span class="icon-[ph--caret-right-bold]"></span>
+      <a :href="getPageUrl(page + 1)" class="page-btn rtl-flip" :class="{ 'disabled': page >= total }">
+        <span class="icon-[ph--arrow-fat-right-duotone]"></span>
       </a>
     </div>
   </div>

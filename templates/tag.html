@@ -39,14 +39,14 @@
       <!-- 分页 -->
       <div class="pagination-wrapper" th:if="${posts.totalPages > 1}">
         <div class="pagination">
-          <a th:href="${posts.prevUrl}" class="page-btn" th:classappend="${!posts.hasPrevious} ? 'disabled'">
-            <span class="icon-[ph--caret-left-bold]"></span>
+          <a th:href="${posts.prevUrl}" class="page-btn rtl-flip" th:classappend="${!posts.hasPrevious} ? 'disabled'">
+            <span class="icon-[ph--arrow-fat-left-duotone]"></span>
           </a>
           <span class="page-info">
             <span th:text="${posts.page}"></span> / <span th:text="${posts.totalPages}"></span>
           </span>
-          <a th:href="${posts.nextUrl}" class="page-btn" th:classappend="${!posts.hasNext} ? 'disabled'">
-            <span class="icon-[ph--caret-right-bold]"></span>
+          <a th:href="${posts.nextUrl}" class="page-btn rtl-flip" th:classappend="${!posts.hasNext} ? 'disabled'">
+            <span class="icon-[ph--arrow-fat-right-duotone]"></span>
           </a>
         </div>
       </div>

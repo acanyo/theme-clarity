@@ -16,7 +16,7 @@ $breakpoint-widescreen: 1080px !default;
 
 	// 宽屏以下：默认隐藏，通过 .show 类显示
 	@media (max-width: $breakpoint-widescreen) {
-		display: none;
+		display: none !important;
 		position: fixed;
 		top: 0;
 		inset-inline-end: 0;
@@ -29,7 +29,7 @@ $breakpoint-widescreen: 1080px !default;
 
 		// 显示状态
 		&.show {
-			display: block;
+			display: block !important;
 		}
 
 		// 滑入时的 widget 样式

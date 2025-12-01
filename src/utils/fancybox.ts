@@ -1,5 +1,4 @@
 import { Fancybox } from "@fancyapps/ui";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 /**
  * 初始化 Fancybox 灯箱

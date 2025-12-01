@@ -39,10 +39,16 @@ $breakpoint-widescreen: 1080px !default;
 		min-width: 0;
 	}
 
+	// 宽屏以下：aside 隐藏，去除 gap
+	@media (max-width: $breakpoint-widescreen) {
+		gap: 0;
+	}
+
 	// 移动端：单列全宽
 	@media (max-width: $breakpoint-mobile) {
 		flex-direction: column;
 		width: 100%;
+		padding-top: env(safe-area-inset-top, 0);
 	}
 }
 

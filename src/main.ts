@@ -1,5 +1,6 @@
 import "./styles/tailwind.css";
 import "./styles/style.scss";
+import "@fancyapps/ui/dist/fancybox/fancybox.css";
 import Alpine from "alpinejs";
 // @ts-ignore
 import collapse from "@alpinejs/collapse";

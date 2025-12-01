@@ -191,3 +191,104 @@ mark {
 		to { transform: scale(1.25); }
 	}
 }
+
+// ========================================
+// 全局分页样式 (移植自 blog-v3)
+// ========================================
+.pagination-wrapper {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	padding: 2rem 1rem;
+	margin-top: 1rem;
+}
+
+.pagination {
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	max-width: calc(100vw - 2rem);
+	border: 1px solid var(--c-border);
+	border-radius: 0.5rem;
+	box-shadow: 0 0.1em 0.2em var(--ld-shadow);
+	background-color: var(--ld-bg-card);
+	font-variant-numeric: tabular-nums;
+	transition: max-width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.page-btn {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-width: 3em;
+	height: 2.75em;
+	padding: 0 0.6em;
+	font-size: 0.9rem;
+	font-weight: 500;
+	color: var(--c-text-2);
+	background: transparent;
+	transition: all 0.2s ease;
+	text-decoration: none;
+	cursor: pointer;
+
+	&:hover:not(.disabled):not(.active) {
+		background-color: var(--c-bg-soft);
+		color: var(--c-text);
+	}
+
+	&:active:not(.disabled) {
+		background-color: var(--c-border);
+	}
+
+	&.active {
+		background-color: var(--c-primary);
+		color: white;
+		border-radius: 0.4em;
+		margin: 0.25em;
+		min-width: 2.5em;
+		box-shadow: 0 2px 8px rgba(var(--c-primary-rgb), 0.35);
+	}
+
+	&.disabled {
+		color: var(--c-text-3);
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	[class^="icon-"] {
+		font-size: 1.1rem;
+	}
+
+	// 上一页/下一页按钮 - 推到两端
+	&:first-child {
+		margin-inline-end: auto;
+	}
+	
+	&:last-child {
+		margin-inline-start: auto;
+	}
+}
+
+// 页码分隔符（省略号）
+.page-ellipsis {
+	min-width: 2em;
+	color: var(--c-text-3);
+	text-align: center;
+	pointer-events: none;
+}
+
+.page-info {
+	display: flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0 0.75rem;
+	font-size: 0.85rem;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: var(--c-text-3);
+	white-space: nowrap;
+	
+	strong, span:first-child {
+		color: var(--c-text-2);
+	}
+}

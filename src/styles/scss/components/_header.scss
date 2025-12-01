@@ -12,11 +12,14 @@
 	line-height: 1.4;
 	color: var(--c-text);
 	user-select: none;
+
+	// 移动端头部：紧凑边距
 	&.mobile-only {
 		display: none;
 
 		@media (max-width: $breakpoint-mobile) {
 			display: flex;
+			margin: 0.75rem 1rem 0.5rem;
 		}
 	}
 
