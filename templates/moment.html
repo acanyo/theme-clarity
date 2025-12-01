@@ -80,10 +80,57 @@
       <!-- 底部操作栏 -->
       <footer class="moment-footer">
         <div class="moment-actions">
+          <!-- 点赞按钮 -->
+          <button 
+            class="action-btn like"
+            title="点赞"
+            x-data="{ 
+              liked: localStorage.getItem('moment-liked-' + $el.dataset.name) === 'true',
+              count: parseInt($el.dataset.count) || 0,
+              loading: false,
+              async toggle() {
+                if (this.loading || this.liked) return;
+                this.loading = true;
+                try {
+                  console.log('Upvoting moment:', $el.dataset.name);
+                  const res = await fetch('/apis/api.halo.run/v1alpha1/trackers/upvote', { 
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      group: 'moment.halo.run',
+                      plural: 'moments',
+                      name: $el.dataset.name
+                    })
+                  });
+                  if (res.ok) {
+                    this.liked = true;
+                    this.count++;
+                    localStorage.setItem('moment-liked-' + $el.dataset.name, 'true');
+                    console.log('Upvote success');
+                  } else {
+                    console.error('Upvote failed:', res.status, await res.text());
+                  }
+                } catch(e) { console.error('Upvote error:', e); }
+                this.loading = false;
+              }
+            }"
+            :class="{ 'active': liked, 'loading': loading }"
+            @click="toggle()"
+            th:data-name="${moment.metadata.name}"
+            th:data-count="${moment.stats.upvote ?: 0}"
+          >
+            <span class="icon-[ph--heart-bold]" x-show="!liked"></span>
+            <span class="icon-[ph--heart-fill]" x-show="liked" style="display: none; color: #ef4444;"></span>
+            <span x-text="count"></span>
+          </button>
+          <!-- 评论数 -->
           <span class="action-btn comment">
             <span class="icon-[ph--chat-circle-bold]"></span>
             <span th:text="${moment.stats.approvedComment ?: 0}"></span>
           </span>
+          <!-- 分享按钮 -->
           <button 
             class="action-btn share" 
             title="复制链接"
