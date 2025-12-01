@@ -41,4 +41,6 @@ $breakpoint-widescreen: 1080px;
 @use "./scss/components/links";
 @use "./scss/components/music-player";
 @use "./scss/components/moments";
+// 直接引入 Fancybox 基础样式，并指定命名空间防止冲突
+@use "@fancyapps/ui/dist/fancybox/fancybox.css" as fancybox-lib;
 @use "./scss/components/fancybox";

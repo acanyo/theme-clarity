@@ -1,6 +1,7 @@
 import "./styles/tailwind.css";
 import "./styles/style.scss";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
+
+import { Fancybox } from "@fancyapps/ui";
 import Alpine from "alpinejs";
 // @ts-ignore
 import collapse from "@alpinejs/collapse";
@@ -13,6 +14,7 @@ import SwupScriptsPlugin from "@swup/scripts-plugin";
 import { mountCounter } from "./preact";
 import { musicPlayer } from "./plugins/musicPlayer";
 import { initFancybox } from "./utils/fancybox";
+(window as any).Fancybox = Fancybox;
 
 // 注册音乐播放器组件
 Alpine.data("musicPlayer", musicPlayer);
