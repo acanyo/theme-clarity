@@ -14,7 +14,7 @@ spec:
   issues: https://github.com/halo-dev/theme-clarity/issues
   settingName: "theme-clarity-setting"
   configMapName: "theme-clarity-configMap"
-  version: "1.0.0-alpha.1"
+  version: "1.0.0-alpha.5"
   requires: "2.0.0"
   license:
     - name: "GPL-3.0"

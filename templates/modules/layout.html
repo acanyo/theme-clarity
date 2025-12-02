@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="zh-CN" th:fragment="html (content, showAside)">
+<html lang="zh-CN" th:fragment="html (content, showAside, pageTitle)">
   <head>
     <!-- SEO 标准化模板（Open Graph / Twitter Card / JSON-LD） -->
-    <th:block th:replace="~{modules/seo :: seo}" />
+    <th:block th:replace="~{modules/seo :: seo(pageTitle=${pageTitle})}" />
 
     <!-- Fonts -->
     <link

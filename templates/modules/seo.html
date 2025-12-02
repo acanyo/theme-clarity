@@ -1,11 +1,16 @@
-<th:block th:fragment="seo">
+<th:block th:fragment="seo(pageTitle)">
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title th:if="${post != null}" th:text="${post.spec.title} + ' | ' + ${site.title}"></title>
-  <title th:if="${singlePage != null and post == null}" th:text="${singlePage.spec.title} + ' | ' + ${site.title}"></title>
-  <title th:if="${author != null and post == null and singlePage == null}" th:text="${author.spec.displayName} + ' 的文章 | ' + ${site.title}"></title>
-  <title th:if="${post == null and singlePage == null and author == null}" th:text="${site.title} + ' | ' + ${site.subtitle}"></title>
+  <!-- 自定义页面标题 -->
+  <title th:if="${pageTitle != null}" th:text="${pageTitle} + ' | ' + ${site.title}"></title>
+  <!-- 文章/页面/作者标题 -->
+  <title th:if="${pageTitle == null and post != null}" th:text="${post.spec.title} + ' | ' + ${site.title}"></title>
+  <title th:if="${pageTitle == null and singlePage != null and post == null}" th:text="${singlePage.spec.title} + ' | ' + ${site.title}"></title>
+  <title th:if="${pageTitle == null and author != null and post == null and singlePage == null}" th:text="${author.spec.displayName} + ' 的文章 | ' + ${site.title}"></title>
+  <!-- 默认标题 -->
+  <title th:if="${pageTitle == null and post == null and singlePage == null and author == null}" 
+         th:text="${site.subtitle} ? (${site.title} + ' | ' + ${site.subtitle}) : ${site.title}"></title>
   <meta name="description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
   <meta name="description" th:if="${singlePage != null and post == null}" th:content="${singlePage.status.excerpt ?: site.subtitle}" />
   <meta name="description" th:if="${author != null and post == null and singlePage == null}" th:content="${author.spec.bio ?: (author.spec.displayName + ' 的文章归档')}" />

@@ -1,11 +1,11 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true)}">
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = (${theme.config.plugins?.moments?.title} ?: '瞬间'))}">
   <th:block th:fragment="content">
     <!-- 页面标题 -->
     <div class="moments-header">
       <div class="moments-title">
         <span class="icon-[ph--shooting-star-bold]"></span>
-        <h1 class="text-creative">瞬间</h1>
+        <h1 class="text-creative" th:text="${theme.config.plugins?.moments?.title} ?: '瞬间'">瞬间</h1>
       </div>
       <a href="/moments/rss.xml" class="rss-link" title="RSS 订阅" target="_blank" rel="noopener">
         <span class="icon-[ph--rss-simple-bold]"></span>

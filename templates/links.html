@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false)}">
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.plugins?.links?.title} ?: '友链'))}">
   <th:block th:fragment="content">
     <!-- Mobile Header -->
     <div class="clarity-header mobile-only">
@@ -36,7 +36,7 @@
           >
           </span>
         </div>
-        <div class="header-subtitle">友链</div>
+        <div class="header-subtitle" th:text="${theme.config.plugins?.links?.title} ?: '友链'">友链</div>
       </div>
     </div>
 

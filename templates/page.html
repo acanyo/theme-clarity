@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false)}">
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = null)}">
   <th:block th:fragment="content">
     <!-- 页面头部 -->
     <div class="post-header" th:classappend="${singlePage.spec.cover != null and singlePage.spec.cover != ''} ? 'has-cover' : ''">

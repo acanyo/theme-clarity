@@ -282,6 +282,44 @@ spec:
             <p>我会尽快审核并添加你的友链。</p>
           rows: 8
           help: 支持 HTML 格式
+    - group: plugins
+      label: 插件适配
+      formSchema:
+        - $formkit: group
+          name: moments
+          label: 瞬间插件
+          help: plugin-moments
+          children:
+            - $formkit: text
+              name: title
+              label: 页面标题
+              value: 瞬间
+              placeholder: 瞬间
+        - $formkit: group
+          name: photos
+          label: 图库插件
+          help: plugin-photos
+          children:
+            - $formkit: text
+              name: title
+              label: 页面标题
+              value: 图库
+              placeholder: 图库
+            - $formkit: text
+              name: description
+              label: 页面描述
+              value: 记录生活中的美好瞬间
+              placeholder: 记录生活中的美好瞬间
+        - $formkit: group
+          name: links
+          label: 友链插件
+          help: plugin-links
+          children:
+            - $formkit: text
+              name: title
+              label: 页面标题
+              value: 友链
+              placeholder: 友链
     - group: custom
       label: 自定义
       formSchema:

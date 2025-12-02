@@ -1,6 +1,6 @@
 import { render } from 'preact'
-import { Counter } from './components/Counter'
+import { PhotoGallery } from './components/PhotoGallery'
 
-export function mountCounter(container: HTMLElement) {
-  render(<Counter />, container)
+export function mountPhotoGallery(container: HTMLElement, groups: any[]) {
+  render(<PhotoGallery groups={groups} />, container)
 }

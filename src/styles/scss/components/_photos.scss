@@ -1,0 +1,264 @@
+// ========================================
+// 图库页面样式
+// ========================================
+
+.photos-container {
+  margin: 1rem;
+}
+
+// ========================================
+// 分类标签栏
+// ========================================
+.photo-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.photo-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  background: var(--c-bg-soft);
+  border: 1px solid transparent;
+  border-radius: 2rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    color: var(--c-primary);
+    background: var(--c-primary-soft);
+  }
+
+  &.active {
+    color: #fff;
+    background: var(--c-primary);
+    border-color: var(--c-primary);
+  }
+
+  .tab-count {
+    padding: 0.125rem 0.5rem;
+    font-size: 0.75rem;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 1rem;
+  }
+
+  &.active .tab-count {
+    background: rgba(255, 255, 255, 0.2);
+  }
+}
+
+// 分组样式（备用）
+.photo-group {
+  margin-bottom: 2rem;
+}
+
+.group-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-family: var(--font-creative);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--c-text);
+
+  .group-count {
+    margin-left: auto;
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: var(--c-text-2);
+  }
+}
+
+// 瀑布流布局
+.photo-masonry {
+  column-count: 4;
+  column-gap: 0.75rem;
+
+  @media (max-width: 1200px) {
+    column-count: 3;
+  }
+
+  @media (max-width: 768px) {
+    column-count: 2;
+  }
+
+  @media (max-width: 480px) {
+    column-count: 2;
+    column-gap: 0.5rem;
+  }
+}
+
+// 图片项
+.photo-item {
+  position: relative;
+  break-inside: avoid;
+  margin-bottom: 0.75rem;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: var(--c-bg-soft);
+  cursor: url("/themes/theme-clarity/assets/images/zoom-in.cur"), zoom-in;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.4s ease;
+  animation: photo-fade-in 0.5s ease backwards;
+
+  &:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow: 0 12px 32px var(--ld-shadow);
+
+    img {
+      transform: scale(1.05);
+    }
+
+    figcaption {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  &:active {
+    transform: translateY(-2px) scale(0.98);
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: auto;
+    transition: transform 0.3s;
+    
+    // 懒加载占位
+    &[loading="lazy"] {
+      min-height: 100px;
+      background: linear-gradient(
+        90deg,
+        var(--c-bg-soft) 25%,
+        var(--c-bg-mute) 50%,
+        var(--c-bg-soft) 75%
+      );
+      background-size: 200% 100%;
+      animation: photo-skeleton 1.5s infinite;
+    }
+
+    &:not([src]) {
+      visibility: hidden;
+    }
+  }
+
+  figcaption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem 0.75rem 0.75rem;
+    font-size: 0.875rem;
+    color: #fff;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+    opacity: 0;
+    transform: translateY(100%);
+    transition: opacity 0.3s, transform 0.3s;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+
+    @media (max-width: 480px) {
+      padding: 1.5rem 0.5rem 0.5rem;
+      font-size: 0.75rem;
+    }
+  }
+}
+
+// 骨架屏动画
+@keyframes photo-skeleton {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+// 图片入场动画
+@keyframes photo-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// 空状态
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 4rem 2rem;
+  color: var(--c-text-3);
+  
+  > span {
+    font-size: 4rem;
+    opacity: 0.5;
+  }
+
+  > p {
+    font-size: 1rem;
+  }
+}
+
+// 页面头部
+.page-header {
+  margin: 2rem 1rem 1.5rem;
+  text-align: center;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--c-text);
+}
+
+.page-desc {
+  color: var(--c-text-2);
+  font-size: 0.9rem;
+}
+
+// 加载状态
+.photo-loader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 2rem;
+  color: var(--c-text-2);
+  font-size: 0.875rem;
+
+  .animate-spin {
+    animation: spin 1s linear infinite;
+  }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+// 加载完成提示
+.photo-end {
+  padding: 1.5rem;
+  text-align: center;
+  color: var(--c-text-3);
+  font-size: 0.875rem;
+}

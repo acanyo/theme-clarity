@@ -7,9 +7,10 @@ import Alpine from "alpinejs";
 // @ts-ignore
 import collapse from "@alpinejs/collapse";
 
-import { mountCounter } from "./preact";
+import { mountPhotoGallery } from "./preact";
 import { initFancybox } from "./utils/fancybox";
 (window as any).Fancybox = Fancybox;
+(window as any).mountPhotoGallery = mountPhotoGallery;
 
 /* Alpine.js 主题切换组件 */
 Alpine.data("themeToggle", () => ({
@@ -203,20 +204,8 @@ document.addEventListener("keydown", (e) => {
   }
 });
 
-export function count(x: number, y: number) {
-  return x + y;
-}
-function mountWidgets() {
-  const counterContainer = document.querySelector("#counter");
-  if (counterContainer) {
-    mountCounter(counterContainer as HTMLElement);
-  }
-}
-
-
 // 页面初始加载
 document.addEventListener("DOMContentLoaded", () => {
-  mountWidgets();
   initDropdownMenus();
   initFancybox();
   initBackToTop();
