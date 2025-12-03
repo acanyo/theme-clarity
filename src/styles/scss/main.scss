@@ -134,13 +134,13 @@ img {
 		display: grid;
 		place-content: center;
 		overflow: visible;
-		padding: 0.5em;
+		padding: 0.5em; 
 		background-color: var(--c-border);
 		font: bold 1.5rem/1.2 var(--font-serif);
 		word-break: normal;
 		text-align: center;
 		text-shadow: none;
-		color: var(--c-bg-soft);
+		color: var(--c-text-3); 
 	}
 }
 

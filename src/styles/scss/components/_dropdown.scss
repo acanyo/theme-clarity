@@ -32,17 +32,26 @@
 .dropdown-content.menu {
   background: var(--ld-bg-card, #fff);
   border: 1px solid var(--c-border, #eee);
+  padding: 0.25rem;
+  min-width: 0 !important;
+  width: max-content;
+  gap: 0;
 
-  a {
-    color: var(--c-text-1);
-    
-    &:hover {
-      background: var(--c-bg-soft);
-    }
-    
-    &.active {
-      background: var(--c-primary-soft);
-      color: var(--c-primary);
+  li {
+    a {
+      padding: 0.4rem 0.75rem;
+      font-size: 0.9em;
+      color: var(--c-text-1);
+      border-radius: 0.25rem;
+      
+      &:hover {
+        background: var(--c-bg-soft);
+      }
+      
+      &.active {
+        background: var(--c-primary-soft);
+        color: var(--c-primary);
+      }
     }
   }
 }
