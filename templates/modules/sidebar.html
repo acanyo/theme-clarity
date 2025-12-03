@@ -43,7 +43,7 @@
                 th:each="child : ${menuItem.children}"
                 th:href="${child.status.href}"
                 class="dropdown-item"
-                th:target="${child.spec.target}"
+                th:attr="target=${(child.spec.target == '_blank' or child.spec.target == 'BLANK') ? '_blank' : ((child.spec.target == '_parent' or child.spec.target == 'PARENT') ? '_parent' : ((child.spec.target == '_top' or child.spec.target == 'TOP') ? '_top' : null))}"
               >
                 <span
                   th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}"
@@ -54,13 +54,11 @@
               </a>
             </div>
           </th:block>
-
-          <!-- 无子菜单：可直接点击 -->
           <a
             th:unless="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}"
             th:href="${menuItem.status.href}"
             class="sidebar-nav-item"
-            th:target="${menuItem.spec.target}"
+            th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP') ? '_top' : null))}"
           >
             <span
               th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
