@@ -95,33 +95,46 @@ span:not([class]):empty {
 	:hover > & {
 		opacity: 1;
 	}
+}
 
-	& + article {
+.article-card:has(.article-cover) {
+	> article,
+	> .article-body {
 		position: relative;
-		width: 60%;
-		text-shadow: 0 0 0.5rem var(--ld-bg-card), 0 0 1rem var(--ld-bg-card);
-	}
+		width: calc(100% - min(260px, 40%));
+		background: linear-gradient(to var(--end), var(--ld-bg-card) 90%, transparent);
 
-	@mixin cover-narrow {
+		// 窄屏：文字恢复全宽
+		@media (max-width: $breakpoint-phone) {
+			width: auto;
+			background: none;
+		}
+
+		@container (max-width: #{$breakpoint-phone}) {
+			width: auto;
+			background: none;
+		}
+	}
+}
+
+// 封面图窄屏布局：图上文下
+@mixin cover-narrow {
+	.article-cover {
 		position: revert;
 		width: 100%;
 		height: auto;
 		max-width: none;
-		max-height: 256px;
+		max-height: 200px;
 		aspect-ratio: 2.4;
 		margin-bottom: -10%;
 		mask-image: linear-gradient(#FFF 50%, transparent);
-
-		& + article {
-			width: auto;
-		}
 	}
+}
 
-	@media (max-width: $breakpoint-phone) {
-		@include cover-narrow;
-	}
+@media (max-width: $breakpoint-phone) {
+	@include cover-narrow;
+}
 
-	@container (max-width: #{$breakpoint-phone}) {
-		@include cover-narrow;
-	}
+@container (max-width: #{$breakpoint-phone}) {
+	@include cover-narrow;
 }
