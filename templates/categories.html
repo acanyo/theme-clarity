@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '分类')}"
+>
+  <th:block th:fragment="content">
+    <div class="categories-page">
+      <div class="categories-grid">
+        <a th:each="cat, iterStat : ${categories}" 
+           th:href="${cat.status.permalink}"
+           th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'"
+           class="category-card card">
+          <span class="category-card-icon icon-[ph--folder-bold]"></span>
+          <div class="category-card-body">
+            <h2 class="category-card-title" th:text="${cat.spec.displayName}">分类名称</h2>
+            <p th:if="${not #strings.isEmpty(cat.spec.description)}" 
+               class="category-card-desc"
+               th:text="${cat.spec.description}">分类描述
+            </p>
+          </div>
+          <div class="category-card-footer">
+            <span class="category-card-count" th:text="${cat.postCount + ' 篇文章'}">0 篇文章</span>
+            <span class="category-card-arrow icon-[ph--arrow-right-bold]"></span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </th:block>
+</html>

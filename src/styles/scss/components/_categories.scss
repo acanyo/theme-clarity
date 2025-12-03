@@ -1,0 +1,178 @@
+// ========================================
+// 分类列表页面样式
+// ========================================
+
+.categories-page {
+  margin: 1rem;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.category-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 1.25rem;
+  min-height: 120px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: float-in 0.3s var(--delay, 0s) backwards;
+
+  // 装饰背景
+  &::before {
+    content: "";
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 100%;
+    height: 100%;
+    background: var(--c-primary);
+    opacity: 0;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: all 0.4s ease;
+  }
+
+  &:hover {
+    transform: translateY(-4px);
+    border-color: var(--c-primary);
+    
+    &::before {
+      opacity: 0.05;
+      transform: scale(3);
+    }
+    
+    .category-card-icon {
+      color: var(--c-primary);
+      transform: scale(1.1);
+    }
+    
+    .category-card-title {
+      color: var(--c-primary);
+    }
+  }
+}
+
+.category-card-icon {
+  font-size: 1.5em;
+  color: var(--c-text-3);
+  margin-bottom: 0.75rem;
+  transition: all 0.3s;
+}
+
+.category-card-body {
+  position: relative;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.category-card-title {
+  margin: 0 0 0.25rem;
+  font-size: 1.1em;
+  font-weight: 600;
+  color: var(--c-text);
+  transition: color 0.2s;
+}
+
+.category-card-desc {
+  margin: 0;
+  font-size: 0.8em;
+  color: var(--c-text-2);
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.category-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed var(--c-border);
+}
+
+.category-card-count {
+  font-size: 0.8em;
+  font-weight: 500;
+  color: var(--c-primary);
+}
+
+.category-card-arrow {
+  font-size: 1em;
+  color: var(--c-text-3);
+  transition: transform 0.2s;
+  
+  .category-card:hover & {
+    transform: translateX(4px);
+    color: var(--c-primary);
+  }
+}
+
+// ========================================
+// 分类归档页面样式（单个分类的文章列表）
+// ========================================
+
+.category-page {
+  margin: 1rem;
+}
+
+.category-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.category-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.category-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5em;
+  margin: 0 0 0.5rem;
+  font-size: 1.5em;
+  color: var(--c-text);
+}
+
+.category-description {
+  margin: 0 0 0.75rem;
+  font-size: 0.9em;
+  color: var(--c-text-2);
+  line-height: 1.6;
+}
+
+.category-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85em;
+  color: var(--c-text-3);
+
+  .meta-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3em;
+  }
+}
+
+.category-cover {
+  width: 120px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
