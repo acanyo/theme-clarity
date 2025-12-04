@@ -19,8 +19,10 @@
         <!-- 自定义探索链接 -->
         <li th:each="link : ${theme.config.footer.explore?.links}">
           <a th:href="${link.url}" target="_blank">
-            <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-            <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+            <th:block th:if="${not #strings.isEmpty(link.icon)}">
+              <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
+              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+            </th:block>
             <span class="nav-text" th:text="${link.text}"></span>
           </a>
         </li>
@@ -33,8 +35,10 @@
       <menu>
         <li th:each="link : ${theme.config.footer.links.items}">
           <a th:href="${link.url}" target="_blank">
-            <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-            <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+            <th:block th:if="${not #strings.isEmpty(link.icon)}">
+              <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
+              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+            </th:block>
             <span class="nav-text" th:text="${link.text}"></span>
           </a>
         </li>

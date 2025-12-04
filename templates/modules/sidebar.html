@@ -133,10 +133,13 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <!-- Iconify 格式（包含冒号，如 ph:home） -->
-        <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-        <!-- iconfont 格式（如 iconfont icon-qq） -->
-        <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+        <!-- 仅在 icon 不为空时渲染 -->
+        <th:block th:if="${not #strings.isEmpty(link.icon)}">
+          <!-- Iconify 格式（包含冒号，如 ph:home） -->
+          <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
+          <!-- iconfont 格式（如 iconfont icon-qq） -->
+          <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+        </th:block>
       </a>
     </div>
   </footer>

@@ -11,6 +11,9 @@ importers:
       '@alpinejs/collapse':
         specifier: ^3.15.2
         version: 3.15.2
+      '@chinese-fonts/kksjt':
+        specifier: ^3.0.0
+        version: 3.0.0
       '@fancyapps/ui':
         specifier: ^6.1.6
         version: 6.1.6
@@ -191,6 +194,9 @@ packages:
   '@babel/types@7.28.5':
     resolution: {integrity: sha512-qQ5m48eI/MFLQ5PxQj4PFaprjyCTLI37ElWMmNs0K8Lk3dVeOdNpB3ks8jc7yM5CDmVC73eMVk/trk3fgmrUpA==}
     engines: {node: '>=6.9.0'}
+
+  '@chinese-fonts/kksjt@3.0.0':
+    resolution: {integrity: sha512-ddedlQVV9PYEVXXCHk39hwn2DlzQiB7jYt1ZqLFxRGB4/e9dVWlhjtO4S/DfGv1YYyh7Jy73IySFXjExg65h+g==}
 
   '@esbuild/aix-ppc64@0.25.12':
     resolution: {integrity: sha512-Hhmwd6CInZ3dwpuGTF8fJG6yoWmsToE+vYgD4nytZVxcu1ulHpUQRAB1UJ8+N1Am3Mz4+xOByoQoSZf4D+CpkA==}
@@ -2463,6 +2469,8 @@ snapshots:
     dependencies:
       '@babel/helper-string-parser': 7.27.1
       '@babel/helper-validator-identifier': 7.28.5
+
+  '@chinese-fonts/kksjt@3.0.0': {}
 
   '@esbuild/aix-ppc64@0.25.12':
     optional: true
