@@ -196,6 +196,13 @@
                       <span>在线提交</span>
                     </button>
                   </div>
+                  <!-- 修改友链按钮 -->
+                  <div th:if="${theme.config.links?.enable_update}" id="link-update-entry" class="link-submit-entry" style="display: none;">
+                    <button type="button" class="z-btn" onclick="openLinkUpdateModal()">
+                      <span class="icon-[ph--pencil-bold]"></span>
+                      <span>修改友链</span>
+                    </button>
+                  </div>
                   <!-- 插件未安装提示 -->
                   <div id="link-submit-unavailable" class="link-submit-unavailable" style="display: none;">
                     <span class="icon-[ph--warning-circle-bold]"></span>
@@ -344,6 +351,134 @@
         </div>
       </div>
 
+      <!-- 友链修改弹窗 -->
+      <div th:if="${theme.config.links?.enable_submit and theme.config.links?.enable_update}" id="link-update-modal" class="link-submit-modal">
+        <div class="link-submit-overlay" onclick="closeLinkUpdateModal()"></div>
+        <div class="link-submit-content link-update-content">
+          <div class="link-submit-header">
+            <div class="header-info">
+              <span class="header-icon icon-[ph--pencil-bold]"></span>
+              <div>
+                <h3>修改友链信息</h3>
+                <p class="header-desc">请使用原友链邮箱验证身份</p>
+              </div>
+            </div>
+            <button class="link-submit-close" onclick="closeLinkUpdateModal()">
+              <span class="icon-[ph--x-bold]"></span>
+            </button>
+          </div>
+          
+          <!-- 提示信息 -->
+          <div id="update-submit-message" class="submit-message" style="display: none;"></div>
+          
+          <form id="link-update-form" class="link-submit-form">
+            <!-- 原网站地址（定位用） -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="icon-[ph--magnifying-glass-bold]"></span>
+                查找友链
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-old-url">原网站地址 <span class="required">*</span></label>
+                <input type="url" id="update-link-old-url" name="oldUrl" placeholder="https://your-original-site.com" required />
+                <p class="form-hint">输入你当前已提交的友链地址</p>
+              </div>
+            </div>
+
+            <!-- 新网站信息 -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="icon-[ph--globe-bold]"></span>
+                新网站信息
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-url">网站地址 <span class="required">*</span></label>
+                <input type="url" id="update-link-url" name="url" placeholder="https://your-new-site.com" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-name">网站名称 <span class="required">*</span></label>
+                <input type="text" id="update-link-name" name="displayName" placeholder="我的博客" required />
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-desc">网站描述</label>
+                <textarea id="update-link-desc" name="description" placeholder="一句话介绍你的网站" rows="2"></textarea>
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-logo">网站图标</label>
+                <input type="url" id="update-link-logo" name="logo" placeholder="https://example.com/logo.png" />
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-page">友链页面</label>
+                <input type="url" id="update-link-page" name="linkPageUrl" placeholder="https://your-site.com/links" />
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-rss">RSS 地址</label>
+                <input type="url" id="update-link-rss" name="rssUrl" placeholder="https://your-site.com/rss.xml" />
+              </div>
+              
+              <div class="form-group" id="update-link-group-wrapper" style="display: none;">
+                <label for="update-link-group">申请分组</label>
+                <select id="update-link-group" name="groupName">
+                  <option value="">默认分组</option>
+                </select>
+              </div>
+            </div>
+            
+            <!-- 验证信息 -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="icon-[ph--shield-check-bold]"></span>
+                验证信息
+              </div>
+              
+              <div class="form-group">
+                <label for="update-link-email">联系邮箱 <span class="required">*</span></label>
+                <input type="email" id="update-link-email" name="email" placeholder="your@email.com" required />
+                <p class="form-hint">必须与原友链邮箱一致</p>
+              </div>
+              
+              <!-- 邮箱验证码 -->
+              <div th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}" class="form-group" id="update-email-verify-group">
+                <label for="update-link-code">邮箱验证码 <span class="required">*</span></label>
+                <div class="input-with-btn">
+                  <input type="text" id="update-link-code" name="verifyCode" placeholder="请输入收到的验证码" />
+                  <button type="button" class="z-btn" id="update-send-code-btn" onclick="sendUpdateVerifyCode()">
+                    <span class="icon-[ph--paper-plane-tilt-bold]"></span>
+                    <span>发送</span>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 图形验证码 -->
+              <div th:if="${theme.config.links?.verify_type == 'captcha'}" class="form-group" id="update-captcha-group">
+                <label for="update-link-captcha">图形验证码 <span class="required">*</span></label>
+                <div class="captcha-row">
+                  <input type="text" id="update-link-captcha" name="captcha" placeholder="请输入图中字符" />
+                  <img id="update-captcha-img" class="captcha-img" alt="验证码" onclick="refreshCaptcha('update')" title="点击刷新" />
+                </div>
+              </div>
+            </div>
+            
+          </form>
+          
+          <!-- 提交按钮（固定在底部） -->
+          <div class="form-actions">
+            <button type="button" class="z-btn cancel-btn" onclick="closeLinkUpdateModal()">取消</button>
+            <button type="submit" form="link-update-form" class="z-btn primary submit-btn" id="update-submit-btn">
+              <span class="icon-[ph--check-bold]"></span>
+              <span>确认修改</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- 评论区 -->
       <h3 th:if="${haloCommentEnabled}" class="comment-title">
         <span class="icon-[ph--chat-circle-text-bold]"></span>
@@ -360,6 +495,7 @@
       // 配置传递给 JS 模块
       window.linkSubmitConfig = {
         enableSubmit: /*[[${theme.config.links?.enable_submit}]]*/ false,
+        enableUpdate: /*[[${theme.config.links?.enable_update}]]*/ false,
         verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ 'email'
       };
       /*]]>*/

@@ -425,6 +425,12 @@ spec:
               value: captcha
             - label: 无需验证
               value: none
+        - $formkit: checkbox
+          name: enable_update
+          label: 允许修改友链
+          value: false
+          help: 开启后已提交的友链可凭邮箱验证修改信息
+          if: "$get(enable_submit).value === true"
         - $formkit: textarea
           name: apply_content
           label: 申请友链说明
