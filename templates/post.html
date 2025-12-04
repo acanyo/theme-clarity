@@ -121,72 +121,9 @@
       })();
     </script>
 
-    <!-- 私密文章验证 -->
-    <th:block th:if="${post.metadata.annotations != null and post.metadata.annotations['accessPassword'] != null and post.metadata.annotations['accessPassword'] != ''}">
-      <div 
-        class="password-protect"
-        x-data="postPassword"
-        th:data-post="${post.metadata.name}"
-        th:data-hash="${post.metadata.annotations['accessPassword']}"
-        x-show="!unlocked"
-        x-cloak
-      >
-        <div class="password-box">
-          <div class="password-icon">
-            <span class="icon-[ph--lock-key-bold]"></span>
-          </div>
-          <h3>私密文章</h3>
-          <p class="password-tip">该文章需要密码才能访问</p>
-          
-          <form @submit.prevent="verify" class="password-form">
-            <input 
-              type="password" 
-              x-model="inputPassword" 
-              placeholder="请输入访问密码"
-              :disabled="locked"
-              class="password-input"
-            />
-            <button type="submit" :disabled="locked || !inputPassword" class="password-btn">
-              <span x-show="!locked">验证</span>
-              <span x-show="locked" x-text="'请等待 ' + lockTime + 's'"></span>
-            </button>
-          </form>
-          
-          <p x-show="error" class="password-error" x-text="error"></p>
-          <p class="password-attempts" x-show="attempts > 0">
-            已尝试 <span x-text="attempts"></span>/5 次
-          </p>
-        </div>
-      </div>
-    </th:block>
+    <article class="article" th:utext="${post.content.content}"></article>
 
-    <article 
-      class="article" 
-      th:utext="${post.content.content}"
-      th:classappend="${post.metadata.annotations != null and post.metadata.annotations['accessPassword'] != null and post.metadata.annotations['accessPassword'] != ''} ? 'password-protected' : ''"
-      x-data="{ show: true }"
-      x-init="
-        const pwd = document.querySelector('.password-protect');
-        if (pwd) {
-          show = false;
-          $watch('$store.postUnlocked', (val) => { if (val) show = true; });
-        }
-      "
-      x-show="show"
-    ></article>
-
-    <div class="post-footer" 
-      th:classappend="${post.metadata.annotations != null and post.metadata.annotations['accessPassword'] != null and post.metadata.annotations['accessPassword'] != ''} ? 'password-protected' : ''"
-      x-data="{ show: true }"
-      x-init="
-        const pwd = document.querySelector('.password-protect');
-        if (pwd) {
-          show = false;
-          $watch('$store.postUnlocked', (val) => { if (val) show = true; });
-        }
-      "
-      x-show="show"
-    >
+    <div class="post-footer">
       <!-- 标签 -->
       <section th:if="${not #lists.isEmpty(post.tags)}" class="tags-section">
         <div class="title text-creative">文章标签</div>

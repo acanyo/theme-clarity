@@ -42,18 +42,3 @@ spec:
       label: 分组描述
       placeholder: 这是我的好友们
       help: 显示在分组标题下方的描述文字
----
-apiVersion: v1alpha1
-kind: AnnotationSetting
-metadata:
-  name: post-annotation-setting
-spec:
-  targetRef:
-    group: "content.halo.run"
-    kind: Post
-  formSchema:
-    - $formkit: text
-      name: accessPassword
-      label: 访问密码 (SHA-256)
-      placeholder: 填写密码的 SHA-256 哈希值
-      help: "请填写密码的 SHA-256 哈希值（在线工具：https://www.lddgo.net/encrypt/hash）。前端验证仅能防君子。"
