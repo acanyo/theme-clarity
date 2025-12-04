@@ -14,6 +14,7 @@ spec:
             - "image/*"
         - $formkit: checkbox
           name: show_title
+          id: show_title
           label: 显示标题
           value: true
         - $formkit: text
@@ -21,11 +22,13 @@ spec:
           label: 副标题
           value: "Just another Halo site"
           placeholder: 一句话介绍
+          if: "$get(show_title).value === true"
         - $formkit: text
           name: emoji_tail
           label: Emoji 尾巴
           value: "📄,🦌,🙌,🐟,🏖️"
           help: 使用英文逗号分隔，例如：📄,🦌,🙌,🐟,🏖️
+          if: "$get(show_title).value === true"
         - $formkit: menuRadio
           name: primary_menu
           label: 主导航菜单
@@ -59,8 +62,14 @@ spec:
           label: 探索
           help: 配置页脚左侧"探索"栏目
           children:
+            - $formkit: text
+              name: title
+              label: 栏目标题
+              value: 探索
+              validation: required
             - $formkit: checkbox
               name: show_rss
+              id: show_rss
               label: 显示 RSS 订阅
               value: true
             - $formkit: text
@@ -68,15 +77,13 @@ spec:
               label: RSS 地址
               value: /rss.xml
               placeholder: /rss.xml
+              if: "$get(show_rss).value === true"
+              validation: required
             - $formkit: checkbox
               name: show_travellings
               label: 显示开往
               value: true
               help: 开往是一个友链接力项目
-            - $formkit: text
-              name: title
-              label: 栏目标题
-              value: 探索
             - $formkit: repeater
               name: links
               label: 自定义探索链接
@@ -91,10 +98,12 @@ spec:
                   name: text
                   label: 文本
                   placeholder: 我的链接
+                  validation: required
                 - $formkit: url
                   name: url
                   label: 链接
                   placeholder: https://example.com
+                  validation: required
         
         - $formkit: group
           name: links
@@ -105,6 +114,7 @@ spec:
               name: title
               label: 栏目标题
               value: 链接
+              validation: required
             - $formkit: repeater
               name: items
               label: 链接列表
@@ -119,10 +129,12 @@ spec:
                   name: text
                   label: 文本
                   placeholder: 我的链接
+                  validation: required
                 - $formkit: url
                   name: url
                   label: 链接
                   placeholder: https://example.com
+                  validation: required
 
         - $formkit: group
           name: social
@@ -139,14 +151,17 @@ spec:
                   label: 图标
                   help: "Iconfont: iconfont icon-xxx | Iconify: simple-icons:github（在 iconify.design 搜索）"
                   placeholder: simple-icons:github
+                  validation: required
                 - $formkit: text
                   name: text
                   label: 描述
                   placeholder: GitHub
+                  validation: required
                 - $formkit: url
                   name: url
                   label: 链接
                   placeholder: https://github.com
+                  validation: required
 
         - $formkit: text
           name: beian
@@ -206,6 +221,7 @@ spec:
               label: 建站时间
               value: "2024-01-01"
               help: 用于计算运营时长
+              validation: required
             - $formkit: text
               name: image_hosting
               label: 图片存储服务
@@ -214,10 +230,12 @@ spec:
               name: license
               label: 许可协议名称
               value: "署名-非商业性使用-相同方式共享 4.0 国际"
+              validation: required
             - $formkit: url
               name: license_url
               label: 许可协议链接
               value: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans"
+              validation: required|url
         - $formkit: group
           name: community
           label: 社区群组卡片
@@ -293,6 +311,7 @@ spec:
           children:
             - $formkit: checkbox
               name: enabled
+              id: outdated_enabled
               label: 启用过时提示
               value: true
             - $formkit: number
@@ -302,14 +321,24 @@ spec:
               min: 1
               max: 3650
               help: 文章发布超过此天数后显示过时提示
+              if: "$get(outdated_enabled).value === true"
+              validation: required|min:1|max:3650
             - $formkit: text
               name: message
               label: 提示文案
               value: "本文发布于 {days} 天前，内容可能已过时，请注意甄别。"
               help: 使用 {days} 作为实际天数的占位符
+              if: "$get(outdated_enabled).value === true"
+              validation: required
     - group: links
       label: 友链页面
       formSchema:
+        - $formkit: text
+          name: title
+          label: 页面标题
+          value: 友链
+          placeholder: 友链
+          validation: required
         - $formkit: group
           name: my_info
           label: 我的博客信息
@@ -337,6 +366,25 @@ spec:
               name: rss
               label: RSS 地址
               placeholder: 如 /rss.xml
+        - $formkit: checkbox
+          name: enable_submit
+          id: enable_submit
+          label: 启用自主提交
+          value: false
+          help: 开启后需安装友链自主提交插件（LinksSubmit），访客可自助提交友链申请
+        - $formkit: select
+          name: verify_type
+          label: 验证方式
+          value: email
+          help: 选择提交时的验证方式（只能选一种）
+          if: "$get(enable_submit).value === true"
+          options:
+            - label: 邮箱验证码
+              value: email
+            - label: 图形验证码
+              value: captcha
+            - label: 无需验证
+              value: none
         - $formkit: textarea
           name: apply_content
           label: 申请友链说明
@@ -364,6 +412,7 @@ spec:
               label: 页面标题
               value: 瞬间
               placeholder: 瞬间
+              validation: required
         - $formkit: group
           name: photos
           label: 图库插件
@@ -374,21 +423,12 @@ spec:
               label: 页面标题
               value: 图库
               placeholder: 图库
+              validation: required
             - $formkit: text
               name: description
               label: 页面描述
               value: 记录生活中的美好瞬间
               placeholder: 记录生活中的美好瞬间
-        - $formkit: group
-          name: links
-          label: 友链插件
-          help: plugin-links
-          children:
-            - $formkit: text
-              name: title
-              label: 页面标题
-              value: 友链
-              placeholder: 友链
     - group: custom
       label: 自定义
       formSchema:

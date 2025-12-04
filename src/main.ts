@@ -11,6 +11,7 @@ import QRCode from "qrcode";
 
 import { mountPhotoGallery } from "./preact";
 import { initFancybox } from "./utils/fancybox";
+import { initLinkSubmit } from "./links-submit";
 (window as any).Fancybox = Fancybox;
 (window as any).mountPhotoGallery = mountPhotoGallery;
 
@@ -241,6 +242,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initDropdownMenus();
   initFancybox();
   initBackToTop();
+  initLinkSubmit();
 });
 
 // 初始化下拉菜单交互

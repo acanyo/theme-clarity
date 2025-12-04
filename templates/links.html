@@ -1,5 +1,5 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.plugins?.links?.title} ?: '友链'))}">
+<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.links?.title} ?: '友链'))}">
   <th:block th:fragment="content">
     <!-- Mobile Header -->
     <div class="clarity-header mobile-only">
@@ -36,7 +36,7 @@
           >
           </span>
         </div>
-        <div class="header-subtitle" th:text="${theme.config.plugins?.links?.title} ?: '友链'">友链</div>
+        <div class="header-subtitle" th:text="${theme.config.links?.title} ?: '友链'">友链</div>
       </div>
     </div>
 
@@ -93,13 +93,15 @@
       <!-- 我的博客信息 / 申请友链 Tab -->
       <div class="custom-tabs-container" id="link-tabs">
         <!-- Tab 导航 -->
-        <div class="custom-tabs-nav">
-          <button class="custom-tab-item active" data-tab="tab-info" onclick="switchTab(this)">
-            我的博客信息
-          </button>
-          <button class="custom-tab-item" data-tab="tab-apply" onclick="switchTab(this)">
-            申请友链
-          </button>
+        <div class="custom-tabs-header">
+          <div class="custom-tabs-nav">
+            <button class="custom-tab-item active" data-tab="tab-info" onclick="switchTab(this)">
+              我的博客信息
+            </button>
+            <button class="custom-tab-item" data-tab="tab-apply" onclick="switchTab(this)">
+              申请友链
+            </button>
+          </div>
         </div>
         
         <!-- Tab 内容 -->
@@ -184,7 +186,160 @@
                   <p>我会尽快审核并添加你的友链。</p>
                 </th:block>
               </div>
+              
+              <!-- 自主提交按钮 -->
+              <th:block th:if="${theme.config.links?.enable_submit}">
+                <div class="link-submit-actions">
+                  <div id="link-submit-entry" class="link-submit-entry" style="display: none;">
+                    <button type="button" class="z-btn primary" onclick="openLinkSubmitModal()">
+                      <span class="icon-[ph--plus-bold]"></span>
+                      <span>在线提交</span>
+                    </button>
+                  </div>
+                  <!-- 插件未安装提示 -->
+                  <div id="link-submit-unavailable" class="link-submit-unavailable" style="display: none;">
+                    <span class="icon-[ph--warning-circle-bold]"></span>
+                    <span>自主提交插件未安装</span>
+                  </div>
+                </div>
+              </th:block>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 友链自主提交弹窗 -->
+      <div th:if="${theme.config.links?.enable_submit}" id="link-submit-modal" class="link-submit-modal">
+        <div class="link-submit-overlay" onclick="closeLinkSubmitModal()"></div>
+        <div class="link-submit-content">
+          <div class="link-submit-header">
+            <div class="header-info">
+              <span class="header-icon icon-[ph--link-bold]"></span>
+              <div>
+                <h3>提交友链申请</h3>
+                <p class="header-desc">填写你的网站信息，我会尽快审核</p>
+              </div>
+            </div>
+            <button class="link-submit-close" onclick="closeLinkSubmitModal()">
+              <span class="icon-[ph--x-bold]"></span>
+            </button>
+          </div>
+          
+          <!-- 提示信息（移到顶部） -->
+          <div id="submit-message" class="submit-message" style="display: none;"></div>
+          
+          <form id="link-submit-form" class="link-submit-form">
+            <!-- 网站地址 + 自动获取 -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="icon-[ph--globe-bold]"></span>
+                基本信息
+              </div>
+              
+              <div class="form-group">
+                <label for="link-url">网站地址 <span class="required">*</span></label>
+                <div class="input-with-btn">
+                  <input type="url" id="link-url" name="url" placeholder="https://example.com" required />
+                  <button type="button" class="z-btn fetch-btn" id="auto-fetch-btn" onclick="autoFetchSiteInfo()">
+                    <span class="icon-[ph--magic-wand-bold]"></span>
+                    <span>自动填充</span>
+                  </button>
+                </div>
+                <p class="form-hint">输入网址后点击"自动填充"可自动获取网站信息</p>
+              </div>
+              
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="link-name">网站名称 <span class="required">*</span></label>
+                  <input type="text" id="link-name" name="displayName" placeholder="我的博客" required />
+                </div>
+                
+                <div class="form-group">
+                  <label for="link-logo">网站图标</label>
+                  <input type="url" id="link-logo" name="logo" placeholder="Logo URL（可选）" />
+                </div>
+              </div>
+              
+              <div class="form-group">
+                <label for="link-desc">网站描述</label>
+                <textarea id="link-desc" name="description" rows="2" placeholder="一句话介绍你的网站"></textarea>
+              </div>
+            </div>
+            
+            <!-- 可选信息 -->
+            <div class="form-section collapsible" x-data="{ open: true }">
+              <button type="button" class="section-title clickable" @click="open = !open">
+                <span class="icon-[ph--dots-three-circle-bold]"></span>
+                更多选项（可选）
+                <span class="icon-[ph--caret-down-bold] caret" :class="{ 'rotate': open }"></span>
+              </button>
+              
+              <div class="section-content" x-show="open" x-collapse>
+                <div class="form-row">
+                  <div class="form-group">
+                    <label for="link-page">友链页面</label>
+                    <input type="url" id="link-page" name="linkPageUrl" placeholder="友链页面 URL" />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label for="link-rss">RSS 地址</label>
+                    <input type="url" id="link-rss" name="rssUrl" placeholder="RSS 订阅地址" />
+                  </div>
+                </div>
+                
+                <div class="form-group" id="link-group-wrapper" style="display: none;">
+                  <label for="link-group">申请分组</label>
+                  <select id="link-group" name="groupName">
+                    <option value="">默认分组</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            
+            <!-- 验证信息 -->
+            <div class="form-section">
+              <div class="section-title">
+                <span class="icon-[ph--shield-check-bold]"></span>
+                验证信息
+              </div>
+              
+              <div class="form-group">
+                <label for="link-email">联系邮箱 <span class="required">*</span></label>
+                <input type="email" id="link-email" name="email" placeholder="your@email.com" required />
+                <p class="form-hint">用于接收审核结果通知</p>
+              </div>
+              
+              <!-- 邮箱验证码 -->
+              <div th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}" class="form-group" id="email-verify-group">
+                <label for="link-code">邮箱验证码 <span class="required">*</span></label>
+                <div class="input-with-btn">
+                  <input type="text" id="link-code" name="verifyCode" placeholder="请输入收到的验证码" />
+                  <button type="button" class="z-btn" id="send-code-btn" onclick="sendVerifyCode()">
+                    <span class="icon-[ph--paper-plane-tilt-bold]"></span>
+                    <span>发送</span>
+                  </button>
+                </div>
+              </div>
+              
+              <!-- 图形验证码 -->
+              <div th:if="${theme.config.links?.verify_type == 'captcha'}" class="form-group" id="captcha-group">
+                <label for="link-captcha">图形验证码 <span class="required">*</span></label>
+                <div class="captcha-row">
+                  <input type="text" id="link-captcha" name="captcha" placeholder="请输入图中字符" />
+                  <img id="captcha-img" class="captcha-img" alt="验证码" onclick="refreshCaptcha()" title="点击刷新" />
+                </div>
+              </div>
+            </div>
+            
+          </form>
+          
+          <!-- 提交按钮（固定在底部） -->
+          <div class="form-actions">
+            <button type="button" class="z-btn cancel-btn" onclick="closeLinkSubmitModal()">取消</button>
+            <button type="submit" form="link-submit-form" class="z-btn primary submit-btn" id="submit-btn">
+              <span class="icon-[ph--paper-plane-right-bold]"></span>
+              <span>提交申请</span>
+            </button>
           </div>
         </div>
       </div>
@@ -199,26 +354,28 @@
       </section>
     </div>
 
-    <!-- 复制功能脚本 & Tab 切换脚本 -->
-    <script>
+    <!-- 友链页面脚本 -->
+    <script th:inline="javascript">
+      /*<![CDATA[*/
+      // 配置传递给 JS 模块
+      window.linkSubmitConfig = {
+        enableSubmit: /*[[${theme.config.links?.enable_submit}]]*/ false,
+        verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ 'email'
+      };
+      /*]]>*/
+
+      // Tab 切换
       function switchTab(btn) {
         const targetId = btn.getAttribute('data-tab');
         const tabsContainer = btn.closest('.custom-tabs-container');
-        
-        // 更新按钮状态
         tabsContainer.querySelectorAll('.custom-tab-item').forEach(t => t.classList.remove('active'));
         btn.classList.add('active');
-        
-        // 更新内容状态
         tabsContainer.querySelectorAll('.custom-tab-pane').forEach(content => {
-          if (content.id === targetId) {
-            content.classList.add('active');
-          } else {
-            content.classList.remove('active');
-          }
+          content.classList.toggle('active', content.id === targetId);
         });
       }
 
+      // 初始化
       (function() {
         // 复制功能
         document.querySelectorAll('.copy-btn').forEach(btn => {
@@ -228,9 +385,7 @@
               await navigator.clipboard.writeText(text);
               const icon = this.querySelector('span');
               icon.className = 'icon-[ph--check-bold]';
-              setTimeout(() => {
-                icon.className = 'icon-[ph--copy-bold]';
-              }, 2000);
+              setTimeout(() => { icon.className = 'icon-[ph--copy-bold]'; }, 2000);
             } catch (err) {
               console.error('复制失败:', err);
             }
@@ -241,12 +396,10 @@
         document.querySelectorAll('.feed-card-wrapper').forEach(wrapper => {
           const link = wrapper.getAttribute('data-link') || '';
           let hash = 0;
-          for (const char of link) {
-            hash = hash * 31 + char.charCodeAt(0);
-          }
-          const delay = (Math.abs(hash) % 1000) / 1000;
-          wrapper.style.setProperty('--delay', delay + 's');
+          for (const char of link) hash = hash * 31 + char.charCodeAt(0);
+          wrapper.style.setProperty('--delay', (Math.abs(hash) % 1000) / 1000 + 's');
         });
+
       })();
     </script>
   </th:block>
