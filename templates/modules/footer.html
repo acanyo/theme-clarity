@@ -21,7 +21,7 @@
           <a th:href="${link.url}" target="_blank">
             <th:block th:if="${not #strings.isEmpty(link.icon)}">
               <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="'iconfont ' + ${link.icon}"></span>
             </th:block>
             <span class="nav-text" th:text="${link.text}"></span>
           </a>
@@ -37,7 +37,7 @@
           <a th:href="${link.url}" target="_blank">
             <th:block th:if="${not #strings.isEmpty(link.icon)}">
               <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+              <span th:unless="${#strings.contains(link.icon, ':')}" th:class="'iconfont ' + ${link.icon}"></span>
             </th:block>
             <span class="nav-text" th:text="${link.text}"></span>
           </a>

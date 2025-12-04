@@ -25,9 +25,8 @@
             <div class="sidebar-nav-item has-dropdown">
               <th:block th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}">
                 <iconify-icon th:if="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:icon="${menuItem.metadata.annotations.get('icon')}"></iconify-icon>
-                <span th:unless="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:class="${menuItem.metadata.annotations.get('icon')}"></span>
+                <span th:unless="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"></span>
               </th:block>
-              <span th:unless="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" class="iconfont icon-file"></span>
               <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
               <span class="icon-[ph--caret-down-bold] dropdown-arrow"></span>
             </div>
@@ -42,7 +41,7 @@
               >
                 <th:block th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}">
                   <iconify-icon th:if="${#strings.contains(child.metadata.annotations.get('icon'), ':')}" th:icon="${child.metadata.annotations.get('icon')}"></iconify-icon>
-                  <span th:unless="${#strings.contains(child.metadata.annotations.get('icon'), ':')}" th:class="${child.metadata.annotations.get('icon')}"></span>
+                  <span th:unless="${#strings.contains(child.metadata.annotations.get('icon'), ':')}" th:class="'iconfont ' + ${child.metadata.annotations.get('icon')}"></span>
                 </th:block>
                 <span class="nav-text" th:text="${child.status.displayName}"></span>
               </a>
@@ -56,11 +55,10 @@
           >
             <th:block th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}">
               <iconify-icon th:if="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:icon="${menuItem.metadata.annotations.get('icon')}"></iconify-icon>
-              <span th:unless="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:class="${menuItem.metadata.annotations.get('icon')}"></span>
+              <span th:unless="${#strings.contains(menuItem.metadata.annotations.get('icon'), ':')}" th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"></span>
             </th:block>
-            <span th:unless="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" class="iconfont icon-file"></span>
             <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
-            <span th:if="${menuItem.spec.target == '_blank'}" class="iconfont icon-link external-tip"></span>
+            <span th:if="${menuItem.spec.target == '_blank'}" class="icon-[ph--arrow-up-right] external-tip"></span>
           </a>
         </li>
       </menu>
@@ -137,8 +135,8 @@
         <th:block th:if="${not #strings.isEmpty(link.icon)}">
           <!-- Iconify 格式（包含冒号，如 ph:home） -->
           <iconify-icon th:if="${#strings.contains(link.icon, ':')}" th:icon="${link.icon}"></iconify-icon>
-          <!-- iconfont 格式（如 iconfont icon-qq） -->
-          <span th:unless="${#strings.contains(link.icon, ':')}" th:class="${link.icon}"></span>
+          <!-- iconfont 格式（如 blog home → class="iconfont blog home"） -->
+          <span th:unless="${#strings.contains(link.icon, ':')}" th:class="'iconfont ' + ${link.icon}"></span>
         </th:block>
       </a>
     </div>

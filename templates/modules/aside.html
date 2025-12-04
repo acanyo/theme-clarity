@@ -280,6 +280,19 @@
           </div>
         </section>
 
+        <!-- 云计算支持 -->
+        <section th:case="'sponsor'" class="widget dim">
+          <hgroup class="widget-title text-creative" th:text="${theme.config.aside.sponsor?.title} ?: '云计算支持'">云计算支持</hgroup>
+          <a th:href="${theme.config.aside.sponsor?.url}" target="_blank" rel="noopener noreferrer" class="widget-body widget-card with-bg sponsor-card">
+            <img th:if="${not #strings.isEmpty(theme.config.aside.sponsor?.logo)}" th:src="${theme.config.aside.sponsor.logo}" th:alt="${theme.config.aside.sponsor?.name}" class="bg-img bg-right" loading="lazy" />
+            <div class="sponsor-name text-creative" th:text="${theme.config.aside.sponsor?.name} ?: '赞助商'"></div>
+            <p class="sponsor-tip">
+              <span class="icon-[ph--cloud-bold]"></span>
+              <span th:text="${theme.config.aside.sponsor?.desc} ?: '提供云计算服务'"></span>
+            </p>
+          </a>
+        </section>
+
         <!-- 自定义组件 -->
         <section th:case="'custom'" class="widget">
           <hgroup class="widget-title text-creative" th:text="${item.title}">自定义</hgroup>

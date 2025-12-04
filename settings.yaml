@@ -184,6 +184,8 @@ spec:
                       label: 技术信息
                     - value: "community"
                       label: 社区群组
+                    - value: "sponsor"
+                      label: 云计算支持
                     - value: "custom"
                       label: 自定义
                 - $formkit: text
@@ -240,6 +242,32 @@ spec:
               label: 描述
               value: "169994096"
               help: "例如 QQ 群号"
+        - $formkit: group
+          name: sponsor
+          label: 云计算支持卡片
+          children:
+            - $formkit: text
+              name: title
+              label: 标题
+              value: "云计算支持"
+            - $formkit: attachment
+              name: logo
+              label: Logo 图片
+              accepts:
+                - "image/*"
+            - $formkit: text
+              name: name
+              label: 名称
+              value: "速纳云计算"
+            - $formkit: url
+              name: url
+              label: 链接
+              placeholder: "https://example.com"
+            - $formkit: text
+              name: desc
+              label: 描述
+              value: "提供云计算服务"
+              help: "显示在名称下方的说明文字"
     - group: post
       label: 文章
       formSchema:
