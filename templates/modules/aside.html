@@ -91,8 +91,17 @@
               a.title = item.text;
               a.onclick = (e) => {
                 e.preventDefault();
-                document.getElementById(item.id).scrollIntoView({ behavior: 'smooth' });
-                history.pushState(null, null, '#' + item.id);
+                const target = document.getElementById(item.id);
+                if (target) {
+                  target.scrollIntoView({ behavior: 'smooth' });
+                  history.pushState(null, null, '#' + item.id);
+                  // 触发高亮动画
+                  target.classList.remove('toc-highlight');
+                  void target.offsetWidth; // 强制重排以重播动画
+                  target.classList.add('toc-highlight');
+                  // 动画结束后移除类名
+                  setTimeout(() => target.classList.remove('toc-highlight'), 2000);
+                }
               };
   
               li.appendChild(a);

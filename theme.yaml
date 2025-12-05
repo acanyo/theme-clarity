@@ -6,15 +6,15 @@ spec:
   displayName: Clarity
   author:
     name: Halo
-    website: https://github.com/halo-dev
+    website: https:/www.xhhao.com
   description: A clean and modern theme for Halo
   logo: https://www.halo.run/logo
-  homepage: https://github.com/halo-dev/theme-clarity#readme
+  homepage: https:/www.xhhao.com
   repo: https://github.com/halo-dev/theme-clarity
   issues: https://github.com/halo-dev/theme-clarity/issues
   settingName: "theme-clarity-setting"
   configMapName: "theme-clarity-configMap"
-  version: "1.0.0-alpha.7"
+  version: "1.0.0"
   requires: "2.0.0"
   license:
     - name: "GPL-3.0"

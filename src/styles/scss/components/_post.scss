@@ -261,19 +261,23 @@ $breakpoint-mobile: 768px !default;
 		margin: 1rem 0;
 	}
 
-	// 锚点高亮
-	:target {
-		border-radius: 0.2rem;
-		animation: highlight 3s;
+	// 锚点高亮（点击目录跳转时）
+	.toc-highlight {
+		border-radius: 0.25rem;
+		background-color: var(--c-primary-soft);
+		animation: toc-highlight-fade 2s ease-out forwards;
 
-		@keyframes highlight {
-			50% { background-color: var(--c-primary-soft); }
+		@keyframes toc-highlight-fade {
+			0% { background-color: var(--c-primary-soft); }
+			100% { background-color: transparent; }
 		}
 	}
 
 	// 标题通用样式
 	> :where(h1, h2, h3, h4, h5, h6) {
 		position: relative;
+		display: flex;
+		align-items: center;
 		margin: 1.6em 0 0.8em;
 		font-family: var(--font-creative);
 		font-weight: 550;
@@ -379,13 +383,12 @@ $breakpoint-mobile: 768px !default;
 	&:not(.md-tech):not(.md-story) {
 		> :where(h1, h2, h3, h4, h5, h6)::before {
 			content: "";
-			display: inline-block;
+			flex-shrink: 0;
 			width: 4px;
 			height: 1em;
 			margin-inline-end: 0.5em;
 			border-radius: 2px;
 			background-color: var(--c-primary);
-			vertical-align: middle;
 		}
 
 		// 如果标题包含链接，隐藏标题的装饰块，改用链接的
@@ -395,13 +398,12 @@ $breakpoint-mobile: 768px !default;
 
 		> :where(h1, h2, h3, h4, h5, h6) > a::before {
 			content: "";
-			display: inline-block;
+			flex-shrink: 0;
 			width: 4px;
 			height: 1em;
 			margin-inline-end: 0.5em;
 			border-radius: 2px;
 			background-color: var(--c-primary);
-			vertical-align: middle;
 		}
 	}
 
