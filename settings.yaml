@@ -7,6 +7,78 @@ spec:
     - group: header
       label: 侧边栏头部
       formSchema:
+        - $el: div
+          attrs:
+            class: "text-sm"
+            style: |
+              margin-bottom: 1rem;
+              margin-top: -0.5rem;
+              padding: 0.75rem 1rem;
+              background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+              border-radius: 0.5rem;
+              border: 1px solid #bae6fd;
+          children:
+            - $el: div
+              attrs:
+                style: |
+                  display: flex;
+                  align-items: center;
+                  justify-content: space-between;
+                  flex-wrap: wrap;
+                  gap: 0.5rem;
+              children:
+                - $el: span
+                  attrs:
+                    style: "color: #0369a1;"
+                  children: "💬 遇到问题？加入 QQ 群 766203360 获取帮助"
+                - $el: div
+                  attrs:
+                    style: "display: flex; gap: 0.5rem;"
+                  children:
+                    - $el: a
+                      attrs:
+                        href: "https://qm.qq.com/q/mPJeUOtG5G"
+                        target: "_blank"
+                        style: |
+                          color: #fff;
+                          background: #0ea5e9;
+                          padding: 0.25rem 0.75rem;
+                          border-radius: 0.25rem;
+                          text-decoration: none;
+                          font-size: 0.75rem;
+                      children: "加入群聊"
+                    - $el: button
+                      attrs:
+                        type: "button"
+                        onclick: "navigator.clipboard.writeText('766203360').then(() => alert('已复制'))"
+                        style: |
+                          color: #0369a1;
+                          background: #fff;
+                          padding: 0.25rem 0.75rem;
+                          border-radius: 0.25rem;
+                          border: 1px solid #7dd3fc;
+                          cursor: pointer;
+                          font-size: 0.75rem;
+                      children: "复制群号"
+            - $el: a
+              attrs:
+                href: "https://docs.xhhao.com"
+                target: "_blank"
+                style: |
+                  display: inline-flex;
+                  align-items: center;
+                  color: #0369a1;
+                  margin-top: 0.5rem;
+                  font-size: 0.75rem;
+              children:
+                - $el: span
+                  children: "📖 查看主题文档"
+                - $el: img
+                  attrs:
+                    src: "/themes/theme-clarity/assets/images/link.svg"
+                    width: "12px"
+                    height: "12px"
+                    style: "margin-left: 4px; opacity: 0.7;"
         - $formkit: attachment
           name: logo
           label: Logo
