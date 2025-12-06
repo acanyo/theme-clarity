@@ -8,6 +8,8 @@
 [![License](https://img.shields.io/badge/License-GPL--3.0-green?style=flat-square)](./LICENSE)
 [![Version](https://img.shields.io/badge/Version-1.0.0-orange?style=flat-square)](./theme.yaml)
 
+[🌐 预览站点](https://www.xhhao.com)
+
 </div>
 
 ---
