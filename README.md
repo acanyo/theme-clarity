@@ -27,7 +27,7 @@
 
 ## 📸 预览
 
-![主题预览](./templates/assets/images/jietu.png)
+![主题预览](./img/jietu.png)
 
 ## 🚀 安装
 
