@@ -96,6 +96,52 @@ export async function autoFetchSiteInfo(): Promise<void> {
   }
 }
 
+// 自动获取网站信息（修改友链用）
+export async function autoFetchUpdateSiteInfo(): Promise<void> {
+  if (!window.LinksSubmit) return;
+  const urlInput = document.getElementById('update-link-url') as HTMLInputElement;
+  const url = urlInput?.value.trim();
+  if (!url) {
+    showMessage('请先输入网站地址', 'error', 'update');
+    return;
+  }
+
+  const btn = document.getElementById('update-auto-fetch-btn') as HTMLButtonElement;
+  const icon = btn?.querySelector('span:first-child') as HTMLElement;
+  const text = btn?.querySelector('span:last-child') as HTMLElement;
+  if (!btn || !icon || !text) return;
+  
+  const originalIcon = icon.className;
+  const originalText = text.textContent || '';
+
+  icon.className = 'icon-[ph--spinner] animate-spin';
+  text.textContent = '获取中...';
+  btn.disabled = true;
+
+  try {
+    const res = await window.LinksSubmit.getLinkDetail(url);
+    if (res.code === 200 && res.data) {
+      const info = res.data;
+      const nameInput = document.getElementById('update-link-name') as HTMLInputElement;
+      const descInput = document.getElementById('update-link-desc') as HTMLTextAreaElement;
+      const logoInput = document.getElementById('update-link-logo') as HTMLInputElement;
+      
+      if (info.title && nameInput) nameInput.value = info.title;
+      if (info.description && descInput) descInput.value = info.description;
+      if ((info.image || info.icon) && logoInput) logoInput.value = info.image || info.icon;
+      showMessage('获取成功！请检查并补充信息', 'success', 'update');
+    } else {
+      showMessage(res.msg || '获取失败', 'error', 'update');
+    }
+  } catch (e: any) {
+    showMessage(e.msg || '获取失败', 'error', 'update');
+  } finally {
+    icon.className = originalIcon;
+    text.textContent = originalText;
+    btn.disabled = false;
+  }
+}
+
 // 发送验证码
 export async function sendVerifyCode(): Promise<void> {
   if (!window.LinksSubmit) return;
@@ -485,6 +531,7 @@ if (typeof window !== 'undefined') {
   (window as any).openLinkUpdateModal = openLinkUpdateModal;
   (window as any).closeLinkUpdateModal = closeLinkUpdateModal;
   (window as any).autoFetchSiteInfo = autoFetchSiteInfo;
+  (window as any).autoFetchUpdateSiteInfo = autoFetchUpdateSiteInfo;
   (window as any).sendVerifyCode = sendVerifyCode;
   (window as any).sendUpdateVerifyCode = sendUpdateVerifyCode;
   (window as any).refreshCaptcha = refreshCaptcha;

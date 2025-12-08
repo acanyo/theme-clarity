@@ -367,7 +367,14 @@
               
               <div class="form-group">
                 <label for="update-link-url">网站地址 <span class="required">*</span></label>
-                <input type="url" id="update-link-url" name="url" placeholder="https://your-new-site.com" required />
+                <div class="input-with-btn">
+                  <input type="url" id="update-link-url" name="url" placeholder="https://your-new-site.com" required />
+                  <button type="button" class="z-btn fetch-btn" id="update-auto-fetch-btn" onclick="autoFetchUpdateSiteInfo()">
+                    <span class="icon-[ph--magic-wand-bold]"></span>
+                    <span>自动填充</span>
+                  </button>
+                </div>
+                <p class="form-hint">输入新网址后点击"自动填充"可自动获取网站信息</p>
               </div>
               
               <div class="form-group">
