@@ -2,17 +2,20 @@
   th:fragment="aside-bgmask"
   id="z-aside-bgmask"
   class="hidden"
-  onclick="document.getElementById('z-aside').classList.remove('show'); this.classList.add('hidden')"
+  onclick="
+    document.getElementById('z-aside').classList.remove('show');
+    this.classList.add('hidden');
+  "
 ></div>
 
 <aside th:fragment="aside" id="z-aside">
   <th:block th:if="${post != null or singlePage != null}">
-    <section class="widget toc-widget" id="catalog-widget" style="display: none;">
+    <section class="widget toc-widget" id="catalog-widget" style="display: none">
       <hgroup class="widget-title">
         <span class="title-text">文章目录</span>
-        <a 
-          onclick="return false;" 
-          aria-label="点赞文章" 
+        <a
+          onclick="return false;"
+          aria-label="点赞文章"
           x-data="postLike()"
           x-init="init()"
           @click="toggleLike()"
@@ -25,98 +28,113 @@
           <span class="icon-[ph--heart-fill]" x-show="liked"></span>
           <span class="like-count" x-show="count > 0" x-text="count"></span>
         </a>
-        <a href="#content" aria-label="返回顶部" data-title="返回顶部" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); return false;">
+        <a
+          href="#content"
+          aria-label="返回顶部"
+          data-title="返回顶部"
+          onclick="
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            return false;
+          "
+        >
           <span class="icon-[ph--arrow-circle-up-bold]"></span>
         </a>
-        <a href="#comment" aria-label="评论区" data-title="评论区" onclick="document.getElementById('comment').scrollIntoView({behavior: 'smooth'}); return false;">
+        <a
+          href="#comment"
+          aria-label="评论区"
+          data-title="评论区"
+          onclick="
+            document.getElementById('comment').scrollIntoView({ behavior: 'smooth' });
+            return false;
+          "
+        >
           <span class="icon-[ph--chat-circle-text-bold]"></span>
         </a>
       </hgroup>
-      
+
       <div class="widget-body widget-card toc-body">
-        <nav id="catalog-content" class="toc-nav">
-          </nav>
-        <p id="no-toc-tip" class="no-toc" style="display: none;">暂无目录信息</p>
+        <nav id="catalog-content" class="toc-nav"></nav>
+        <p id="no-toc-tip" class="no-toc" style="display: none">暂无目录信息</p>
       </div>
     </section>
-    
+
     <script>
-      (function() {
+      (function () {
         function generateCatalog() {
-          const article = document.querySelector('.article');
-          const catalogWidget = document.getElementById('catalog-widget');
-          const catalogContent = document.getElementById('catalog-content');
-          const noTocTip = document.getElementById('no-toc-tip');
-  
+          const article = document.querySelector(".article");
+          const catalogWidget = document.getElementById("catalog-widget");
+          const catalogContent = document.getElementById("catalog-content");
+          const noTocTip = document.getElementById("no-toc-tip");
+
           if (!article || !catalogWidget || !catalogContent) return;
-  
-          const headers = Array.from(article.querySelectorAll('h1, h2, h3, h4, h5, h6'));
+
+          const headers = Array.from(article.querySelectorAll("h1, h2, h3, h4, h5, h6"));
           if (headers.length === 0) {
-            catalogWidget.style.display = 'block';
-            catalogContent.style.display = 'none';
-            noTocTip.style.display = 'block';
+            catalogWidget.style.display = "block";
+            catalogContent.style.display = "none";
+            noTocTip.style.display = "block";
             return;
           }
-  
+
           // 显示组件
-          catalogWidget.style.display = 'block';
-          catalogContent.style.display = 'block';
-          noTocTip.style.display = 'none';
-          catalogContent.innerHTML = '';
-  
+          catalogWidget.style.display = "block";
+          catalogContent.style.display = "block";
+          noTocTip.style.display = "none";
+          catalogContent.innerHTML = "";
+
           // 构建嵌套树结构
           const root = { children: [] };
           const stack = [root]; // 栈中存储 { level, element, children }
-  
+
           headers.forEach((header, index) => {
-            if (!header.id) header.id = 'heading-' + index;
-            
+            if (!header.id) header.id = "heading-" + index;
+
             const level = parseInt(header.tagName.substring(1));
             const item = {
               id: header.id,
               text: header.textContent,
               level: level,
-              children: []
+              children: [],
             };
-  
+
             // 找到父级：栈顶元素的 level 必须小于当前 level
             while (stack.length > 1 && stack[stack.length - 1].level >= level) {
               stack.pop();
             }
-            
+
             stack[stack.length - 1].children.push(item);
             stack.push(item);
           });
-  
+
           // 递归渲染函数
           function renderTree(items) {
             if (!items.length) return null;
-            const ol = document.createElement('ol');
-            items.forEach(item => {
-              const li = document.createElement('li');
+            const ol = document.createElement("ol");
+            items.forEach((item) => {
+              const li = document.createElement("li");
               li.dataset.id = item.id;
-              
-              const a = document.createElement('a');
-              a.href = '#' + item.id;
+
+              const a = document.createElement("a");
+              a.href = "#" + item.id;
               a.textContent = item.text;
               a.title = item.text;
               a.onclick = (e) => {
                 e.preventDefault();
                 const target = document.getElementById(item.id);
                 if (target) {
-                  target.scrollIntoView({ behavior: 'smooth' });
-                  history.pushState(null, null, '#' + item.id);
+                  target.scrollIntoView({ behavior: "smooth" });
+                  history.pushState(null, null, "#" + item.id);
                   // 触发高亮动画
-                  target.classList.remove('toc-highlight');
+                  target.classList.remove("toc-highlight");
                   void target.offsetWidth; // 强制重排以重播动画
-                  target.classList.add('toc-highlight');
+                  target.classList.add("toc-highlight");
                   // 动画结束后移除类名
-                  setTimeout(() => target.classList.remove('toc-highlight'), 2000);
+                  setTimeout(() => target.classList.remove("toc-highlight"), 2000);
                 }
               };
-  
+
               li.appendChild(a);
-              
+
               const childrenOl = renderTree(item.children);
               if (childrenOl) {
                 li.appendChild(childrenOl);
@@ -125,58 +143,58 @@
             });
             return ol;
           }
-  
+
           const treeDom = renderTree(root.children);
           if (treeDom) catalogContent.appendChild(treeDom);
-  
+
           // 滚动监听 (ScrollSpy)
           if (window.tocObserver) window.tocObserver.disconnect();
-          
+
           const observerCallback = (entries) => {
             // 找出当前视口中可见的所有标题
-            entries.forEach(entry => {
+            entries.forEach((entry) => {
               const li = catalogContent.querySelector(`li[data-id="${entry.target.id}"]`);
               if (!li) return;
-  
+
               if (entry.isIntersecting) {
-                li.classList.add('active');
+                li.classList.add("active");
               } else {
-                li.classList.remove('active');
+                li.classList.remove("active");
               }
             });
-            
+
             // 处理高亮逻辑：如果多个 active，取最上面的一个；处理父级 has-active
-            const activeLis = catalogContent.querySelectorAll('li.active');
+            const activeLis = catalogContent.querySelectorAll("li.active");
             // 实际业务中，Intersecting 可能有多个，这里简单处理：
             // 更精确的做法是计算距离顶部最近的 header。
             // 为简化，我们这里结合 scroll 事件做简单的“可视区域”高亮
             // 实际上 IntersectionObserver 已经够用，但为了模拟 blog-v3 的 hasActiveChild
-            
+
             // 清除所有 has-active
-            catalogContent.querySelectorAll('.has-active').forEach(el => el.classList.remove('has-active'));
-            
+            catalogContent.querySelectorAll(".has-active").forEach((el) => el.classList.remove("has-active"));
+
             // 重新计算 has-active (父级高亮)
             // 这里我们只取第一个 active 的作为主激活点
-            let currentActive = catalogContent.querySelector('li.active');
-             // 如果有多个 active，通常取第一个或者根据 intersectionRatio
-             // 这里的简单实现可能不够完美，但基本可用
-            
-             if (currentActive) {
-               let parent = currentActive.parentElement.closest('li');
-               while (parent) {
-                 parent.classList.add('has-active');
-                 parent = parent.parentElement.closest('li');
-               }
-             }
+            let currentActive = catalogContent.querySelector("li.active");
+            // 如果有多个 active，通常取第一个或者根据 intersectionRatio
+            // 这里的简单实现可能不够完美，但基本可用
+
+            if (currentActive) {
+              let parent = currentActive.parentElement.closest("li");
+              while (parent) {
+                parent.classList.add("has-active");
+                parent = parent.parentElement.closest("li");
+              }
+            }
           };
-  
+
           // 使用 IntersectionObserver 监听标题
           window.tocObserver = new IntersectionObserver(observerCallback, {
-            rootMargin: '-80px 0px -70% 0px' // 调整触发区域，偏向屏幕顶部
+            rootMargin: "-80px 0px -70% 0px", // 调整触发区域，偏向屏幕顶部
           });
-          headers.forEach(h => window.tocObserver.observe(h));
+          headers.forEach((h) => window.tocObserver.observe(h));
         }
-  
+
         generateCatalog();
       })();
     </script>
@@ -185,7 +203,6 @@
   <th:block th:unless="${post != null or singlePage != null}">
     <th:block th:each="item : ${theme.config.aside.widgets.index}">
       <th:block th:switch="${item.widget}">
-
         <section th:case="'stats'" class="widget">
           <hgroup class="widget-title text-creative">博客统计</hgroup>
           <div class="widget-body widget-card">
@@ -198,15 +215,15 @@
                 <dt>上次更新</dt>
                 <dd class="time-ago" id="latest-update-time" data-time="">-</dd>
                 <script th:inline="javascript">
-                  (function() {
+                  (function () {
                     var posts = /*[[${postFinder.listAll()}]]*/ [];
                     if (posts && posts.length > 0) {
-                      var latest = posts.reduce(function(max, post) {
+                      var latest = posts.reduce(function (max, post) {
                         var time = post.spec && post.spec.publishTime;
                         return time && time > max ? time : max;
-                      }, '');
+                      }, "");
                       if (latest) {
-                        document.getElementById('latest-update-time').dataset.time = latest;
+                        document.getElementById("latest-update-time").dataset.time = latest;
                       }
                     }
                   })();
@@ -239,19 +256,24 @@
               <div>
                 <dt>文章许可</dt>
                 <dd>
-                  <a th:href="${theme.config.aside.basic.license_url}" 
-                     th:text="${theme.config.aside.basic.license}" 
-                     target="_blank" 
-                     rel="noopener noreferrer">CC BY-NC-SA 4.0</a>
+                  <a
+                    th:href="${theme.config.aside.basic.license_url}"
+                    th:text="${theme.config.aside.basic.license}"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    >CC BY-NC-SA 4.0</a
+                  >
                 </dd>
               </div>
               <div>
                 <dt>规范域名</dt>
-                <dd class="domain-text" 
-                    th:title="${site.url}" 
-                    th:with="tempUrl=${#strings.replace(#strings.replace(#strings.replace(site.url, 'https://', ''), 'http://', ''), 'www.', '')},
+                <dd
+                  class="domain-text"
+                  th:title="${site.url}"
+                  th:with="tempUrl=${#strings.replace(#strings.replace(#strings.replace(site.url, 'https://', ''), 'http://', ''), 'www.', '')},
                             cleanUrl=${#strings.endsWith(tempUrl, '/') ? #strings.substring(tempUrl, 0, #strings.length(tempUrl) - 1) : tempUrl}"
-                    th:text="${cleanUrl}"></dd>
+                  th:text="${cleanUrl}"
+                ></dd>
               </div>
             </dl>
 
@@ -280,29 +302,46 @@
           </div>
         </section>
 
-        <section th:case="'weather'" class="widget" th:if="${not #strings.isEmpty(theme.config.aside.weather?.seniverse_key)}">
+        <section
+          th:case="'weather'"
+          class="widget"
+          th:if="${not #strings.isEmpty(theme.config.aside.weather?.seniverse_key)}"
+        >
           <hgroup class="widget-title text-creative">天气预报</hgroup>
-          <div class="widget-body widget-card" 
-               id="weather-container"
-               th:data-key="${theme.config.aside.weather.seniverse_key}"
-               th:data-icon-base="@{/assets/images}">
-            <div class="weather-init" style="display: flex; align-items: center; justify-content: center; gap: 0.5em; padding: 0.75rem 1rem; font-size: 0.9em; color: var(--c-text-3);">
+          <div
+            class="widget-body widget-card"
+            id="weather-container"
+            th:data-key="${theme.config.aside.weather.seniverse_key}"
+            th:data-icon-base="@{/assets/images}"
+          >
+            <div
+              class="weather-init"
+              style="
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 0.5em;
+                padding: 0.75rem 1rem;
+                font-size: 0.9em;
+                color: var(--c-text-3);
+              "
+            >
               <span class="icon-[ph--spinner] animate-spin"></span>
               <span>加载中...</span>
             </div>
           </div>
           <script>
             (function initWeather() {
-              const container = document.getElementById('weather-container');
+              const container = document.getElementById("weather-container");
               if (!container) return;
-              
+
               if (window.mountWeather) {
-                container.innerHTML = '';
+                container.innerHTML = "";
                 window.mountWeather(container, container.dataset.key, container.dataset.iconBase);
               } else {
-                window.addEventListener('load', function() {
+                window.addEventListener("load", function () {
                   if (window.mountWeather) {
-                    container.innerHTML = '';
+                    container.innerHTML = "";
                     window.mountWeather(container, container.dataset.key, container.dataset.iconBase);
                   }
                 });
@@ -322,7 +361,11 @@
             <th:block th:with="momentCount = ${item.count ?: 3}">
               <th:block th:each="moment : ${momentFinder.list(1, momentCount * 3).items}">
                 <article class="moment-item" th:if="${not #strings.isEmpty(moment.spec.content.html)}">
-                  <div class="moment-content" th:utext="${moment.spec.content.html}"></div>
+                  <a
+                    class="moment-content"
+                    th:href="|/moments/${moment.metadata.name}|"
+                    th:utext="${moment.spec.content.html}"
+                  ></a>
                   <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
                     <span class="icon-[ph--clock-bold]"></span>
                     <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
@@ -335,41 +378,43 @@
               </div>
             </th:block>
             <script>
-              (function() {
-                const widget = document.querySelector('.moments-widget');
+              (function () {
+                const widget = document.querySelector(".moments-widget");
                 if (!widget) return;
                 const count = parseInt(widget.dataset.count) || 3;
-                const items = widget.querySelectorAll('.moment-item');
-                
+                const items = widget.querySelectorAll(".moment-item");
+
                 // 过滤内容：移除标签、图片等，只保留纯文本
                 items.forEach((item, i) => {
                   if (i >= count) {
-                    item.style.display = 'none';
+                    item.style.display = "none";
                     return;
                   }
-                  const content = item.querySelector('.moment-content');
+                  const content = item.querySelector(".moment-content");
                   if (content) {
                     // 移除图片、视频、iframe 等媒体元素
-                    content.querySelectorAll('img, video, iframe, audio, embed, object').forEach(el => el.remove());
+                    content.querySelectorAll("img, video, iframe, audio, embed, object").forEach((el) => el.remove());
                     // 移除标签链接 (通常是 #tag 格式)
-                    content.querySelectorAll('a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag').forEach(el => el.remove());
+                    content
+                      .querySelectorAll('a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag')
+                      .forEach((el) => el.remove());
                     // 移除空的段落
-                    content.querySelectorAll('p, div, span').forEach(el => {
+                    content.querySelectorAll("p, div, span").forEach((el) => {
                       if (!el.textContent.trim()) el.remove();
                     });
                     // 如果内容为空则隐藏整个条目
                     if (!content.textContent.trim()) {
-                      item.style.display = 'none';
+                      item.style.display = "none";
                     }
                   }
                 });
-                
+
                 // 重新计算显示数量，确保显示足够的条目
                 let visibleCount = 0;
-                items.forEach(item => {
-                  if (item.style.display !== 'none') {
+                items.forEach((item) => {
+                  if (item.style.display !== "none") {
                     if (visibleCount >= count) {
-                      item.style.display = 'none';
+                      item.style.display = "none";
                     } else {
                       visibleCount++;
                     }
@@ -380,7 +425,11 @@
           </div>
         </section>
 
-        <section th:case="'community'" class="widget dim" th:if="${not #strings.isEmpty(theme.config.aside.community.image)}">
+        <section
+          th:case="'community'"
+          class="widget dim"
+          th:if="${not #strings.isEmpty(theme.config.aside.community.image)}"
+        >
           <hgroup class="widget-title text-creative" th:text="${theme.config.aside.community.title}">
             博客/技术社区
           </hgroup>
@@ -395,9 +444,22 @@
         </section>
 
         <section th:case="'sponsor'" class="widget dim">
-          <hgroup class="widget-title text-creative" th:text="${theme.config.aside.sponsor?.title} ?: '云计算支持'">云计算支持</hgroup>
-          <a th:href="${theme.config.aside.sponsor?.url}" target="_blank" rel="noopener noreferrer" class="widget-body widget-card with-bg sponsor-card">
-            <img th:if="${not #strings.isEmpty(theme.config.aside.sponsor?.logo)}" th:src="${theme.config.aside.sponsor.logo}" th:alt="${theme.config.aside.sponsor?.name}" class="bg-img bg-right" loading="lazy" />
+          <hgroup class="widget-title text-creative" th:text="${theme.config.aside.sponsor?.title} ?: '云计算支持'">
+            云计算支持
+          </hgroup>
+          <a
+            th:href="${theme.config.aside.sponsor?.url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="widget-body widget-card with-bg sponsor-card"
+          >
+            <img
+              th:if="${not #strings.isEmpty(theme.config.aside.sponsor?.logo)}"
+              th:src="${theme.config.aside.sponsor.logo}"
+              th:alt="${theme.config.aside.sponsor?.name}"
+              class="bg-img bg-right"
+              loading="lazy"
+            />
             <div class="sponsor-name text-creative" th:text="${theme.config.aside.sponsor?.name} ?: '赞助商'"></div>
             <p class="sponsor-tip">
               <span class="icon-[ph--cloud-bold]"></span>
@@ -410,7 +472,6 @@
           <hgroup class="widget-title text-creative" th:text="${item.title}">自定义</hgroup>
           <div class="widget-body widget-card" th:utext="${item.content}"></div>
         </section>
-
       </th:block>
     </th:block>
   </th:block>

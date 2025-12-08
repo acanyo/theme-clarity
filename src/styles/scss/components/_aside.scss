@@ -511,6 +511,11 @@ a.sponsor-card.widget-card.with-bg {
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+  text-decoration: none;
+
+  &:hover {
+    color: var(--c-primary);
+  }
 
 	p {
 		margin: 0;
