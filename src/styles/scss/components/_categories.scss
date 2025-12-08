@@ -126,39 +126,95 @@
 
 .category-header {
   display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
-  justify-content: space-between;
-  gap: 1.5rem;
-  padding: 1.5rem;
+  text-align: center;
+  padding: 3rem 1.5rem;
   margin-bottom: 1rem;
   position: relative;
   overflow: hidden;
+  min-height: 180px;
+
+  // 有封面时的样式
+  &:has(.category-cover) {
+    min-height: 220px;
+
+    // 遮罩
+    &::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3),
+        rgba(0, 0, 0, 0.5)
+      );
+      z-index: 1;
+    }
+
+    .category-info {
+      color: #fff;
+    }
+
+    .category-title {
+      color: #fff;
+      text-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+
+      [class^="icon-"] {
+        color: #fff;
+      }
+    }
+
+    .category-description {
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .category-meta {
+      color: rgba(255, 255, 255, 0.8);
+
+      .meta-item {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(4px);
+        border-color: rgba(255, 255, 255, 0.2);
+        color: #fff;
+      }
+    }
+  }
 }
 
 .category-info {
-  flex: 1;
-  min-width: 0;
+  position: relative;
+  z-index: 2;
 }
 
 .category-title {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 0.5em;
   margin: 0 0 0.5rem;
-  font-size: 1.5em;
+  font-size: 1.6em;
   color: var(--c-text);
+
+  [class^="icon-"] {
+    color: var(--c-primary);
+  }
 }
 
 .category-description {
-  margin: 0 0 0.75rem;
+  margin: 0 0 1rem;
   font-size: 0.9em;
   color: var(--c-text-2);
   line-height: 1.6;
+  max-width: 400px;
 }
 
 .category-meta {
   display: flex;
-  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   font-size: 0.85em;
   color: var(--c-text-3);
 
@@ -166,13 +222,18 @@
     display: inline-flex;
     align-items: center;
     gap: 0.3em;
+    padding: 0.25em 0.75em;
+    background: var(--c-bg-soft);
+    border: 1px solid var(--c-border);
+    border-radius: 1em;
   }
 }
 
 .category-cover {
-  width: 120px;
-  height: 80px;
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: 0.5rem;
-  flex-shrink: 0;
+  z-index: 0;
 }
