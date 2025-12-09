@@ -360,12 +360,12 @@
           <div class="widget-body widget-card moments-widget" th:data-count="${item.count ?: 3}">
             <th:block th:with="momentCount = ${item.count ?: 3}">
               <th:block th:each="moment : ${momentFinder.list(1, momentCount * 3).items}">
-                <article class="moment-item" th:if="${not #strings.isEmpty(moment.spec.content.html)}">
-                  <a
-                    class="moment-content"
-                    th:href="|/moments/${moment.metadata.name}|"
-                    th:utext="${moment.spec.content.html}"
-                  ></a>
+                <article
+                  class="moment-item"
+                  th:if="${not #strings.isEmpty(moment.spec.content.html)}"
+                  th:data-html="${moment.spec.content.html}"
+                >
+                  <a class="moment-content" th:href="|/moments/${moment.metadata.name}|"></a>
                   <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
                     <span class="icon-[ph--clock-bold]"></span>
                     <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
@@ -381,45 +381,66 @@
               (function () {
                 const widget = document.querySelector(".moments-widget");
                 if (!widget) return;
+
                 const count = parseInt(widget.dataset.count) || 3;
-                const items = widget.querySelectorAll(".moment-item");
+                const items = Array.from(widget.querySelectorAll(".moment-item"));
 
-                // 过滤内容：移除标签、图片等，只保留纯文本
-                items.forEach((item, i) => {
-                  if (i >= count) {
-                    item.style.display = "none";
-                    return;
-                  }
-                  const content = item.querySelector(".moment-content");
-                  if (content) {
-                    // 移除图片、视频、iframe 等媒体元素
-                    content.querySelectorAll("img, video, iframe, audio, embed, object").forEach((el) => el.remove());
-                    // 移除标签链接 (通常是 #tag 格式)
-                    content
-                      .querySelectorAll('a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag')
-                      .forEach((el) => el.remove());
-                    // 移除空的段落
-                    content.querySelectorAll("p, div, span").forEach((el) => {
-                      if (!el.textContent.trim()) el.remove();
-                    });
-                    // 如果内容为空则隐藏整个条目
-                    if (!content.textContent.trim()) {
-                      item.style.display = "none";
-                    }
-                  }
-                });
+                // 如果完全没有内容则不展示
+                if (!items.length) return;
 
-                // 重新计算显示数量，确保显示足够的条目
-                let visibleCount = 0;
-                items.forEach((item) => {
-                  if (item.style.display !== "none") {
-                    if (visibleCount >= count) {
+                // 预编译 DOMParser
+                const parser = new DOMParser();
+
+                // 选择器常量（避免每次 parse 都创建）
+                const REMOVE_MEDIA = "img, video, iframe, audio, embed, object";
+                const REMOVE_TAG_LINKS = 'a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag';
+
+                let visible = 0;
+
+                // 使用 requestIdleCallback 提升页面初渲染流畅度
+                const run = () => {
+                  items.forEach((item) => {
+                    if (visible >= count) {
                       item.style.display = "none";
-                    } else {
-                      visibleCount++;
+                      return;
                     }
-                  }
-                });
+
+                    const raw = item.dataset.html;
+                    if (!raw) {
+                      item.style.display = "none";
+                      return;
+                    }
+
+                    // 内存解析 HTML
+                    const doc = parser.parseFromString(raw, "text/html");
+                    const body = doc.body;
+
+                    // 移除媒体
+                    body.querySelectorAll(REMOVE_MEDIA).forEach((el) => el.remove());
+                    // 移除标签链接
+                    body.querySelectorAll(REMOVE_TAG_LINKS).forEach((el) => el.remove());
+
+                    // 移除空元素（一次性选择）
+                    body.querySelectorAll("p, div, span").forEach((el) => !el.textContent.trim() && el.remove());
+
+                    const html = body.innerHTML.trim();
+
+                    // 内容为空则隐藏
+                    if (!html) {
+                      item.style.display = "none";
+                      return;
+                    }
+
+                    // 写入内容
+                    const content = item.querySelector(".moment-content");
+                    if (content) content.innerHTML = html;
+
+                    visible++;
+                  });
+                };
+
+                // 使用 requestIdleCallback，如果浏览器不支持则 fallback
+                window.requestIdleCallback ? requestIdleCallback(run) : run();
               })();
             </script>
           </div>
