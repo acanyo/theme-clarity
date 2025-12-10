@@ -274,7 +274,7 @@ $breakpoint-mobile: 768px !default;
 	}
 
 	// 标题通用样式
-	> :where(h1, h2, h3, h4, h5, h6) {
+	:where(h1, h2, h3, h4, h5, h6) {
 		position: relative;
 		display: flex;
 		align-items: center;
@@ -294,25 +294,25 @@ $breakpoint-mobile: 768px !default;
 		}
 	}
 
-	> h1 { font-size: 2em; }
-	> h2 { font-size: 1.5em; }
-	> h3 { font-size: 1.25em; }
-	> h4 { font-size: 1.1em; }
-	> h5 { font-size: 1em; }
-	> h6 { font-size: 0.9em; color: var(--c-text-2); }
+	h1 { font-size: 2em; }
+	h2 { font-size: 1.5em; }
+	h3 { font-size: 1.25em; }
+	h4 { font-size: 1.1em; }
+	h5 { font-size: 1em; }
+	h6 { font-size: 0.9em; color: var(--c-text-2); }
 
 	// ==========================================
 	// 技术文章样式 (.md-tech)
 	// ==========================================
 	&.md-tech {
 		// h2 链接前的 # 符号
-		> h2 > a::before {
+		h2 > a::before {
 			content: "#";
 			color: white;
 		}
 
 		// h2-h6 链接前的装饰块
-		> :where(h2, h3, h4, h5, h6) > a::before {
+		:where(h2, h3, h4, h5, h6) > a::before {
 			content: "";
 			margin-inline-end: 0.5em;
 			padding: 0 2px;
@@ -321,7 +321,7 @@ $breakpoint-mobile: 768px !default;
 		}
 
 		// 无链接的标题也加装饰块
-		> :where(h2, h3, h4, h5, h6):not(:has(> a))::before {
+		:where(h2, h3, h4, h5, h6):not(:has(> a))::before {
 			content: "";
 			display: inline-block;
 			width: 4px;
@@ -346,7 +346,7 @@ $breakpoint-mobile: 768px !default;
 		}
 
 		// h2 前的圆形渐变装饰
-		> h2::before {
+		h2::before {
 			content: "";
 			position: absolute;
 			width: 2.5em;
@@ -358,7 +358,7 @@ $breakpoint-mobile: 768px !default;
 		}
 
 		// h3 后的小装饰块
-		> h3::after {
+		h3::after {
 			content: "";
 			position: absolute;
 			bottom: 0;
@@ -368,7 +368,7 @@ $breakpoint-mobile: 768px !default;
 		}
 
 		// 段落首行缩进
-		> p, :not([class]) > p {
+		p, :not([class]) > p {
 			text-indent: 2em;
 
 			> [class] {
@@ -378,7 +378,7 @@ $breakpoint-mobile: 768px !default;
 	}
 
 	&:not(.md-tech):not(.md-story) {
-		> :where(h1, h2, h3, h4, h5, h6)::before {
+		:where(h1, h2, h3, h4, h5, h6)::before {
 			content: "";
 			flex-shrink: 0;
 			width: 4px;
@@ -389,11 +389,11 @@ $breakpoint-mobile: 768px !default;
 		}
 
 		// 如果标题包含链接，隐藏标题的装饰块，改用链接的
-		> :where(h1, h2, h3, h4, h5, h6):has(> a)::before {
+		:where(h1, h2, h3, h4, h5, h6):has(> a)::before {
 			display: none;
 		}
 
-		> :where(h1, h2, h3, h4, h5, h6) > a::before {
+		:where(h1, h2, h3, h4, h5, h6) > a::before {
 			content: "";
 			flex-shrink: 0;
 			width: 4px;
