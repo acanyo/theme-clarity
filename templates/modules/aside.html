@@ -390,10 +390,6 @@
                 // 预编译 DOMParser
                 const parser = new DOMParser();
 
-                // 选择器常量（避免每次 parse 都创建）
-                const REMOVE_MEDIA = "img, video, iframe, audio, embed, object";
-                const REMOVE_TAG_LINKS = 'a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag';
-
                 // 使用 requestIdleCallback 提升页面初渲染流畅度
                 const run = () => {
                   items.forEach((item) => {
@@ -403,29 +399,20 @@
                       return;
                     }
 
-                    // 内存解析 HTML
+                    // 内存解析 HTML 并提取纯文本
                     const doc = parser.parseFromString(raw, "text/html");
-                    const body = doc.body;
-
-                    // 移除媒体
-                    body.querySelectorAll(REMOVE_MEDIA).forEach((el) => el.remove());
-                    // 移除标签链接
-                    body.querySelectorAll(REMOVE_TAG_LINKS).forEach((el) => el.remove());
-
-                    // 移除空元素（一次性选择）
-                    body.querySelectorAll("p, div, span").forEach((el) => !el.textContent.trim() && el.remove());
-
-                    const html = body.innerHTML.trim();
+                    const text = doc.body.textContent || doc.body.innerText || "";
+                    const trimmedText = text.trim();
 
                     // 内容为空则隐藏
-                    if (!html) {
+                    if (!trimmedText) {
                       item.style.display = "none";
                       return;
                     }
 
-                    // 写入内容
+                    // 写入纯文本内容
                     const content = item.querySelector(".moment-content");
-                    if (content) content.innerHTML = html;
+                    if (content) content.textContent = trimmedText;
                   });
                 };
 
