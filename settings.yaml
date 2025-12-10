@@ -432,6 +432,11 @@ spec:
           max: 50
           validation: required
         - $formkit: checkbox
+          name: default_cover
+          label: 启用默认封面图
+          value: true
+          help: 当文章无封面图时，显示灰色背景+文章标题作为默认封面
+        - $formkit: checkbox
           name: show_excerpt
           id: show_excerpt
           label: 显示文章摘要框
