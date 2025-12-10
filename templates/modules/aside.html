@@ -357,9 +357,9 @@
               <span class="icon-[ph--arrow-right-bold]"></span>
             </a>
           </hgroup>
-          <div class="widget-body widget-card moments-widget" th:data-count="${item.count ?: 3}">
+          <div class="widget-body widget-card moments-widget">
             <th:block th:with="momentCount = ${item.count ?: 3}">
-              <th:block th:each="moment : ${momentFinder.list(1, momentCount * 3).items}">
+              <th:block th:each="moment : ${momentFinder.list(1, momentCount).items}">
                 <article
                   class="moment-item"
                   th:if="${not #strings.isEmpty(moment.spec.content.html)}"
@@ -382,7 +382,6 @@
                 const widget = document.querySelector(".moments-widget");
                 if (!widget) return;
 
-                const count = parseInt(widget.dataset.count) || 3;
                 const items = Array.from(widget.querySelectorAll(".moment-item"));
 
                 // 如果完全没有内容则不展示
@@ -395,16 +394,9 @@
                 const REMOVE_MEDIA = "img, video, iframe, audio, embed, object";
                 const REMOVE_TAG_LINKS = 'a[href*="/tags/"], a[href*="/tag/"], a.tag, a.moment-tag';
 
-                let visible = 0;
-
                 // 使用 requestIdleCallback 提升页面初渲染流畅度
                 const run = () => {
                   items.forEach((item) => {
-                    if (visible >= count) {
-                      item.style.display = "none";
-                      return;
-                    }
-
                     const raw = item.dataset.html;
                     if (!raw) {
                       item.style.display = "none";
@@ -434,8 +426,6 @@
                     // 写入内容
                     const content = item.querySelector(".moment-content");
                     if (content) content.innerHTML = html;
-
-                    visible++;
                   });
                 };
 
