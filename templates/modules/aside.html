@@ -371,9 +371,9 @@
                 <article
                   class="moment-item"
                   th:if="${not #strings.isEmpty(moment.spec.content.html) or (moment.spec.content.medium != null and not #lists.isEmpty(moment.spec.content.medium))}"
-                  th:data-html="${moment.spec.content.html}"
                   th:data-has-media="${moment.spec.content.medium != null and not #lists.isEmpty(moment.spec.content.medium)}"
                 >
+                  <script type="text/plain" class="moment-raw-html" th:utext="${moment.spec.content.html}"></script>
                   <a class="moment-content" th:href="|/moments/${moment.metadata.name}|"></a>
                   <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
                     <span class="icon-[ph--clock-bold]"></span>
@@ -406,9 +406,12 @@
                 // 使用 requestIdleCallback 提升页面初渲染流畅度
                 const run = () => {
                   items.forEach((item) => {
-                    const raw = item.dataset.html || "";
                     const hasMedia = item.dataset.hasMedia === "true";
                     let displayText = "";
+
+                    // 从moment-raw-html脚本标签中获取HTML内容
+                    const rawHtmlScript = item.querySelector(".moment-raw-html");
+                    const raw = rawHtmlScript ? rawHtmlScript.textContent || rawHtmlScript.innerText || "" : "";
 
                     // 处理HTML内容
                     if (raw) {
