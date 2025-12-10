@@ -8,7 +8,7 @@
       </a>
     </div>
 
-    <article th:with="content=${moment.spec.content}" class="moment-detail">
+    <article th:with="content=${moment.spec.content}" class="moment-detail" style="--delay: 0.1s">
       <header class="moment-header">
         <div th:if="${moment.owner != null}" class="author-info">
           <img 
@@ -39,7 +39,7 @@
         <div 
           th:if="${not #lists.isEmpty(content.medium)}" 
           class="moment-media"
-          th:classappend="${#lists.size(content.medium) == 1} ? 'single' : (#lists.size(content.medium) == 2 ? 'double' : 'grid')"
+          th:classappend="${#lists.size(content.medium) == 1 ? 'single' : (#lists.size(content.medium) == 2 ? 'double' : 'grid')}"
         >
           <th:block th:each="mediaItem : ${content.medium}">
             <figure th:if="${mediaItem.type.name == 'PHOTO'}" class="media-item photo">
@@ -69,6 +69,14 @@
       </div>
 
       <footer class="moment-footer">
+        <div th:if="${not #lists.isEmpty(moment.spec.tags)}" class="moment-tags">
+          <a th:each="tag : ${moment.spec.tags}" 
+             th:href="@{/moments(tag=${tag})}" 
+             class="moment-tag">
+            <span class="tag-hash">#</span>
+            <span th:text="${tag}"></span>
+          </a>
+        </div>
         <div class="moment-actions">
           <button 
             class="action-btn like"
@@ -112,10 +120,10 @@
             <span class="icon-[ph--heart-fill]" x-show="liked" style="display: none; color: #ef4444;"></span>
             <span x-text="count"></span>
           </button>
-          <span class="action-btn comment">
+          <a href="#comment" class="action-btn comment" title="查看评论">
             <span class="icon-[ph--chat-circle-bold]"></span>
             <span th:text="${moment.stats.approvedComment ?: 0}"></span>
-          </span>
+          </a>
           <button 
             class="action-btn share" 
             title="复制链接"

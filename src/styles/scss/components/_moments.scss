@@ -840,83 +840,195 @@
 
 // 详情页返回链接
 .moment-back {
-	margin: 1.5rem 1rem 1rem;
+	margin: 1rem;
+	animation: fade-slide-down 0.3s both;
 
 	.back-link {
 		display: inline-flex;
 		align-items: center;
-		gap: 0.4rem;
-		padding: 0.5em 1.1em;
+		gap: 0.35rem;
+		padding: 0.5em 1em;
 		border-radius: 2em;
 		background-color: var(--c-bg-soft);
-		font-size: 0.85rem;
+		font-size: 0.8rem;
 		font-weight: 500;
 		color: var(--c-text-2);
 		transition: all 0.2s;
 
 		[class^="icon-"], .iconify {
 			font-size: 1.1em;
+			transition: transform 0.2s;
 		}
 
 		&:hover {
-			background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
-			color: white;
-			transform: translateX(-2px);
-			box-shadow: 0 2px 8px color-mix(in srgb, var(--c-primary), transparent 60%);
+			background-color: var(--c-primary-soft);
+			color: var(--c-primary);
+			
+			[class^="icon-"], .iconify {
+				transform: translateX(-2px);
+			}
 		}
 	}
 }
 
 // 详情页样式
 .moment-detail {
-	margin: 0 1rem;
-	padding: 1.75rem;
+	margin: 0 1rem 1.5rem;
+	padding: 1.25rem;
 	border-radius: 1rem;
 	background-color: var(--ld-bg-card);
-	box-shadow: 0 4px 20px var(--ld-shadow);
+	box-shadow: 
+		0 1px 2px var(--ld-shadow),
+		0 4px 12px color-mix(in srgb, var(--ld-shadow), transparent 50%);
+	animation: fade-slide-up 0.4s 0.1s both;
 
 	.moment-header {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
 		margin-bottom: 1rem;
+		padding-bottom: 0.75rem;
+		border-bottom: 1px solid var(--c-border);
+
+		.author-info {
+			gap: 0.6rem;
+		}
 
 		.author-avatar {
-			width: 3.5rem;
-			height: 3.5rem;
-			box-shadow: 0 0 0 3px var(--ld-bg-card), 0 0 0 5px var(--c-primary-soft);
+			width: 2.5rem;
+			height: 2.5rem;
+			border-radius: 50%;
+			box-shadow: 0 2px 8px var(--ld-shadow);
+			transition: transform 0.2s;
+
+			&:hover {
+				transform: scale(1.08);
+			}
 		}
 
 		.author-name {
-			font-size: 1.15rem;
+			font-size: 1rem;
+			font-weight: 600;
+			color: var(--c-text);
 		}
 
 		.moment-time {
-			font-size: 0.8rem;
+			font-size: 0.75rem;
+			padding: 0.25em 0.6em;
+			border-radius: 1em;
+			background-color: var(--c-bg-soft);
+			color: var(--c-text-3);
 		}
+	}
+
+	.moment-body {
+		animation: fade-in 0.4s 0.2s both;
 	}
 
 	.moment-text {
 		font-size: 1rem;
-		line-height: 1.75;
+		line-height: 1.8;
+		color: var(--c-text-1);
 	}
 
-	.moment-media.single .media-item {
-		max-height: 500px;
+	.moment-media {
+		margin-top: 1rem;
+		animation: fade-scale-in 0.4s 0.3s both;
 
-		img, video {
-			max-height: 500px;
-			border-radius: 0.5rem;
+		&.single .media-item {
+			max-height: 450px;
+			border-radius: 0.75rem;
+			overflow: hidden;
+			box-shadow: 0 2px 12px var(--ld-shadow);
+
+			img, video {
+				max-height: 450px;
+				border-radius: 0.75rem;
+				transition: transform 0.3s;
+			}
+
+			&:hover img,
+			&:hover video {
+				transform: scale(1.01);
+			}
+		}
+
+		&.double, &.grid {
+			gap: 4px;
+			border-radius: 0.75rem;
+			overflow: hidden;
+			box-shadow: 0 2px 12px var(--ld-shadow);
 		}
 	}
 
 	.moment-footer {
-		margin-top: 1.25rem;
-		padding-top: 1rem;
+		margin-top: 1rem;
+		padding-top: 0.75rem;
+		border-top: 1px dashed var(--c-border);
+		animation: fade-in 0.3s 0.4s both;
+
+		.moment-tags {
+			margin: 0;
+			padding: 0;
+		}
+
+		.action-btn {
+			font-size: 0.8rem;
+			padding: 0.45em 0.85em;
+			border-radius: 2em;
+			transition: all 0.2s;
+
+			&:hover {
+				transform: translateY(-1px);
+			}
+		}
+	}
+}
+
+// 详情页动画
+@keyframes fade-slide-down {
+	from {
+		opacity: 0;
+		transform: translateY(-10px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fade-slide-up {
+	from {
+		opacity: 0;
+		transform: translateY(15px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
+	}
+}
+
+@keyframes fade-in {
+	from { opacity: 0; }
+	to { opacity: 1; }
+}
+
+@keyframes fade-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(0.97);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
 	}
 }
 
 // 详情页评论区
 .moment-comment-section {
-	margin: 1.5rem 1rem 2rem;
-	padding: 1.5rem 0;
+	margin: 0 1rem 2rem;
+	padding: 1rem 0;
+	animation: fade-slide-up 0.4s 0.5s both;
 
 	// 继承评论变量
 	--halo-cw-primary-1-color: var(--c-primary);
@@ -948,5 +1060,16 @@
 			font-size: 1.2em;
 			color: var(--c-primary);
 		}
+	}
+}
+
+@keyframes comment-section-in {
+	from {
+		opacity: 0;
+		transform: translateY(20px);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0);
 	}
 }
