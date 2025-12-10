@@ -12,18 +12,28 @@
       <kbd class="search-shortcut" x-data x-text="navigator.platform.includes('Mac') ? '⌘K' : 'Ctrl+K'"></kbd>
     </div>
 
-    <th:block th:if="${not #strings.isEmpty(theme.config.header.primary_menu)}" th:with="menu = ${menuFinder.getByName(theme.config.header.primary_menu)}">
+    <th:block
+      th:if="${not #strings.isEmpty(theme.config.header.primary_menu)}"
+      th:with="menu = ${menuFinder.getByName(theme.config.header.primary_menu)}"
+    >
       <menu th:if="${menu != null and menu.menuItems != null}">
         <li
           th:each="menuItem : ${menu.menuItems}"
           th:class="${menuItem.children != null and not #lists.isEmpty(menuItem.children)} ? 'has-submenu' : ''"
         >
           <th:block th:if="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}">
-            <div class="sidebar-nav-item has-dropdown">
-              <span th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"></span>
+            <a
+              class="sidebar-nav-item has-dropdown"
+              th:href="${menuItem.status.href}"
+              th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP') ? '_top' : null))}"
+            >
+              <span
+                th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+                th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"
+              ></span>
               <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
               <span class="icon-[ph--caret-down-bold] dropdown-arrow"></span>
-            </div>
+            </a>
 
             <div class="dropdown-menu">
               <a
@@ -32,7 +42,10 @@
                 class="dropdown-item"
                 th:attr="target=${(child.spec.target == '_blank' or child.spec.target == 'BLANK') ? '_blank' : ((child.spec.target == '_parent' or child.spec.target == 'PARENT') ? '_parent' : ((child.spec.target == '_top' or child.spec.target == 'TOP') ? '_top' : null))}"
               >
-                <span th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}" th:class="'iconfont ' + ${child.metadata.annotations.get('icon')}"></span>
+                <span
+                  th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}"
+                  th:class="'iconfont ' + ${child.metadata.annotations.get('icon')}"
+                ></span>
                 <span class="nav-text" th:text="${child.status.displayName}"></span>
               </a>
             </div>
@@ -43,7 +56,10 @@
             class="sidebar-nav-item"
             th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP') ? '_top' : null))}"
           >
-            <span th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"></span>
+            <span
+              th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
+              th:class="'iconfont ' + ${menuItem.metadata.annotations.get('icon')}"
+            ></span>
             <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
             <span th:if="${menuItem.spec.target == '_blank'}" class="icon-[ph--arrow-up-right] external-tip"></span>
           </a>
@@ -62,7 +78,7 @@
           <span class="user-name">加载中...</span>
         </div>
       </div>
-      
+
       <a x-show="ready && !currentUser" x-cloak href="/login" class="user-entry">
         <div class="avatar-wrapper">
           <span class="icon-[ph--user-circle-bold] default-avatar-icon"></span>
@@ -72,7 +88,7 @@
           <span class="user-desc">点击登录账号</span>
         </div>
       </a>
-      
+
       <div x-show="ready && currentUser" x-cloak class="user-entry" @click="handleClick()">
         <div class="avatar-wrapper">
           <img :src="currentUser?.avatar" :alt="currentUser?.name" class="user-avatar" />
@@ -81,9 +97,13 @@
           <span class="user-name" x-text="currentUser?.name"></span>
           <span class="user-desc" x-text="currentUser?.isAdmin ? '管理员' : '个人中心'"></span>
         </div>
-        <span x-show="currentUser?.isAdmin" class="icon-[ph--caret-down-bold] menu-arrow" :class="{ 'rotate': showMenu }"></span>
+        <span
+          x-show="currentUser?.isAdmin"
+          class="icon-[ph--caret-down-bold] menu-arrow"
+          :class="{ 'rotate': showMenu }"
+        ></span>
       </div>
-      
+
       <div x-show="ready && showMenu" x-cloak x-transition class="user-menu">
         <a href="/uc" class="user-menu-item">
           <span class="icon-[ph--user-bold]"></span>
@@ -112,7 +132,10 @@
       </button>
     </div>
 
-    <div class="social-icons" th:if="${theme.config.footer.social?.items != null and !theme.config.footer.social.items.isEmpty()}">
+    <div
+      class="social-icons"
+      th:if="${theme.config.footer.social?.items != null and !theme.config.footer.social.items.isEmpty()}"
+    >
       <a
         th:each="link : ${theme.config.footer.social.items}"
         th:href="${link.url}"

@@ -112,11 +112,11 @@ Alpine.data("userAuth", () => ({
           // 检查用户角色，判断是否为管理员
           const roles = data.user?.metadata?.annotations?.["rbac.authorization.halo.run/role-names"] || "";
           const isAdmin = roles.includes("super-role") || roles.includes("admin") || userName === "admin";
-          
+
           this.currentUser = {
             name: data.user?.spec?.displayName || userName,
             avatar: data.user?.spec?.avatar,
-            isAdmin
+            isAdmin,
           };
         } else {
           this.currentUser = null;
@@ -141,7 +141,7 @@ Alpine.data("userAuth", () => ({
     } else {
       window.location.href = "/uc";
     }
-  }
+  },
 }));
 
 /* Alpine.js 侧边栏控制组件 */
@@ -314,13 +314,18 @@ function initDropdownMenus() {
   document.addEventListener("click", (e) => {
     const target = e.target as HTMLElement;
     const trigger = target.closest(".has-dropdown");
-    
+
     if (trigger) {
       const parent = trigger.closest(".has-submenu");
       if (parent) {
-        // 阻止可能的默认链接行为（如果有的话）
-        e.preventDefault();
-        parent.classList.toggle("expanded");
+        const arrow = trigger.querySelector(".dropdown-arrow");
+        const navText = trigger.querySelector(".nav-text");
+
+        // 只有点击箭头或直接点击触发器（非链接文本）时才阻止跳转
+        if (target === arrow || target === trigger || !navText?.contains(target)) {
+          e.preventDefault();
+          parent.classList.toggle("expanded");
+        }
       }
     }
   });
@@ -330,7 +335,7 @@ function initDropdownMenus() {
 function initBackToTop() {
   const mobileBtn = document.getElementById("back-to-top") as HTMLButtonElement | null;
   const pcBtn = document.getElementById("pc-back-to-top") as HTMLButtonElement | null;
-  
+
   if (!mobileBtn && !pcBtn) return;
 
   // 避免重复绑定
@@ -340,11 +345,11 @@ function initBackToTop() {
   const updateVisibility = () => {
     const y = window.scrollY || document.documentElement.scrollTop || 0;
     const showMobile = y > 300;
-    
+
     if (mobileBtn) mobileBtn.style.display = showMobile ? "" : "none";
-    
+
     if (pcBtn) {
-      if (showMobile) { 
+      if (showMobile) {
         pcBtn.classList.add("show");
       } else {
         pcBtn.classList.remove("show");
