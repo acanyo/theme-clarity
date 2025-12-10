@@ -511,6 +511,17 @@ a.sponsor-card.widget-card.with-bg {
 	-webkit-line-clamp: 3;
 	-webkit-box-orient: vertical;
 	overflow: hidden;
+	text-decoration: none !important;
+
+	&:hover {
+		color: var(--c-primary) !important;
+	}
+
+	// 确保所有子元素继承正确的样式
+	* {
+		text-decoration: inherit !important;
+		color: inherit !important;
+	}
 
 	p {
 		margin: 0;
