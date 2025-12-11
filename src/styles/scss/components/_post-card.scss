@@ -117,9 +117,65 @@ span:not([class]):empty {
 	}
 }
 
+// 默认封面样式
+.default-cover {
+	position: absolute;
+	top: 0;
+	inset-inline-end: 0;
+	width: min(320px, 50%);
+	height: 100%;
+	margin: 0;
+	mask-image: linear-gradient(to var(--end), transparent, #FFF 50%);
+	opacity: 0.8;
+	transition: opacity 0.3s ease;
+	background-color: var(--c-border);
+	
+	.default-cover-title {
+		display: grid;
+		align-content: center;
+		justify-content: end;
+		overflow: visible;
+		padding: 0.5em;
+		font: bold 1.5rem/1.2 var(--font-serif);
+		word-break: normal;
+		text-align: right;
+		text-shadow: none;
+		color: var(--c-text-3);
+		height: 100%;
+		
+		// 移动端上下居上，左右居中
+		@media (max-width: $breakpoint-phone) {
+			align-content: start;
+			justify-content: center;
+			text-align: center;
+		}
+		
+		@container (max-width: #{$breakpoint-phone}) {
+			align-content: start;
+			justify-content: center;
+			text-align: center;
+		}
+	}
+	
+	.article-card:hover & {
+		opacity: 1;
+	}
+}
+
 // 封面图窄屏布局：图上文下
 @mixin cover-narrow {
 	.article-cover {
+		position: revert;
+		width: 100%;
+		height: auto;
+		max-width: none;
+		max-height: 200px;
+		aspect-ratio: 2.4;
+		margin-bottom: -10%;
+		mask-image: linear-gradient(#FFF 50%, transparent);
+	}
+	
+	.default-cover {
 		position: revert;
 		width: 100%;
 		height: auto;
