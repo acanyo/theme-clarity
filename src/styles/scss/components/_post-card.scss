@@ -60,6 +60,23 @@ $breakpoint-phone: 528px !default;
 .article-title {
 	font-size: 1.2em;
 	color: var(--c-text);
+	
+	.hotpost {
+		display: inline-block;
+
+		.icon {
+			width: 16px;
+			height: 16px;
+			fill: var(--c-danger);
+			margin-left: 4px;
+			transition: all 0.3s ease;
+		}
+
+		&:hover .icon {
+			transform: scale(1.1);
+			fill: var(--c-danger-dark);
+		}
+	}
 }
 
 .article-description {
