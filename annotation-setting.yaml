@@ -42,3 +42,59 @@ spec:
       label: 分组描述
       placeholder: 这是我的好友们
       help: 显示在分组标题下方的描述文字
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: content.halo.run
+    kind: Post
+  formSchema:
+    - $formkit: checkbox
+      id: post_author
+      key: post_author
+      name: post_author
+      label: 原创
+      value: true
+      on-value: "true"
+      off-value: "false"
+    - $formkit: text
+      if: "$get(post_author).value == 'false'"
+      id: post_original
+      key: post_original
+      name: post_original
+      label: 来源
+    - $formkit: text
+      if: "$get(post_author).value == 'false'"
+      id: post_original_url
+      key: post_original_url
+      name: post_original_url
+      label: 源链接
+    - $formkit: text
+      if: "$get(post_author).value == 'false'"
+      id: post_original_text
+      key: post_original_text
+      name: post_original_text
+      value: "此文来自 {post_original} ，侵删。"
+      label: 非原创文案
+    - $formkit: checkbox
+      name: post_license
+      id: post_license
+      label: 自定义授权协议
+      value: false
+      on-value: "true"
+      off-value: "false"
+    - $formkit: text
+      if: "$get(post_license).value == 'true'"
+      id: post_license_text
+      key: post_license_text
+      name: post_license_text
+      label: 授权协议
+    - $formkit: text
+      if: "$get(post_license).value == 'true'"
+      id: post_license_url
+      key: post_license_url
+      name: post_license_url
+      label: 协议链接

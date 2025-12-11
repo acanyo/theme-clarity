@@ -1,5 +1,8 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = null)}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = null)}"
+>
   <th:block th:fragment="content">
     <div class="post-header" th:classappend="${post.spec.cover != null and post.spec.cover != ''} ? 'has-cover' : ''">
       <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="post-cover" th:alt="${post.spec.title}" />
@@ -42,8 +45,8 @@
       </div>
       <h1 class="post-title text-creative" th:text="${post.spec.title}"></h1>
     </div>
-    <div 
-      th:if="${theme.config.post.show_excerpt != false and post.status.excerpt != null and post.status.excerpt != ''}" 
+    <div
+      th:if="${theme.config.post.show_excerpt != false and post.status.excerpt != null and post.status.excerpt != ''}"
       class="md-excerpt gradient-card"
       th:with="
         enableAnimation = ${theme.config.post.excerpt?.animation != false},
@@ -55,16 +58,21 @@
       th:data-caret="${caret}"
     >
       <span class="icon-[ph--highlighter-bold]"></span>
-      <span id="excerpt-text" th:data-text="${post.status.excerpt}" th:text="${enableAnimation ? '' : post.status.excerpt}"></span><span th:if="${enableAnimation}" id="excerpt-caret" class="excerpt-caret" th:text="${caret}"></span>
+      <span
+        id="excerpt-text"
+        th:data-text="${post.status.excerpt}"
+        th:text="${enableAnimation ? '' : post.status.excerpt}"
+      ></span
+      ><span th:if="${enableAnimation}" id="excerpt-caret" class="excerpt-caret" th:text="${caret}"></span>
     </div>
     <script>
-      (function() {
-        const container = document.querySelector('.md-excerpt');
-        if (!container || container.dataset.animation === 'false') return;
-        const el = document.getElementById('excerpt-text');
-        const caret = document.getElementById('excerpt-caret');
+      (function () {
+        const container = document.querySelector(".md-excerpt");
+        if (!container || container.dataset.animation === "false") return;
+        const el = document.getElementById("excerpt-text");
+        const caret = document.getElementById("excerpt-caret");
         if (!el) return;
-        const text = el.dataset.text || '';
+        const text = el.dataset.text || "";
         const speed = parseInt(container.dataset.speed) || 50;
         let index = 0;
         function type() {
@@ -73,14 +81,14 @@
             index++;
             setTimeout(type, speed);
           } else {
-            if (caret) caret.style.display = 'none';
+            if (caret) caret.style.display = "none";
           }
         }
         type();
       })();
     </script>
 
-    <div 
+    <div
       th:if="${theme.config.post.outdated_notice?.enabled != false and post.spec.publishTime != null}"
       class="outdated-notice"
       th:with="
@@ -90,27 +98,27 @@
       th:data-publish-time="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd''T''HH:mm:ss')}"
       th:data-threshold="${thresholdDays}"
       th:data-message="${message}"
-      style="display: none;"
+      style="display: none"
     >
       <span class="icon-[ph--warning-circle-bold]"></span>
       <span class="notice-text"></span>
     </div>
     <script>
-      (function() {
-        const notice = document.querySelector('.outdated-notice');
+      (function () {
+        const notice = document.querySelector(".outdated-notice");
         if (!notice) return;
-        
+
         const publishTime = new Date(notice.dataset.publishTime).getTime();
         const threshold = parseInt(notice.dataset.threshold) || 180;
         const messageTemplate = notice.dataset.message;
-        
+
         const now = Date.now();
         const daysPassed = Math.floor((now - publishTime) / (1000 * 60 * 60 * 24));
-        
+
         if (daysPassed >= threshold) {
-          const text = messageTemplate.replace('{days}', daysPassed);
-          notice.querySelector('.notice-text').textContent = text;
-          notice.style.display = '';
+          const text = messageTemplate.replace("{days}", daysPassed);
+          notice.querySelector(".notice-text").textContent = text;
+          notice.style.display = "";
         }
       })();
     </script>
@@ -131,8 +139,57 @@
       </section>
 
       <section class="license">
-        <div class="title text-creative">许可协议</div>
-        <div class="content">本文采用 <a th:href="${theme.config.aside.basic.license_url ?: 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans'}" target="_blank"><svg xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" viewBox="0 0 24 24" style="vertical-align: -0.125em; display: inline;"><path fill="currentColor" d="M9 8c1.104 0 2.105.448 2.829 1.173l-1.414 1.413a2 2 0 1 0 0 2.828l1.413 1.414A4.001 4.001 0 0 1 5 12c0-2.208 1.792-4 4-4m9.829 1.173A4.001 4.001 0 0 0 12 12a4.001 4.001 0 0 0 6.828 2.828l-1.414-1.414a2 2 0 1 1 0-2.828zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12m10-8a8 8 0 1 0 0 16a8 8 0 0 0 0-16"/></svg> <span th:text="${theme.config.aside.basic.license ?: '署名-非商业性使用-相同方式共享 4.0 国际'}"></span></a> 许可协议，转载请注明出处。</div>
+        <th:block th:with="isOriginal = ${#annotations.getOrDefault(post, 'post_author', 'true')}">
+          <th:block th:if="${isOriginal == 'true'}">
+            <div class="title text-creative">许可协议</div>
+            <div class="content">
+              本文采用
+              <a
+                th:with="hasPostLicense = ${#annotations.getOrDefault(post, 'post_license', 'false')}"
+                th:href="${hasPostLicense ? #annotations.getOrDefault(post, 'post_license_url', '') : (theme.config.aside.basic.license_url ?: 'https://creativecommons.org/licenses/by-nc-sa/4.0/deed.zh-hans')}"
+                target="_blank"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  width="1em"
+                  height="1em"
+                  viewBox="0 0 24 24"
+                  style="vertical-align: -0.125em; display: inline"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M9 8c1.104 0 2.105.448 2.829 1.173l-1.414 1.413a2 2 0 1 0 0 2.828l1.413 1.414A4.001 4.001 0 0 1 5 12c0-2.208 1.792-4 4-4m9.829 1.173A4.001 4.001 0 0 0 12 12a4.001 4.001 0 0 0 6.828 2.828l-1.414-1.414a2 2 0 1 1 0-2.828zM2 12C2 6.477 6.477 2 12 2s10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12m10-8a8 8 0 1 0 0 16a8 8 0 0 0 0-16"
+                  />
+                </svg>
+                <th:block th:if="${hasPostLicense}">
+                  <span th:text="${#annotations.getOrDefault(post, 'post_license_text', '')}"></span>
+                </th:block>
+                <th:block th:unless="${hasPostLicense}">
+                  <span
+                    th:text="${theme.config.aside.basic.license ?: '署名-非商业性使用-相同方式共享 4.0 国际'}"
+                  ></span>
+                </th:block>
+              </a>
+              许可协议，转载请注明出处。
+            </div>
+          </th:block>
+          <th:block
+            th:unless="${isOriginal == 'true'}"
+            th:with="originUrl=${#annotations.getOrDefault(post, 'post_original_url', '')},
+                      originName=${#annotations.getOrDefault(post, 'post_original', '')},
+                      replaceHtml=${'<a href=&quot;' + originUrl + '&quot; target=&quot;_blank&quot;>' + originName + '</a>'}"
+          >
+            <div class="title text-creative">文章来源</div>
+            <div
+              class="content"
+              th:utext="${#strings.replace(
+                      #annotations.getOrDefault(post, 'post_original_text', '此文来自 {post_original} ，侵删。'),
+                      '{post_original}',
+                      replaceHtml
+              )}"
+            ></div>
+          </th:block>
+        </th:block>
       </section>
     </div>
 
@@ -181,7 +238,7 @@
       <halo:comment group="content.halo.run" kind="Post" th:attr="name=${post.metadata.name}" />
     </section>
 
-    <div id="poster-modal" class="poster-modal" style="display: none;">
+    <div id="poster-modal" class="poster-modal" style="display: none">
       <div class="poster-modal-overlay"></div>
       <div class="poster-modal-content">
         <button class="poster-close" id="poster-close">
@@ -190,15 +247,27 @@
         <div class="poster-preview">
           <div class="poster-card" id="poster-card">
             <div class="poster-header">
-              <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="poster-cover" th:alt="${post.spec.title}" crossorigin="anonymous" />
+              <img
+                th:if="${post.spec.cover}"
+                th:src="${post.spec.cover}"
+                class="poster-cover"
+                th:alt="${post.spec.title}"
+                crossorigin="anonymous"
+              />
               <div class="poster-gradient"></div>
             </div>
             <div class="poster-body">
               <h2 class="poster-title" th:text="${post.spec.title}"></h2>
               <p th:if="${post.status.excerpt}" class="poster-excerpt" th:text="${post.status.excerpt}"></p>
               <div class="poster-meta">
-                <span th:if="${post.spec.publishTime}" th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></span>
-                <span th:if="${not #lists.isEmpty(post.categories)}" th:text="${post.categories[0].spec.displayName}"></span>
+                <span
+                  th:if="${post.spec.publishTime}"
+                  th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"
+                ></span>
+                <span
+                  th:if="${not #lists.isEmpty(post.categories)}"
+                  th:text="${post.categories[0].spec.displayName}"
+                ></span>
               </div>
             </div>
             <div class="poster-footer">
@@ -262,7 +331,7 @@
           posterBtn.addEventListener("click", () => {
             posterModal.style.display = "flex";
             document.body.style.overflow = "hidden";
-            
+
             // 生成二维码
             if (!qrGenerated && window.generateQRCode) {
               window.generateQRCode(posterQrcode, url);
@@ -283,7 +352,7 @@
           posterDownload.addEventListener("click", async () => {
             const icon = posterDownload.querySelector("span:first-child");
             const text = posterDownload.querySelector("span:last-child");
-            
+
             icon.className = "icon-[ph--spinner] animate-spin";
             text.textContent = "生成中...";
 
