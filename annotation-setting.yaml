@@ -57,7 +57,7 @@ spec:
       key: post_author
       name: post_author
       label: 原创
-      value: true
+      value: "true"
       on-value: "true"
       off-value: "false"
     - $formkit: text
@@ -83,7 +83,7 @@ spec:
       name: post_license
       id: post_license
       label: 自定义授权协议
-      value: false
+      value: "false"
       on-value: "true"
       off-value: "false"
     - $formkit: text
