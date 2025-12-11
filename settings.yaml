@@ -653,9 +653,9 @@ spec:
           value: "vertical"
           options:
             - value: "vertical"
-              label: 竖线
+              label: 竖线（|）
             - value: "across"
-              label: 横线
+              label: 横线（-）
     - group: development
       label: 开发设置
       formSchema:
