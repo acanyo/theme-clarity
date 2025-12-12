@@ -6,7 +6,7 @@
       <article class="article-card card" th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'">
         <a th:href="${post.status.permalink}">
           <img
-            th:if="${not #strings.isEmpty(post.spec.cover)}"
+            th:if="${post.spec.cover}"
             th:src="${post.spec.cover}"
             th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w, ${thumbnail.gen(post.spec.cover, 'm')} 800w|"
             sizes="(max-width: 528px) 400px, 800px"
