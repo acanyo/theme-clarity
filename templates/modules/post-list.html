@@ -6,7 +6,7 @@
       <article class="article-card card" th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'">
         <a th:href="${post.status.permalink}">
           <img
-            th:if="${post.spec.cover}"
+            th:if="${not #strings.isEmpty(post.spec.cover)}"
             th:src="${post.spec.cover}"
             th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w, ${thumbnail.gen(post.spec.cover, 'm')} 800w|"
             sizes="(max-width: 528px) 400px, 800px"
@@ -14,8 +14,9 @@
             loading="lazy"
             th:alt="${post.spec.title}"
           />
+          <!-- DEBUG: default_cover=[[${theme.config.post.default_cover}]], cover=[[${post.spec.cover}]], isEmpty=[[${#strings.isEmpty(post.spec.cover)}]] -->
           <div
-            th:if="${#strings.isEmpty(post.spec.cover) and theme.config.post.default_cover != false}"
+            th:if="${#strings.isEmpty(post.spec.cover) and theme.config.post.default_cover}"
             class="article-cover default-cover"
           >
             <span class="default-cover-title" th:text="${post.spec.title}"></span>

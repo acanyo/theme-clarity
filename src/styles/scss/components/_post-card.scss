@@ -112,6 +112,21 @@ span:not([class]):empty {
 	:hover > & {
 		opacity: 1;
 	}
+
+	// 默认封面样式
+	&.default-cover {
+		display: grid;
+		place-content: center;
+		background-color: var(--c-border);
+
+		.default-cover-title {
+			padding: 0.5em;
+			font: bold 1.5rem/1.2 var(--font-serif);
+			word-break: normal;
+			text-align: center;
+			color: var(--c-text-3);
+		}
+	}
 }
 
 .article-card:has(.article-cover) {
