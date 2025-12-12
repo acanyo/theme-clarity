@@ -30,14 +30,6 @@
     <th:block th:if="${theme.config.links?.title_font_css}">
       <style th:utext="${theme.config.links.title_font_css}"></style>
     </th:block>
-
-    <link
-      th:if="${not #strings.isEmpty(theme.config.custom.iconfont_url)}"
-      rel="stylesheet"
-      th:href="${theme.config.custom.iconfont_url}"
-      media="print"
-      onload="this.media='all'"
-    />
     
     <th:block th:if="${theme.config.development.enabled}">
       <script type="module" src="http://localhost:5173/@vite/client"></script>
