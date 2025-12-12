@@ -253,6 +253,114 @@ $breakpoint-mobile: 768px !default;
 	margin: 1rem;
 	line-height: 1.8;
 
+	// 文章画廊 - 悬浮扫光风格 
+	[data-type="gallery"] {
+		margin: 2rem 0;
+	}
+
+	[data-type="gallery"] > div {
+		gap: 16px !important;
+	}
+
+	[data-type="gallery"] [data-type="gallery-group"] {
+		gap: 16px !important;
+	}
+
+	[data-type="gallery"] [data-aspect-ratio] {
+		position: relative;
+		overflow: hidden;
+		border-radius: 16px;
+		background: var(--c-bg-2);
+		// 默认状态：轻微阴影
+		box-shadow: 
+			0 1px 2px rgba(0, 0, 0, 0.05),
+			0 4px 12px rgba(0, 0, 0, 0.05);
+		transition: transform 0.4s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.4s ease;
+		z-index: 1;
+		// 移除 translateZ 以避免影响 Fancybox 层级计算
+		// transform: translateZ(0); 
+		backface-visibility: hidden; // 防止闪烁
+	}
+
+	// 扫光层 (Shine Effect)
+	[data-type="gallery"] [data-aspect-ratio]::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 50%;
+		height: 100%;
+		background: linear-gradient(
+			to right,
+			transparent 0%,
+			rgba(255, 255, 255, 0.3) 50%,
+			transparent 100%
+		);
+		transform: skewX(-25deg);
+		pointer-events: none;
+		z-index: 2;
+		transition: none;
+	}
+
+	[data-type="gallery"] [data-type="gallery-image"] {
+		display: block;
+		width: 100%;
+		height: 100%;
+		border-radius: inherit;
+		transition: transform 0.5s ease;
+	}
+
+	// Hover 交互
+	[data-type="gallery"] [data-aspect-ratio]:hover {
+		// 纯 2D 浮起，稳健不抖动
+		transform: translateY(-6px);
+		z-index: 10;
+		// 强阴影 + 内发光
+		box-shadow: 
+			0 14px 30px rgba(0, 0, 0, 0.15),
+			0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+	}
+
+	// 图片轻微放大
+	[data-type="gallery"] [data-aspect-ratio]:hover [data-type="gallery-image"] {
+		transform: scale(1.05);
+	}
+
+	// 触发扫光
+	[data-type="gallery"] [data-aspect-ratio]:hover::after {
+		left: 150%;
+		transition: left 0.7s ease-in-out;
+	}
+
+	@media (max-width: 640px) {
+		[data-type="gallery"] > div,
+		[data-type="gallery"] [data-type="gallery-group"] {
+			gap: 12px !important;
+		}
+		
+		[data-type="gallery"] [data-type="gallery-group"] {
+			flex-direction: column !important;
+		}
+
+		[data-type="gallery"] [data-aspect-ratio] {
+			border-radius: 12px;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+		}
+		
+		[data-type="gallery"] [data-aspect-ratio]:active {
+			transform: scale(0.98);
+		}
+		
+		[data-type="gallery"] [data-aspect-ratio]:hover {
+			transform: none;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		[data-type="gallery"] [data-aspect-ratio]::after {
+			display: none;
+		}
+	}
+
 
 	p {
 		margin: 0.5em 0;

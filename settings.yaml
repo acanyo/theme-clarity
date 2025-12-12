@@ -300,6 +300,9 @@ spec:
             - $formkit: array
               name: index
               label: 首页侧边栏
+              itemLabels:
+                - type: text
+                  label: $value.widget
               value:
                 - widget: "stats"
                 - widget: "tech-info"

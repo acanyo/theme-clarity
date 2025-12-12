@@ -1,5 +1,6 @@
 // 图片骨架屏基础样式
-img {
+// 排除 Fancybox 灯箱内的图片，避免样式冲突
+img:not(.fancybox__image) {
   // 骨架屏占位
   background: linear-gradient(
     90deg,
@@ -41,7 +42,7 @@ img {
 
 // 减少动画 - 尊重用户偏好
 @media (prefers-reduced-motion: reduce) {
-  img {
+  img:not(.fancybox__image) {
     animation: none;
   }
 }
