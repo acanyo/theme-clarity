@@ -72,7 +72,12 @@
   </nav>
 
   <footer class="sidebar-footer">
-    <div class="user-auth" x-data="userAuth()" @click.outside="showMenu = false">
+    <div
+      class="user-auth"
+      x-data="userAuth()"
+      @click.outside="showMenu = false"
+      th:if="${theme.config.header.userAuth}"
+    >
       <div x-show="!ready" class="user-entry loading">
         <div class="avatar-wrapper">
           <span class="icon-[ph--spinner] animate-spin"></span>

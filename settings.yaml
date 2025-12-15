@@ -105,6 +105,13 @@ spec:
           name: primary_menu
           label: 主导航菜单
           help: 不选择则不显示导航菜单
+        - $formkit: checkbox
+          name: userAuth
+          id: userAuth
+          key: userAuth
+          label: 用户登录
+          help: 不选择则不显示用户登录
+          value: true
     - group: style
       label: 样式设置
       formSchema:
