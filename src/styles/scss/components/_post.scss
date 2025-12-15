@@ -130,6 +130,17 @@ $breakpoint-mobile: 768px !default;
 		color: #fff;
 		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 	}
+
+	// 有封面且开启居中时，标题垂直居中
+	.center-title.has-cover & {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		width: calc(100% - 2rem);
+		margin: 0;
+		text-align: center;
+	}
 }
 
 .post-nav {

@@ -466,6 +466,12 @@ spec:
           value: true
           help: 当文章无封面图时，显示灰色背景+文章标题作为默认封面
         - $formkit: checkbox
+          name: center_title
+          id: center_title
+          label: 标题居中显示
+          value: false
+          help: 开启后文章和页面的标题将居中显示
+        - $formkit: checkbox
           name: show_excerpt
           id: show_excerpt
           label: 显示文章摘要框
