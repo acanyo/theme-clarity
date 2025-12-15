@@ -1,7 +1,6 @@
 import "./styles/tailwind.css";
 import "./styles/style.scss";
 import "@chinese-fonts/kksjt/dist/kuaikanshijieti20231213/result.css";
-// Fancybox CSS - 静态导入确保在 JS 执行前加载
 import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
 import { Fancybox } from "@fancyapps/ui";
