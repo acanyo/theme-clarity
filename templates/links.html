@@ -1,5 +1,8 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.links?.title} ?: '友链'))}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.links?.title} ?: '友链'))}"
+>
   <th:block th:fragment="content">
     <div class="clarity-header mobile-only">
       <div th:if="${theme.config.header.emoji_tail}" class="emoji-tail">
@@ -38,39 +41,33 @@
 
     <div class="links-page">
       <th:block th:each="group,groupStat : ${groups}">
-        <section class="feed-group">
+        <section class="feed-group" th:if="${not #lists.isEmpty(group.links)}">
           <h3 class="feed-title" th:text="${group.spec.displayName}"></h3>
-          <p th:if="${group.metadata.annotations?.get('description')}" class="feed-desc" th:text="${group.metadata.annotations.get('description')}"></p>
-          
+          <p
+            th:if="${group.metadata.annotations?.get('description')}"
+            class="feed-desc"
+            th:text="${group.metadata.annotations.get('description')}"
+          ></p>
+
           <menu class="feed-list">
             <li th:each="link,linkStat : ${group.links}">
               <div class="feed-card-wrapper" th:data-link="${link.spec.url}">
-                <a 
-                  th:href="${link.spec.url}" 
-                  class="feed-card gradient-card"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a th:href="${link.spec.url}" class="feed-card gradient-card" target="_blank" rel="noopener noreferrer">
                   <div class="avatar">
-                    <img 
-                      th:src="${link.spec.logo}" 
-                      th:alt="${link.spec.displayName}"
-                      loading="lazy"
-                    />
+                    <img th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" loading="lazy" />
                   </div>
                   <span class="author" th:text="${link.spec.displayName}"></span>
                 </a>
-                
+
                 <div class="feed-tooltip">
                   <div class="site-content">
-                    <img 
-                      class="site-icon" 
-                      th:src="${link.spec.logo}" 
-                      th:alt="${link.spec.displayName}"
-                    />
+                    <img class="site-icon" th:src="${link.spec.logo}" th:alt="${link.spec.displayName}" />
                     <div class="site-info">
                       <h4 class="text-creative" th:text="${link.spec.displayName}"></h4>
-                      <code class="domain" th:text="${#strings.replace(#strings.replace(link.spec.url, 'https://', ''), 'http://', '')}"></code>
+                      <code
+                        class="domain"
+                        th:text="${#strings.replace(#strings.replace(link.spec.url, 'https://', ''), 'http://', '')}"
+                      ></code>
                     </div>
                   </div>
                   <div class="desc-content">
@@ -86,38 +83,33 @@
       <div class="custom-tabs-container" id="link-tabs">
         <div class="custom-tabs-header">
           <div class="custom-tabs-nav">
-            <button class="custom-tab-item active" data-tab="tab-info" onclick="switchTab(this)">
-              我的博客信息
-            </button>
-            <button class="custom-tab-item" data-tab="tab-apply" onclick="switchTab(this)">
-              申请友链
-            </button>
+            <button class="custom-tab-item active" data-tab="tab-info" onclick="switchTab(this)">我的博客信息</button>
+            <button class="custom-tab-item" data-tab="tab-apply" onclick="switchTab(this)">申请友链</button>
           </div>
         </div>
-        
+
         <div class="custom-tabs-content">
           <div id="tab-info" class="custom-tab-pane active">
-            <div class="link-tab"
+            <div
+              class="link-tab"
               th:with="
                 myTitle = ${theme.config.links.my_info?.title} ?: ${site.title},
                 myUrl = ${theme.config.links.my_info?.url} ?: ${site.url},
                 myLogo = ${theme.config.links.my_info?.logo} ?: ${theme.config.header.logo},
                 myDesc = ${theme.config.links.my_info?.description} ?: ${theme.config.header.subtitle},
                 myRss = ${theme.config.links.my_info?.rss} ?: '/rss.xml'
-              ">
+              "
+            >
               <div class="my-feed-card gradient-card">
                 <div class="avatar">
-                  <img 
-                    th:src="${myLogo}" 
-                    th:alt="${myTitle}"
-                  />
+                  <img th:src="${myLogo}" th:alt="${myTitle}" />
                 </div>
                 <div class="info">
                   <span class="author" th:text="${myTitle}"></span>
                   <span class="title" th:text="${myDesc}"></span>
                 </div>
               </div>
-              
+
               <div class="copy-fields">
                 <div class="copy-item">
                   <span class="prompt">名称</span>
@@ -157,11 +149,14 @@
               </div>
             </div>
           </div>
-          
+
           <div id="tab-apply" class="custom-tab-pane">
             <div class="link-tab">
               <div class="apply-content article">
-                <th:block th:if="${theme.config.links?.apply_content}" th:utext="${theme.config.links.apply_content}"></th:block>
+                <th:block
+                  th:if="${theme.config.links?.apply_content}"
+                  th:utext="${theme.config.links.apply_content}"
+                ></th:block>
                 <th:block th:unless="${theme.config.links?.apply_content}">
                   <p>欢迎与我交换友链！请在评论区留下你的博客信息：</p>
                   <ul>
@@ -173,22 +168,27 @@
                   <p>我会尽快审核并添加你的友链。</p>
                 </th:block>
               </div>
-              
+
               <th:block th:if="${theme.config.links?.enable_submit}">
                 <div class="link-submit-actions">
-                  <div id="link-submit-entry" class="link-submit-entry" style="display: none;">
+                  <div id="link-submit-entry" class="link-submit-entry" style="display: none">
                     <button type="button" class="z-btn primary" onclick="openLinkSubmitModal()">
                       <span class="icon-[ph--plus-bold]"></span>
                       <span>在线提交</span>
                     </button>
                   </div>
-                  <div th:if="${theme.config.links?.enable_update}" id="link-update-entry" class="link-submit-entry" style="display: none;">
+                  <div
+                    th:if="${theme.config.links?.enable_update}"
+                    id="link-update-entry"
+                    class="link-submit-entry"
+                    style="display: none"
+                  >
                     <button type="button" class="z-btn" onclick="openLinkUpdateModal()">
                       <span class="icon-[ph--pencil-bold]"></span>
                       <span>修改友链</span>
                     </button>
                   </div>
-                  <div id="link-submit-unavailable" class="link-submit-unavailable" style="display: none;">
+                  <div id="link-submit-unavailable" class="link-submit-unavailable" style="display: none">
                     <span class="icon-[ph--warning-circle-bold]"></span>
                     <span>自主提交插件未安装</span>
                   </div>
@@ -214,16 +214,16 @@
               <span class="icon-[ph--x-bold]"></span>
             </button>
           </div>
-          
-          <div id="submit-message" class="submit-message" style="display: none;"></div>
-          
+
+          <div id="submit-message" class="submit-message" style="display: none"></div>
+
           <form id="link-submit-form" class="link-submit-form">
             <div class="form-section">
               <div class="section-title">
                 <span class="icon-[ph--globe-bold]"></span>
                 基本信息
               </div>
-              
+
               <div class="form-group">
                 <label for="link-url">网站地址 <span class="required">*</span></label>
                 <div class="input-with-btn">
@@ -235,46 +235,46 @@
                 </div>
                 <p class="form-hint">输入网址后点击"自动填充"可自动获取网站信息</p>
               </div>
-              
+
               <div class="form-row">
                 <div class="form-group">
                   <label for="link-name">网站名称 <span class="required">*</span></label>
                   <input type="text" id="link-name" name="displayName" placeholder="我的博客" required />
                 </div>
-                
+
                 <div class="form-group">
                   <label for="link-logo">网站图标</label>
                   <input type="url" id="link-logo" name="logo" placeholder="Logo URL（可选）" />
                 </div>
               </div>
-              
+
               <div class="form-group">
                 <label for="link-desc">网站描述</label>
                 <textarea id="link-desc" name="description" rows="2" placeholder="一句话介绍你的网站"></textarea>
               </div>
             </div>
-            
+
             <div class="form-section collapsible" x-data="{ open: true }">
               <button type="button" class="section-title clickable" @click="open = !open">
                 <span class="icon-[ph--dots-three-circle-bold]"></span>
                 更多选项（可选）
                 <span class="icon-[ph--caret-down-bold] caret" :class="{ 'rotate': open }"></span>
               </button>
-              
+
               <div class="section-content" x-show="open" x-collapse>
                 <div class="form-row">
                   <div class="form-group">
                     <label for="link-page">友链页面</label>
                     <input type="url" id="link-page" name="linkPageUrl" placeholder="友链页面 URL" />
                   </div>
-                  
+
                   <div class="form-group">
                     <label for="link-rss">RSS 地址</label>
                     <input type="url" id="link-rss" name="rssUrl" placeholder="RSS 订阅地址" />
                   </div>
                 </div>
-                
-                <div class="form-group" id="link-group-wrapper" style="display: none;">
+
+                <div class="form-group" id="link-group-wrapper" style="display: none">
                   <label for="link-group">申请分组</label>
                   <select id="link-group" name="groupName">
                     <option value="">默认分组</option>
@@ -282,20 +282,24 @@
                 </div>
               </div>
             </div>
-            
+
             <div class="form-section">
               <div class="section-title">
                 <span class="icon-[ph--shield-check-bold]"></span>
                 验证信息
               </div>
-              
+
               <div class="form-group">
                 <label for="link-email">联系邮箱 <span class="required">*</span></label>
                 <input type="email" id="link-email" name="email" placeholder="your@email.com" required />
                 <p class="form-hint">用于接收审核结果通知</p>
               </div>
-              
-              <div th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}" class="form-group" id="email-verify-group">
+
+              <div
+                th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}"
+                class="form-group"
+                id="email-verify-group"
+              >
                 <label for="link-code">邮箱验证码 <span class="required">*</span></label>
                 <div class="input-with-btn">
                   <input type="text" id="link-code" name="verifyCode" placeholder="请输入收到的验证码" />
@@ -305,7 +309,7 @@
                   </button>
                 </div>
               </div>
-              
+
               <div th:if="${theme.config.links?.verify_type == 'captcha'}" class="form-group" id="captcha-group">
                 <label for="link-captcha">图形验证码 <span class="required">*</span></label>
                 <div class="captcha-row">
@@ -314,9 +318,8 @@
                 </div>
               </div>
             </div>
-            
           </form>
-          
+
           <div class="form-actions">
             <button type="button" class="z-btn cancel-btn" onclick="closeLinkSubmitModal()">取消</button>
             <button type="submit" form="link-submit-form" class="z-btn primary submit-btn" id="submit-btn">
@@ -327,7 +330,11 @@
         </div>
       </div>
 
-      <div th:if="${theme.config.links?.enable_submit and theme.config.links?.enable_update}" id="link-update-modal" class="link-submit-modal">
+      <div
+        th:if="${theme.config.links?.enable_submit and theme.config.links?.enable_update}"
+        id="link-update-modal"
+        class="link-submit-modal"
+      >
         <div class="link-submit-overlay" onclick="closeLinkUpdateModal()"></div>
         <div class="link-submit-content link-update-content">
           <div class="link-submit-header">
@@ -342,19 +349,25 @@
               <span class="icon-[ph--x-bold]"></span>
             </button>
           </div>
-          
-          <div id="update-submit-message" class="submit-message" style="display: none;"></div>
-          
+
+          <div id="update-submit-message" class="submit-message" style="display: none"></div>
+
           <form id="link-update-form" class="link-submit-form">
             <div class="form-section">
               <div class="section-title">
                 <span class="icon-[ph--magnifying-glass-bold]"></span>
                 查找友链
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-old-url">原网站地址 <span class="required">*</span></label>
-                <input type="url" id="update-link-old-url" name="oldUrl" placeholder="https://your-original-site.com" required />
+                <input
+                  type="url"
+                  id="update-link-old-url"
+                  name="oldUrl"
+                  placeholder="https://your-original-site.com"
+                  required
+                />
                 <p class="form-hint">输入你当前已提交的友链地址</p>
               </div>
             </div>
@@ -364,65 +377,74 @@
                 <span class="icon-[ph--globe-bold]"></span>
                 新网站信息
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-url">网站地址 <span class="required">*</span></label>
                 <div class="input-with-btn">
                   <input type="url" id="update-link-url" name="url" placeholder="https://your-new-site.com" required />
-                  <button type="button" class="z-btn fetch-btn" id="update-auto-fetch-btn" onclick="autoFetchUpdateSiteInfo()">
+                  <button
+                    type="button"
+                    class="z-btn fetch-btn"
+                    id="update-auto-fetch-btn"
+                    onclick="autoFetchUpdateSiteInfo()"
+                  >
                     <span class="icon-[ph--magic-wand-bold]"></span>
                     <span>自动填充</span>
                   </button>
                 </div>
                 <p class="form-hint">输入新网址后点击"自动填充"可自动获取网站信息</p>
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-name">网站名称 <span class="required">*</span></label>
                 <input type="text" id="update-link-name" name="displayName" placeholder="我的博客" required />
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-desc">网站描述</label>
                 <textarea id="update-link-desc" name="description" placeholder="一句话介绍你的网站" rows="2"></textarea>
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-logo">网站图标</label>
                 <input type="url" id="update-link-logo" name="logo" placeholder="https://example.com/logo.png" />
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-page">友链页面</label>
                 <input type="url" id="update-link-page" name="linkPageUrl" placeholder="https://your-site.com/links" />
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-rss">RSS 地址</label>
                 <input type="url" id="update-link-rss" name="rssUrl" placeholder="https://your-site.com/rss.xml" />
               </div>
-              
-              <div class="form-group" id="update-link-group-wrapper" style="display: none;">
+
+              <div class="form-group" id="update-link-group-wrapper" style="display: none">
                 <label for="update-link-group">申请分组</label>
                 <select id="update-link-group" name="groupName">
                   <option value="">默认分组</option>
                 </select>
               </div>
             </div>
-            
+
             <div class="form-section">
               <div class="section-title">
                 <span class="icon-[ph--shield-check-bold]"></span>
                 验证信息
               </div>
-              
+
               <div class="form-group">
                 <label for="update-link-email">联系邮箱 <span class="required">*</span></label>
                 <input type="email" id="update-link-email" name="email" placeholder="your@email.com" required />
                 <p class="form-hint">必须与原友链邮箱一致</p>
               </div>
-              
-              <div th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}" class="form-group" id="update-email-verify-group">
+
+              <div
+                th:if="${theme.config.links?.verify_type == 'email' or theme.config.links?.verify_type == null}"
+                class="form-group"
+                id="update-email-verify-group"
+              >
                 <label for="update-link-code">邮箱验证码 <span class="required">*</span></label>
                 <div class="input-with-btn">
                   <input type="text" id="update-link-code" name="verifyCode" placeholder="请输入收到的验证码" />
@@ -432,18 +454,23 @@
                   </button>
                 </div>
               </div>
-              
+
               <div th:if="${theme.config.links?.verify_type == 'captcha'}" class="form-group" id="update-captcha-group">
                 <label for="update-link-captcha">图形验证码 <span class="required">*</span></label>
                 <div class="captcha-row">
                   <input type="text" id="update-link-captcha" name="captcha" placeholder="请输入图中字符" />
-                  <img id="update-captcha-img" class="captcha-img" alt="验证码" onclick="refreshCaptcha('update')" title="点击刷新" />
+                  <img
+                    id="update-captcha-img"
+                    class="captcha-img"
+                    alt="验证码"
+                    onclick="refreshCaptcha('update')"
+                    title="点击刷新"
+                  />
                 </div>
               </div>
             </div>
-            
           </form>
-          
+
           <div class="form-actions">
             <button type="button" class="z-btn cancel-btn" onclick="closeLinkUpdateModal()">取消</button>
             <button type="submit" form="link-update-form" class="z-btn primary submit-btn" id="update-submit-btn">
@@ -469,46 +496,47 @@
       window.linkSubmitConfig = {
         enableSubmit: /*[[${theme.config.links?.enable_submit}]]*/ false,
         enableUpdate: /*[[${theme.config.links?.enable_update}]]*/ false,
-        verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ 'email'
+        verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ "email",
       };
       /*]]>*/
 
       // Tab 切换
       function switchTab(btn) {
-        const targetId = btn.getAttribute('data-tab');
-        const tabsContainer = btn.closest('.custom-tabs-container');
-        tabsContainer.querySelectorAll('.custom-tab-item').forEach(t => t.classList.remove('active'));
-        btn.classList.add('active');
-        tabsContainer.querySelectorAll('.custom-tab-pane').forEach(content => {
-          content.classList.toggle('active', content.id === targetId);
+        const targetId = btn.getAttribute("data-tab");
+        const tabsContainer = btn.closest(".custom-tabs-container");
+        tabsContainer.querySelectorAll(".custom-tab-item").forEach((t) => t.classList.remove("active"));
+        btn.classList.add("active");
+        tabsContainer.querySelectorAll(".custom-tab-pane").forEach((content) => {
+          content.classList.toggle("active", content.id === targetId);
         });
       }
 
       // 初始化
-      (function() {
+      (function () {
         // 复制功能
-        document.querySelectorAll('.copy-btn').forEach(btn => {
-          btn.addEventListener('click', async function() {
-            const text = this.getAttribute('data-copy');
+        document.querySelectorAll(".copy-btn").forEach((btn) => {
+          btn.addEventListener("click", async function () {
+            const text = this.getAttribute("data-copy");
             try {
               await navigator.clipboard.writeText(text);
-              const icon = this.querySelector('span');
-              icon.className = 'icon-[ph--check-bold]';
-              setTimeout(() => { icon.className = 'icon-[ph--copy-bold]'; }, 2000);
+              const icon = this.querySelector("span");
+              icon.className = "icon-[ph--check-bold]";
+              setTimeout(() => {
+                icon.className = "icon-[ph--copy-bold]";
+              }, 2000);
             } catch (err) {
-              console.error('复制失败:', err);
+              console.error("复制失败:", err);
             }
           });
         });
 
         // 友链卡片随机延迟动画
-        document.querySelectorAll('.feed-card-wrapper').forEach(wrapper => {
-          const link = wrapper.getAttribute('data-link') || '';
+        document.querySelectorAll(".feed-card-wrapper").forEach((wrapper) => {
+          const link = wrapper.getAttribute("data-link") || "";
           let hash = 0;
           for (const char of link) hash = hash * 31 + char.charCodeAt(0);
-          wrapper.style.setProperty('--delay', (Math.abs(hash) % 1000) / 1000 + 's');
+          wrapper.style.setProperty("--delay", (Math.abs(hash) % 1000) / 1000 + "s");
         });
-
       })();
     </script>
   </th:block>
