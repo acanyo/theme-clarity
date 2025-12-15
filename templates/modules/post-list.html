@@ -1,4 +1,4 @@
-<div class="post-list" th:fragment="list(posts)">
+<div class="post-list" th:fragment="list(posts, caller)">
   <th:block th:replace="~{modules/order-toggle :: toolbar}" />
 
   <menu class="posts-container proper-height">
@@ -73,5 +73,11 @@
     </th:block>
   </menu>
 
-  <th:block th:replace="~{modules/pagination :: paginationIndex(data=${posts})}" />
+  <!-- 根据调用者选择不同的分页组件 -->
+  <th:block th:if="${caller == 'category'}">
+    <th:block th:replace="~{modules/pagination :: pagination(data=${posts})}" />
+  </th:block>
+  <th:block th:unless="${caller == 'category'}">
+    <th:block th:replace="~{modules/pagination :: paginationIndex(data=${posts})}" />
+  </th:block>
 </div>

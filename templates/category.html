@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html
   xmlns:th="https://www.thymeleaf.org"
   th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = ${category.spec.displayName})}"
@@ -11,10 +11,11 @@
             <span class="icon-[ph--folder-bold]"></span>
             <span th:text="${category.spec.displayName}">分类名称</span>
           </h1>
-          <p th:if="${not #strings.isEmpty(category.spec.description)}" 
-             class="category-description"
-             th:text="${category.spec.description}">
-          </p>
+          <p
+            th:if="${not #strings.isEmpty(category.spec.description)}"
+            class="category-description"
+            th:text="${category.spec.description}"
+          ></p>
           <div class="category-meta">
             <span class="meta-item">
               <span class="icon-[ph--article-bold]"></span>
@@ -22,15 +23,17 @@
             </span>
           </div>
         </div>
-        <img th:if="${not #strings.isEmpty(category.spec.cover)}"
-             th:src="${category.spec.cover}"
-             th:srcset="|${thumbnail.gen(category.spec.cover, 's')} 400w, ${thumbnail.gen(category.spec.cover, 'm')} 800w|"
-             sizes="200px"
-             class="category-cover"
-             th:alt="${category.spec.displayName}" />
+        <img
+          th:if="${not #strings.isEmpty(category.spec.cover)}"
+          th:src="${category.spec.cover}"
+          th:srcset="|${thumbnail.gen(category.spec.cover, 's')} 400w, ${thumbnail.gen(category.spec.cover, 'm')} 800w|"
+          sizes="200px"
+          class="category-cover"
+          th:alt="${category.spec.displayName}"
+        />
       </header>
 
-      <th:block th:replace="~{modules/post-list :: list(posts=${posts})}" />
+      <th:block th:replace="~{modules/post-list :: list(posts=${posts}, caller='category')}" />
     </div>
   </th:block>
 </html>
