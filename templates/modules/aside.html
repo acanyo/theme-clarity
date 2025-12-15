@@ -381,7 +381,12 @@
                       <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
                     </time>
                     <div th:if="${not #lists.isEmpty(moment.spec.tags)}" class="moment-tags">
-                      <a th:each="tag : ${moment.spec.tags}" th:href="@{/moments(tag=${tag})}" class="moment-tag">
+                      <a
+                        th:each="tag,iterStat : ${moment.spec.tags}"
+                        th:if="${iterStat.index &lt; 2}"
+                        th:href="@{/moments(tag=${tag})}"
+                        class="moment-tag"
+                      >
                         <span class="tag-hash">#</span>
                         <span th:text="${tag}"></span>
                       </a>
