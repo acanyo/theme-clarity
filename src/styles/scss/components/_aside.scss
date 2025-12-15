@@ -532,16 +532,59 @@ a.sponsor-card.widget-card.with-bg {
 	}
 }
 
-.moment-time {
+.moment-meta {
 	display: flex;
+	justify-content: space-between;
 	align-items: center;
-	gap: 0.3em;
 	margin-top: 0.4em;
-	font-size: 0.75em;
-	color: var(--c-text-3);
+	gap: 0.5em;
 
-	[class^="icon-"] {
-		font-size: 1.1em;
+	.moment-time {
+		display: flex;
+		align-items: center;
+		gap: 0.3em;
+		font-size: 0.75em;
+		color: var(--c-text-3);
+		white-space: nowrap;
+
+		[class^="icon-"] {
+			font-size: 1.1em;
+		}
+	}
+
+	// 内容标签 - 胶囊风格
+	.moment-tags {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		justify-content: flex-end;
+		margin-left: auto;
+
+		.moment-tag {
+			display: inline-flex;
+			align-items: center;
+			gap: 0.15rem;
+			padding: 0.25em 0.6em;
+			border-radius: 2em;
+			background-color: var(--c-primary-soft);
+			font-size: 0.7rem;
+			font-weight: 500;
+			color: var(--c-primary);
+			transition: all 0.2s;
+			border: 1px solid transparent;
+
+			.tag-hash {
+				font-weight: 700;
+				opacity: 0.7;
+			}
+
+			&:hover {
+				background-color: var(--c-primary);
+				color: white;
+				transform: translateY(-1px);
+				box-shadow: 0 2px 4px color-mix(in srgb, var(--c-primary), transparent 60%);
+			}
+		}
 	}
 }
 

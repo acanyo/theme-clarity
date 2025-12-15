@@ -375,10 +375,18 @@
                 >
                   <script type="text/plain" class="moment-raw-html" th:utext="${moment.spec.content.html}"></script>
                   <a class="moment-content" th:href="|/moments/${moment.metadata.name}|"></a>
-                  <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
-                    <span class="icon-[ph--clock-bold]"></span>
-                    <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
-                  </time>
+                  <div class="moment-meta">
+                    <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
+                      <span class="icon-[ph--clock-bold]"></span>
+                      <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
+                    </time>
+                    <div th:if="${not #lists.isEmpty(moment.spec.tags)}" class="moment-tags">
+                      <a th:each="tag : ${moment.spec.tags}" th:href="@{/moments(tag=${tag})}" class="moment-tag">
+                        <span class="tag-hash">#</span>
+                        <span th:text="${tag}"></span>
+                      </a>
+                    </div>
+                  </div>
                 </article>
               </th:block>
               <div th:if="${momentFinder.list(1, 1).items.isEmpty()}" class="empty-tip">
