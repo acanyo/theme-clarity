@@ -1,7 +1,7 @@
 <!doctype html>
 <html
   xmlns:th="https://www.thymeleaf.org"
-  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.links?.title} ?: '友链'))}"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.links?.title} ?: '友链'), isLinksPage = true)}"
 >
   <th:block th:fragment="content">
     <div class="clarity-header mobile-only">
@@ -490,6 +490,17 @@
       </section>
     </div>
 
+    <!-- 友链随机访问按钮 -->
+    <button
+      th:if="${theme.config.links?.enable_random != false}"
+      id="random-link-btn"
+      class="random-link-btn"
+      onclick="randomVisitLink()"
+      title="随机穿梭"
+    >
+      <span class="icon-[ph--shuffle-bold]"></span>
+    </button>
+
     <script th:inline="javascript">
       /*<![CDATA[*/
       // 配置传递给 JS 模块
@@ -499,6 +510,32 @@
         verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ "email",
       };
       /*]]>*/
+
+      // 随机穿梭
+      function randomVisitLink() {
+        const linkCards = document.querySelectorAll('.feed-card-wrapper[data-link]');
+        if (linkCards.length === 0) {
+          alert('暂无友链可访问');
+          return;
+        }
+        const linksInfo = Array.from(linkCards).map(card => ({
+          url: card.getAttribute('data-link') || '',
+          name: card.querySelector('.author')?.textContent?.trim() || '',
+          logo: card.querySelector('.avatar img')?.src || '',
+          desc: card.querySelector('.desc-content p')?.textContent?.trim() || ''
+        })).filter(item => item.url);
+        
+        // 随机选择
+        const randomLink = linksInfo[Math.floor(Math.random() * linksInfo.length)];
+        
+        // 调用全局穿梭组件
+        if (window.openShuttle) {
+          window.openShuttle(randomLink);
+        } else {
+          // 降级：直接跳转
+          window.open(randomLink.url, '_blank');
+        }
+      }
 
       // Tab 切换
       function switchTab(btn) {

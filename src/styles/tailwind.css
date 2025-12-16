@@ -5,6 +5,8 @@
 @source './safelist.txt';
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4";
-@plugin "daisyui";
+@plugin "daisyui" {
+  exclude: countdown;
+}
 
 

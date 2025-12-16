@@ -1,0 +1,239 @@
+.shuttle {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  background: var(--c-bg-a80);
+  backdrop-filter: blur(8px);
+  animation: shuttle-in 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes shuttle-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.shuttle__card {
+  position: relative;
+  width: 100%;
+  max-width: 380px;
+  padding: 28px;
+  background: var(--ld-bg-card);
+  border: 1px solid var(--c-border);
+  border-radius: 20px;
+  box-shadow: 0 25px 50px -12px var(--ld-shadow);
+  overflow: hidden;
+  animation: shuttle-card-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes shuttle-card-in {
+  from { opacity: 0; transform: translateY(30px) scale(0.9); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.shuttle__decor {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+  
+  &--1 {
+    top: -60px;
+    right: -60px;
+    width: 150px;
+    height: 150px;
+    background: var(--c-primary);
+    opacity: 0.08;
+    animation: shuttle-float 6s ease-in-out infinite;
+  }
+  
+  &--2 {
+    bottom: -40px;
+    left: -40px;
+    width: 100px;
+    height: 100px;
+    background: var(--c-primary);
+    opacity: 0.05;
+    animation: shuttle-float 8s ease-in-out infinite reverse;
+  }
+}
+
+@keyframes shuttle-float {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-10px, 10px); }
+}
+
+.shuttle__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  color: var(--c-text-3);
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 2;
+
+  &:hover {
+    background: var(--c-bg-soft);
+    color: var(--c-text-1);
+    transform: rotate(90deg);
+  }
+
+  svg { width: 18px; height: 18px; }
+}
+
+.shuttle__header {
+  margin-bottom: 20px;
+}
+
+.shuttle__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 20px;
+  
+  svg { width: 14px; height: 14px; }
+}
+
+.shuttle__site {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background: var(--c-bg-soft);
+  border-radius: 14px;
+  transition: transform 0.2s;
+  
+  &:hover { transform: translateX(4px); }
+}
+
+.shuttle__icon {
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: var(--c-bg-2);
+  border: 1px solid var(--c-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  box-shadow: 0 4px 12px -4px var(--ld-shadow);
+
+  img { width: 100%; height: 100%; object-fit: cover; }
+  span { font-size: 22px; }
+}
+
+.shuttle__info {
+  flex: 1;
+  min-width: 0;
+}
+
+.shuttle__name {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--c-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.shuttle__desc {
+  margin: 4px 0 0;
+  font-size: 13px;
+  color: var(--c-text-3);
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.shuttle__action {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.shuttle__timer {
+  position: relative;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+}
+
+.shuttle__ring {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  
+  circle:first-child {
+    stroke: var(--c-border);
+  }
+  
+  circle:last-child {
+    stroke: var(--c-primary);
+    transition: stroke-dashoffset 1s linear;
+  }
+}
+
+.shuttle__count {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--c-primary);
+  font-variant-numeric: tabular-nums;
+}
+
+.shuttle__btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 24px;
+  background: var(--c-primary);
+  border: none;
+  border-radius: 12px;
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 14px -4px var(--c-primary);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px -4px var(--c-primary);
+  }
+
+  &:active:not(:disabled) { transform: translateY(0); }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+  }
+
+  svg { width: 18px; height: 18px; }
+}

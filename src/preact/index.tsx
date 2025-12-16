@@ -1,6 +1,7 @@
 import { render } from 'preact'
 import { PhotoGallery } from './components/PhotoGallery'
 import { Weather } from './components/Weather'
+import { Shuttle } from './components/Shuttle'
 import {
   Alert, Tab, Copy, Folding, Tip, Blur, Timeline, Quote, 
   Chat, Key, CardList, Pic,
@@ -228,3 +229,40 @@ if (typeof window !== 'undefined') {
 }
 
 export { mountCustomElements }
+
+// ========================================
+// 穿梭组件全局挂载
+// ========================================
+interface ShuttleOptions {
+  url: string
+  name: string
+  logo?: string
+  desc?: string
+}
+
+let shuttleRoot: HTMLElement | null = null
+
+function openShuttle(options: ShuttleOptions) {
+  if (shuttleRoot) return
+
+  shuttleRoot = document.createElement('div')
+  shuttleRoot.id = 'shuttle-root'
+  document.body.appendChild(shuttleRoot)
+  document.body.style.overflow = 'hidden'
+
+  const close = () => {
+    if (shuttleRoot) {
+      render(null, shuttleRoot)
+      shuttleRoot.remove()
+      shuttleRoot = null
+      document.body.style.overflow = ''
+    }
+  }
+
+  render(<Shuttle {...options} onClose={close} />, shuttleRoot)
+}
+
+// 挂载到 window 供全局调用
+if (typeof window !== 'undefined') {
+  (window as any).openShuttle = openShuttle
+}

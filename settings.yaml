@@ -564,6 +564,11 @@ spec:
           value: 友链
           placeholder: 友链
           validation: required
+        - $formkit: checkbox
+          name: enable_random
+          label: 启用随机访问
+          value: true
+          help: 开启后显示随机友链跳转按钮
         - $formkit: group
           name: my_info
           label: 我的博客信息

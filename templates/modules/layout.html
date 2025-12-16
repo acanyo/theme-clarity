@@ -106,6 +106,14 @@
         <span class="icon-[ph--align-right-duotone] rtl-flip" style="display: block;"></span>
       </button>
       <button
+        th:if="${isLinksPage and theme.config.links?.enable_random != false}"
+        id="mobile-random-link-btn"
+        aria-label="随机穿梭"
+        onclick="randomVisitLink()"
+      >
+        <span class="icon-[ph--shuffle-bold]" style="display: block;"></span>
+      </button>
+      <button
         id="back-to-top"
         aria-label="返回顶部"
         style="display: none"
