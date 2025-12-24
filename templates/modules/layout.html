@@ -14,13 +14,13 @@
       rel="stylesheet"
       th:href="@{/assets/fonts/JetBrainsMono-Regular/jetBrainsMonoRegular.css?v={version}(version=${theme.spec.version})}"
       media="print"
-      onload="this.media='all'"
+      onload="this.media = 'all'"
     />
     <link
       rel="stylesheet"
       th:href="@{/assets/fonts/JetBrainsMono-Italic/jetBrainsMonoItalic.css?v={version}(version=${theme.spec.version})}"
       media="print"
-      onload="this.media='all'"
+      onload="this.media = 'all'"
     />
 
     <th:block th:if="${theme.config.style?.logo_font_css}">
@@ -30,7 +30,7 @@
     <th:block th:if="${theme.config.links?.title_font_css}">
       <style th:utext="${theme.config.links.title_font_css}"></style>
     </th:block>
-    
+
     <th:block th:if="${theme.config.development.enabled}">
       <script type="module" src="http://localhost:5173/@vite/client"></script>
       <script type="module" src="http://localhost:5173/main.ts"></script>
@@ -42,7 +42,9 @@
       <script type="module" th:src="@{/assets/dist/main.js?v={version}(version=${theme.spec.version})}"></script>
     </th:block>
     <style th:inline="text">
-      :root, :root.light, :root.dark {
+      :root,
+      :root.light,
+      :root.dark {
         --c-primary: [(${theme.config.style.primary_color})] !important;
         --c-primary-soft: color-mix(in srgb, [(${theme.config.style.primary_color})], transparent 85%) !important;
         --c-accent: [(${theme.config.style.accent_color})] !important;
@@ -63,13 +65,21 @@
     <div
       id="z-sidebar-bgmask"
       class="hidden"
-      onclick="document.getElementById('z-sidebar').classList.remove('show'); this.classList.add('hidden'); document.getElementById('toggle-sidebar')?.classList.remove('active')"
+      onclick="
+        document.getElementById('z-sidebar').classList.remove('show');
+        this.classList.add('hidden');
+        document.getElementById('toggle-sidebar')?.classList.remove('active');
+      "
     ></div>
 
     <div
       id="z-aside-bgmask"
       class="hidden"
-      onclick="document.getElementById('z-aside').classList.remove('show'); this.classList.add('hidden'); document.getElementById('toggle-aside')?.classList.remove('active')"
+      onclick="
+        document.getElementById('z-aside').classList.remove('show');
+        this.classList.add('hidden');
+        document.getElementById('toggle-aside')?.classList.remove('active');
+      "
     ></div>
 
     <th:block th:replace="~{modules/sidebar :: sidebar}" />
@@ -85,7 +95,7 @@
         <th:block th:replace="~{modules/aside :: aside}" />
       </th:block>
       <th:block th:unless="${showAside == null or showAside}">
-        <aside id="z-aside" style="display: none;"></aside>
+        <aside id="z-aside" style="display: none"></aside>
       </th:block>
     </div>
 
@@ -93,40 +103,48 @@
       <button
         id="toggle-sidebar"
         aria-label="切换菜单"
-        onclick="(function(btn){var sb=document.getElementById('z-sidebar'),mk=document.getElementById('z-sidebar-bgmask');sb.classList.toggle('show');mk.classList.toggle('hidden');btn.classList.toggle('active')})(this)"
+        onclick="
+          (function (btn) {
+            var sb = document.getElementById('z-sidebar'),
+              mk = document.getElementById('z-sidebar-bgmask');
+            sb.classList.toggle('show');
+            mk.classList.toggle('hidden');
+            btn.classList.toggle('active');
+          })(this)
+        "
       >
-        <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display: block;"></span>
+        <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display: block"></span>
       </button>
       <button
         th:if="${showAside == null or showAside}"
         id="toggle-aside"
         aria-label="切换侧边栏"
-        onclick="(function(btn){var as=document.getElementById('z-aside'),mk=document.getElementById('z-aside-bgmask');as.classList.toggle('show');mk.classList.toggle('hidden');btn.classList.toggle('active')})(this)"
+        onclick="
+          (function (btn) {
+            var as = document.getElementById('z-aside'),
+              mk = document.getElementById('z-aside-bgmask');
+            as.classList.toggle('show');
+            mk.classList.toggle('hidden');
+            btn.classList.toggle('active');
+          })(this)
+        "
       >
-        <span class="icon-[ph--align-right-duotone] rtl-flip" style="display: block;"></span>
+        <span class="icon-[ph--align-right-duotone] rtl-flip" style="display: block"></span>
       </button>
       <button
-        th:if="${isLinksPage == true and theme.config.links?.enable_random != false}"
+        th:if="${isLinksPage == true and theme.config != null and theme.config.links != null and theme.config.links.enable_random != false}"
         id="mobile-random-link-btn"
         aria-label="随机穿梭"
         onclick="randomVisitLink()"
       >
-        <span class="icon-[ph--shuffle-bold]" style="display: block;"></span>
+        <span class="icon-[ph--shuffle-bold]" style="display: block"></span>
       </button>
-      <button
-        id="back-to-top"
-        aria-label="返回顶部"
-        style="display: none"
-      >
-        <span class="icon-[ph--arrow-up-bold]" style="display: block;"></span>
+      <button id="back-to-top" aria-label="返回顶部" style="display: none">
+        <span class="icon-[ph--arrow-up-bold]" style="display: block"></span>
       </button>
     </div>
 
-    <button
-      id="pc-back-to-top"
-      class="pc-back-to-top"
-      onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
-    >
+    <button id="pc-back-to-top" class="pc-back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
       <svg class="svgIcon" viewBox="0 0 384 512">
         <path
           d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
