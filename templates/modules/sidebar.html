@@ -27,11 +27,8 @@
               th:href="${menuItem.status.href}"
               th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP') ? '_top' : null))}"
             >
-              <img
-                th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
-                th:src="${menuItem.metadata.annotations.get('icon')}"
-                alt=""
-              />
+              <img th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" 
+                   th:src="${menuItem.metadata.annotations.get('icon')}" alt="" />
               <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
               <span class="icon-[ph--caret-down-bold] dropdown-arrow"></span>
             </a>
@@ -43,11 +40,8 @@
                 class="dropdown-item"
                 th:attr="target=${(child.spec.target == '_blank' or child.spec.target == 'BLANK') ? '_blank' : ((child.spec.target == '_parent' or child.spec.target == 'PARENT') ? '_parent' : ((child.spec.target == '_top' or child.spec.target == 'TOP') ? '_top' : null))}"
               >
-                <img
-                  th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}"
-                  th:src="${child.metadata.annotations.get('icon')}"
-                  alt=""
-                />
+                <img th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}" 
+                     th:src="${child.metadata.annotations.get('icon')}" alt="" />
                 <span class="nav-text" th:text="${child.status.displayName}"></span>
               </a>
             </div>
@@ -58,11 +52,8 @@
             class="sidebar-nav-item"
             th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP') ? '_top' : null))}"
           >
-            <img
-              th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
-              th:src="${menuItem.metadata.annotations.get('icon')}"
-              alt=""
-            />
+            <img th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}" 
+                 th:src="${menuItem.metadata.annotations.get('icon')}" alt="" />
             <span class="nav-text" th:text="${menuItem.status.displayName}"></span>
             <span th:if="${menuItem.spec.target == '_blank'}" class="icon-[ph--arrow-up-right] external-tip"></span>
           </a>
@@ -151,7 +142,9 @@
         target="_blank"
         rel="noopener noreferrer"
       >
-        <img th:if="${not #strings.isEmpty(link.icon)}" th:src="${link.icon}" alt="" />
+        <th:block th:if="${link.icon != null}" th:with="iconVal = ${link.icon.value}">
+          <img th:if="${not #strings.isEmpty(iconVal)}" th:src="${iconVal}" alt="" />
+        </th:block>
       </a>
     </div>
   </footer>

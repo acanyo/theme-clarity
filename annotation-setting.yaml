@@ -11,6 +11,7 @@ spec:
       name: icon
       label: 图标
       format: dataurl
+      value-only: true
 ---
 apiVersion: v1alpha1
 kind: AnnotationSetting
@@ -25,6 +26,7 @@ spec:
       name: categoryIicon
       label: 图标
       format: dataurl
+      value-only: true
 ---
 apiVersion: v1alpha1
 kind: AnnotationSetting

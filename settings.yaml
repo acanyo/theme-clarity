@@ -241,8 +241,8 @@ spec:
                 - $formkit: iconify
                   name: icon
                   label: 图标
-                  validation: required
                   format: dataurl
+                  validation: required
                 - $formkit: text
                   name: text
                   label: 描述
