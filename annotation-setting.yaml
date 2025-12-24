@@ -83,6 +83,21 @@ spec:
       label: 非原创文案
       help: "{post_original} 为占位符，显示的值为来源。"
     - $formkit: checkbox
+      name: ai_generated
+      id: ai_generated
+      label: AI 生成声明
+      value: "false"
+      on-value: "true"
+      off-value: "false"
+      help: 开启后将在文章页面显示 AI 生成提示
+    - $formkit: text
+      if: "$get(ai_generated).value == 'true'"
+      name: ai_generated_desc
+      id: ai_generated_desc
+      label: AI 声明描述
+      value: "本文内容由 AI 辅助生成，已经人工审核和编辑。"
+      help: 自定义显示的提示文案
+    - $formkit: checkbox
       name: post_license
       id: post_license
       label: 自定义授权协议

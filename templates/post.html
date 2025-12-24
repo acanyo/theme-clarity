@@ -123,6 +123,15 @@
       })();
     </script>
 
+    <div
+      th:if="${#annotations.getOrDefault(post, 'ai_generated', 'false') == 'true'}"
+      class="ai-notice"
+      th:with="desc = ${#annotations.getOrDefault(post, 'ai_generated_desc', '本文内容由 AI 辅助生成，已经人工审核和编辑。')}"
+    >
+      <span class="icon-[ph--sparkle-bold]"></span>
+      <span class="notice-text" th:text="${desc}"></span>
+    </div>
+
     <article class="article" th:utext="${post.content.content}"></article>
 
     <div class="post-footer">

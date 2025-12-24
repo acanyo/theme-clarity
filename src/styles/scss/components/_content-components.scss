@@ -19,6 +19,27 @@
     --c-primary-soft: color-mix(in srgb, var(--c-primary) 15%, transparent);
   }
 
+  // 关闭渐变效果
+  &.no-gradient {
+    background-image: none;
+  }
+
+  // 卡片模式
+  &.card {
+    padding: 0.8em 1.2em;
+    border-radius: 0.75em;
+    box-shadow: 
+      0 2px 8px color-mix(in srgb, var(--c-primary) 15%, transparent),
+      inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 20%, transparent);
+    
+    &:hover {
+      transform: translateY(-3px);
+      box-shadow: 
+        0 6px 16px color-mix(in srgb, var(--c-primary) 25%, transparent),
+        inset 0 0 0 1px color-mix(in srgb, var(--c-primary) 30%, transparent);
+    }
+  }
+
   .c-alert-title {
     display: flex;
     align-items: center;

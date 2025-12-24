@@ -8,6 +8,7 @@ interface AlertProps {
   type?: 'tip' | 'info' | 'question' | 'warning' | 'error'
   title?: string
   card?: boolean
+  gradient?: boolean
   children?: ComponentChildren
 }
 
@@ -19,10 +20,11 @@ const alertConfig: Record<string, { icon: string; color: string; title: string }
   error: { icon: 'icon-[ph--x-circle-bold]', color: '#F33', title: '错误' },
 }
 
-export const Alert: FunctionComponent<AlertProps> = ({ type = 'tip', title, card = false, children }) => {
+export const Alert: FunctionComponent<AlertProps> = ({ type = 'tip', title, card = false, gradient = true, children }) => {
   const config = alertConfig[type] || alertConfig.tip
+  const classes = ['c-alert', card ? 'card' : '', gradient ? '' : 'no-gradient'].filter(Boolean).join(' ')
   return (
-    <div class={`c-alert ${card ? 'card' : ''}`} style={{ '--c-primary': config.color } as any}>
+    <div class={classes} style={{ '--c-primary': config.color } as any}>
       <div class="c-alert-title">
         <span class={config.icon} />
         {title || config.title}
