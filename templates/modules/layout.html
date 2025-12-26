@@ -60,6 +60,11 @@
         }
       })();
     </script>
+    <script th:inline="javascript">
+      window.themeConfig = window.themeConfig || {};
+      window.themeConfig.custom = window.themeConfig.custom || {};
+      window.themeConfig.custom.img_alt = /*[[${theme.config.custom.img_alt}]]*/ false;
+    </script>
   </head>
   <body id="clarity-root">
     <div
