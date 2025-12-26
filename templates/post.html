@@ -4,7 +4,10 @@
   th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = null)}"
 >
   <th:block th:fragment="content">
-    <div class="post-header" th:classappend="${(post.spec.cover != null and post.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}">
+    <div
+      class="post-header"
+      th:classappend="${(post.spec.cover != null and post.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}"
+    >
       <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="post-cover" th:alt="${post.spec.title}" />
 
       <div class="post-nav">
@@ -204,8 +207,9 @@
 
     <th:block
       th:with="
-        prevPost = ${postFinder.cursor(post.metadata.name).previous},
-        nextPost = ${postFinder.cursor(post.metadata.name).next}
+        cursor = ${postFinder.cursor(post.metadata.name)},
+        prevPost = ${theme.config.post.cursor ? cursor.previous : cursor.next},
+        nextPost = ${theme.config.post.cursor ? cursor.next : cursor.previous}
       "
     >
       <div th:if="${prevPost != null or nextPost != null}" class="surround-post">

@@ -555,6 +555,17 @@ spec:
           min: 1
           max: 50
           validation: required
+        - $formkit: radio
+          name: cursor
+          id: cursor
+          label: 上下页排序
+          value: true
+          help: 倒序：从旧到新；正序：从新到旧。
+          options:
+            - value: true
+              label: 倒序
+            - value: false
+              label: 正序
         - $formkit: checkbox
           name: default_cover
           id: default_cover
