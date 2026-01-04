@@ -312,26 +312,29 @@ function initImageLoaded() {
 
 // 为文章图片添加描述显示
 function initImageCaption() {
+  // 检查是否启用图片 alt 文本功能
+  if (!(window as any).themeConfig?.custom?.img_alt) return;
+
   const article = document.querySelector(".article");
   if (!article) return;
-  
+
   const images = article.querySelectorAll("img");
   if (!images.length) return;
-  
+
   images.forEach((img) => {
     const alt = img.alt?.trim();
     if (!alt) return;
-    
+
     // 跳过 c-pic/gallery 中的图片
     if (img.closest(".c-pic, [data-type='gallery']")) return;
-    
+
     // 检查现有 figure
     const figure = img.closest("figure");
     if (figure?.querySelector("figcaption")) return;
-    
+
     const caption = document.createElement("figcaption");
     caption.textContent = alt;
-    
+
     if (figure) {
       figure.classList.add("img-caption");
       figure.appendChild(caption);
@@ -435,4 +438,3 @@ function initBackToTop() {
     });
   }
 }
-
