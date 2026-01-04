@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="zh-CN" th:fragment="html (content, showAside, pageTitle)">
+<html lang="zh-CN" th:fragment="html (content, showAside, pageTitle)" th:data-page-transition="${theme.config.style.page_transition ?: 'fade-scale'}" th:data-nav-active="${theme.config.style.nav_active_indicator != false}">
   <head>
     <th:block th:replace="~{modules/seo :: seo(pageTitle=${pageTitle})}" />
 
@@ -10,6 +10,13 @@
       </th:block>
     </th:block>
 
+    <link
+      rel="preload"
+      th:href="@{/assets/fonts/JetBrainsMono-Regular/6096f8ea8ec1ddec37a08da471025894.woff2}"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
     <link
       rel="stylesheet"
       th:href="@{/assets/fonts/JetBrainsMono-Regular/jetBrainsMonoRegular.css?v={version}(version=${theme.spec.version})}"

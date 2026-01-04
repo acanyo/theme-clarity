@@ -208,8 +208,8 @@
     <th:block
       th:with="
         cursor = ${postFinder.cursor(post.metadata.name)},
-        prevPost = ${theme.config.post.cursor ? cursor.previous : cursor.next},
-        nextPost = ${theme.config.post.cursor ? cursor.next : cursor.previous}
+        prevPost = ${(theme.config.post.cursor != null and theme.config.post.cursor) ? cursor.previous : cursor.next},
+        nextPost = ${(theme.config.post.cursor != null and theme.config.post.cursor) ? cursor.next : cursor.previous}
       "
     >
       <div th:if="${prevPost != null or nextPost != null}" class="surround-post">

@@ -84,7 +84,7 @@ spec:
           label: Logo
           accepts:
             - "image/*"
-        - $formkit: checkbox
+        - $formkit: switch
           name: show_title
           id: show_title
           label: 显示标题
@@ -105,7 +105,7 @@ spec:
           name: primary_menu
           label: 主导航菜单
           help: 不选择则不显示导航菜单
-        - $formkit: checkbox
+        - $formkit: switch
           name: userAuth
           id: userAuth
           key: userAuth
@@ -133,6 +133,28 @@ spec:
           language: css
           height: 150px
           help: 填写 @font-face 代码，font-family 必须改为 "Logo Font"（如阿里妈妈方圆体需将原 font-family 值替换），留空则使用系统字体（苹方/微软雅黑）
+        - $formkit: select
+          name: page_transition
+          label: 页面切换动画
+          value: fade-scale
+          help: 页面跳转时的过渡动画效果（仅 Chrome 126+ 支持）
+          options:
+            - value: fade-scale
+              label: 淡入淡出 + 缩放
+            - value: sweep
+              label: 黑幕扫光
+            - value: none
+              label: 无动画
+        - $formkit: switch
+          name: nav_active_indicator
+          label: 菜单激活指示器
+          value: true
+          help: 高亮显示当前页面对应的侧边栏菜单项
+        - $formkit: switch
+          name: show_post_author
+          label: 显示文章作者
+          value: true
+          help: 在首页文章卡片中显示作者头像和名称
     - group: footer
       label: 页脚 & 社交
       formSchema:
@@ -242,7 +264,7 @@ spec:
               label: 栏目标题
               value: 探索
               validation: required
-            - $formkit: checkbox
+            - $formkit: switch
               name: show_rss
               id: show_rss
               label: 显示 RSS 订阅
@@ -254,7 +276,7 @@ spec:
               placeholder: /rss.xml
               if: "$get(show_rss).value === true"
               validation: required
-            - $formkit: checkbox
+            - $formkit: switch
               name: show_travellings
               label: 显示开往
               value: true
@@ -358,7 +380,7 @@ spec:
           name: gongan_beian
           label: 公安备案号
           placeholder: 陕公网安备61010302001234号
-        - $formkit: checkbox
+        - $formkit: switch
           name: enable_uptime_kuma
           id: enable_uptime_kuma
           label: 启用 Uptime Kuma 状态监控
@@ -566,19 +588,19 @@ spec:
               label: 倒序
             - value: false
               label: 正序
-        - $formkit: checkbox
+        - $formkit: switch
           name: default_cover
           id: default_cover
           label: 启用默认封面图
           value: true
           help: 当文章无封面图时，显示灰色背景+文章标题作为默认封面
-        - $formkit: checkbox
+        - $formkit: switch
           name: center_title
           id: center_title
           label: 标题居中显示
           value: false
           help: 开启后文章和页面的标题将居中显示
-        - $formkit: checkbox
+        - $formkit: switch
           name: show_excerpt
           id: show_excerpt
           label: 显示文章摘要框
@@ -617,7 +639,7 @@ spec:
           label: 摘要动画
           if: "$get(show_excerpt).value === true"
           children:
-            - $formkit: checkbox
+            - $formkit: switch
               name: animation
               id: excerpt_animation
               label: 启用打字机效果
@@ -641,7 +663,7 @@ spec:
           label: 过时文章提示
           help: 当文章发布时间超过设定天数时，显示过时提醒
           children:
-            - $formkit: checkbox
+            - $formkit: switch
               name: enabled
               id: outdated_enabled
               label: 启用过时提示
@@ -671,7 +693,7 @@ spec:
           value: 友链
           placeholder: 友链
           validation: required
-        - $formkit: checkbox
+        - $formkit: switch
           name: enable_random
           label: 启用随机访问
           value: true
@@ -703,7 +725,7 @@ spec:
               name: rss
               label: RSS 地址
               placeholder: 如 /rss.xml
-        - $formkit: checkbox
+        - $formkit: switch
           name: enable_submit
           id: enable_submit
           label: 启用自主提交
@@ -746,7 +768,7 @@ spec:
               value: captcha
             - label: 无需验证
               value: none
-        - $formkit: checkbox
+        - $formkit: switch
           name: enable_update
           label: 允许修改友链
           value: false
@@ -826,7 +848,7 @@ spec:
               label: 竖线（页面 | 网站）
             - value: "across"
               label: 横线（页面 - 网站）
-        - $formkit: checkbox
+        - $formkit: switch
           name: img_alt
           label: 启用图片 alt 文本
           value: true
@@ -834,7 +856,7 @@ spec:
     - group: development
       label: 开发设置
       formSchema:
-        - $formkit: checkbox
+        - $formkit: switch
           name: enabled
           label: 启用开发模式
           value: false

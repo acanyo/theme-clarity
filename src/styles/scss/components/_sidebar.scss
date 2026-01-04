@@ -97,6 +97,7 @@ $breakpoint-mobile: 768px !default;
 }
 
 .sidebar-nav-item {
+	position: relative;
 	display: flex;
 	align-items: center;
 	gap: 0.5em;
@@ -105,17 +106,21 @@ $breakpoint-mobile: 768px !default;
 	transition: all 0.2s;
 	color: inherit;
 
-	&:hover,
-	&.active { // Halo 当前页高亮通常用 active 或 current
+	&:hover {
 		background-color: var(--c-bg-soft);
 		color: var(--c-text);
 	}
 
-	&.active::after {
-		content: "⦁";
-		width: 1em;
-		text-align: center;
-		color: var(--c-text-3);
+	// 当前页激活状态
+	&.active {
+		background-color: var(--c-bg-soft);
+
+		// 右侧小圆点指示器
+		&::after {
+			content: "•";
+			color: var(--c-text-3);
+			font-size: 1.2em;
+		}
 	}
 
 	// 图标大小

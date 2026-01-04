@@ -76,13 +76,6 @@
 	z-index: 1;
 }
 
-// 扩展动画，配合 JS 使用 clip-path
-// 由于 CSS 无法直接获取 JS 设置的 --x 和 --y，通常需要 JS 配合设置
-// 这里我们使用通用的全屏渐变，或者如果想实现圆形扩散，需要更复杂的 setup
-// 但为了简单起见，我们可以先加上基础的淡入淡出，或者尝试实现圆形扩散
-
-// 实际上，要实现圆形扩散，我们需要在 JS 中动态构建动画，或者使用 CSS 变量
-// 下面是一个基于 CSS 变量的圆形扩散实现尝试
 
 ::view-transition-new(root) {
 	animation: clip-in 0.5s ease-in;
@@ -101,4 +94,95 @@
 @keyframes skeleton-loading {
 	0% { background-position: 200% 0; }
 	100% { background-position: -200% 0; }
+}
+
+// 跨页面导航过渡 (MPA View Transitions)
+// 仅 Chrome 126+ 支持
+@view-transition {
+	navigation: auto;
+}
+
+// ===== 页面导航过渡动画 =====
+
+// 效果1: 淡出缩小模糊 + 淡入放大清晰
+@keyframes fade-scale-out {
+	from {
+		opacity: 1;
+		transform: scale(1);
+		filter: blur(0);
+	}
+	to {
+		opacity: 0;
+		transform: scale(0.95);
+		filter: blur(4px);
+	}
+}
+
+@keyframes fade-scale-in {
+	from {
+		opacity: 0;
+		transform: scale(1.02);
+		filter: blur(4px);
+	}
+	to {
+		opacity: 1;
+		transform: scale(1);
+		filter: blur(0);
+	}
+}
+
+// 效果2: 黑幕扫光 (sweep)
+@keyframes sweep-out {
+	from {
+		clip-path: inset(0 0 0 0);
+	}
+	to {
+		clip-path: inset(0 100% 0 0);
+	}
+}
+
+@keyframes sweep-in {
+	from {
+		clip-path: inset(0 0 0 100%);
+	}
+	to {
+		clip-path: inset(0 0 0 0);
+	}
+}
+
+// 效果3: 无过渡动画 (none)
+// 不需要定义 keyframes
+
+// 根据 data-page-transition 属性选择动画
+// 默认: fade-scale
+html:not([data-theme-transition]):not([data-page-transition])::view-transition-old(root),
+html:not([data-theme-transition])[data-page-transition="fade-scale"]::view-transition-old(root) {
+	animation: fade-scale-out 0.3s ease-out both;
+}
+
+html:not([data-theme-transition]):not([data-page-transition])::view-transition-new(root),
+html:not([data-theme-transition])[data-page-transition="fade-scale"]::view-transition-new(root) {
+	animation: fade-scale-in 0.4s ease-out both;
+}
+
+// sweep 效果
+html:not([data-theme-transition])[data-page-transition="sweep"]::view-transition-old(root) {
+	animation: sweep-out 0.5s ease-in-out both;
+	z-index: 1;
+}
+
+html:not([data-theme-transition])[data-page-transition="sweep"]::view-transition-new(root) {
+	animation: sweep-in 0.5s ease-in-out 0.1s both;
+	z-index: 2;
+}
+
+html:not([data-theme-transition])[data-page-transition="sweep"]::view-transition {
+	background: oklch(0.15 0 0);
+}
+
+// none 效果 - 禁用过渡
+html[data-page-transition="none"] {
+	@view-transition {
+		navigation: none;
+	}
 }

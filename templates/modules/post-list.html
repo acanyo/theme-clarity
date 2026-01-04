@@ -66,7 +66,9 @@
               <span th:text="${post.stats.visit}">0</span>
             </span>
 
-            <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner})}" />
+            <th:block th:if="${theme.config.style.show_post_author != false}">
+              <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner})}" />
+            </th:block>
           </div>
         </div>
       </article>
