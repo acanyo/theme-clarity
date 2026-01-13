@@ -419,12 +419,11 @@
                 // 使用 requestIdleCallback 提升页面初渲染流畅度
                 const run = () => {
                   items.forEach((item) => {
-                    const hasMedia = item.dataset.hasMedia === "true";
-                    let displayText = "";
-
                     // 从moment-raw-html脚本标签中获取HTML内容
                     const rawHtmlScript = item.querySelector(".moment-raw-html");
                     const raw = rawHtmlScript ? rawHtmlScript.textContent || rawHtmlScript.innerText || "" : "";
+                    let displayText = "";
+                    let hasMedia = item.dataset.hasMedia === "true";
 
                     // 处理HTML内容
                     if (raw) {
@@ -440,9 +439,19 @@
                       // 提取纯文本
                       const text = doc.body.textContent || doc.body.innerText || "";
                       displayText = text.trim();
+
+                      const mediaSelectors = [
+                        "img[src]",
+                        "video[src]",
+                        "audio[src]",
+                        "figure[data-content-type='image']",
+                        "figure[data-content-type='video']",
+                        "iframe[src]",
+                        "source[src]",
+                      ];
+                      hasMedia = hasMedia || mediaSelectors.some((selector) => doc.querySelector(selector));
                     }
 
-                    // 判断显示逻辑
                     if (!displayText) {
                       if (hasMedia) {
                         // 有媒体资源但无文字，显示提示
