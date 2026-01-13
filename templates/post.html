@@ -8,7 +8,12 @@
       class="post-header"
       th:classappend="${(post.spec.cover != null and post.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}"
     >
-      <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" class="post-cover" th:alt="${post.spec.title}" />
+      <img
+        th:if="${post.spec.cover != null and post.spec.cover != ''}"
+        th:src="${post.spec.cover}"
+        class="post-cover"
+        th:alt="${post.spec.title}"
+      />
 
       <div class="post-nav">
         <div class="operations">
