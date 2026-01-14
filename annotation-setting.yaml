@@ -53,6 +53,14 @@ spec:
     kind: Post
   formSchema:
     - $formkit: checkbox
+      id: toc
+      key: toc
+      name: toc
+      label: 目录
+      value: "true"
+      on-value: "true"
+      off-value: "false"
+    - $formkit: checkbox
       id: post_author
       key: post_author
       name: post_author
@@ -116,3 +124,21 @@ spec:
       key: post_license_url
       name: post_license_url
       label: 协议链接
+---
+apiVersion: v1alpha1
+kind: AnnotationSetting
+metadata:
+  generateName: annotation-setting-
+spec:
+  targetRef:
+    group: content.halo.run
+    kind: SinglePage
+  formSchema:
+    - $formkit: checkbox
+      id: toc
+      key: toc
+      name: toc
+      label: 目录
+      value: "false"
+      on-value: "true"
+      off-value: "false"
