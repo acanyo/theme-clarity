@@ -853,6 +853,16 @@ spec:
           label: 启用图片 alt 文本
           value: true
           help: 开启后图片将显示 alt 文本
+        - $formkit: switch
+          name: enable_post_toc
+          label: 启用文章目录
+          value: true
+          help: 开启后文章页面将显示目录
+        - $formkit: switch
+          name: enable_page_toc
+          label: 启用独立页面目录
+          value: true
+          help: 开启后独立页面将显示目录
     - group: development
       label: 开发设置
       formSchema:

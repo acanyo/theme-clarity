@@ -10,7 +10,12 @@
 
 <aside th:fragment="aside" id="z-aside">
   <th:block th:if="${post != null or singlePage != null}">
-    <section class="widget toc-widget" id="catalog-widget" style="display: none">
+    <section
+      class="widget toc-widget"
+      id="catalog-widget"
+      style="display: none"
+      th:if="${(post != null and theme.config.custom.enable_post_toc != false) or (singlePage != null and theme.config.custom.enable_page_toc != false)}"
+    >
       <hgroup class="widget-title">
         <span class="title-text">文章目录</span>
         <a
