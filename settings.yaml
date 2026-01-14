@@ -861,7 +861,7 @@ spec:
         - $formkit: switch
           name: enable_page_toc
           label: 启用独立页面目录
-          value: true
+          value: false
           help: 开启后独立页面将显示目录
     - group: development
       label: 开发设置
