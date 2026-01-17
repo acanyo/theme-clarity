@@ -55,7 +55,15 @@
     <section th:if="${haloCommentEnabled}" class="z-comment" id="comment">
       <halo:comment group="content.halo.run" kind="SinglePage" th:attr="name=${singlePage.metadata.name}" />
     </section>
-
+    <button
+      id="edit-page-btn"
+      class="edit-page-btn"
+      th:if="${theme.config.custom.enable_edit and #authentication.name == singlePage.owner.name}"
+      th:data-url="@{/console/single-pages/editor(name=${singlePage.metadata.name}, returnToView=true)}"
+      title="编辑页面"
+    >
+      <span class="icon-[ph--pencil-bold]"></span>
+    </button>
     <script th:inline="javascript">
       (function () {
         const shareBtn = document.getElementById("share-btn");
@@ -79,6 +87,16 @@
               }, 2000);
             } catch (err) {
               console.error("复制失败:", err);
+            }
+          });
+        }
+
+        const editPageBtn = document.getElementById("edit-page-btn");
+        if (editPageBtn) {
+          editPageBtn.addEventListener("click", () => {
+            const editUrl = editPageBtn.dataset.url;
+            if (editUrl) {
+              window.location.href = editUrl;
             }
           });
         }

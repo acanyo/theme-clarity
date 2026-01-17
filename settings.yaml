@@ -859,6 +859,13 @@ spec:
           label: 启用图片 alt 文本
           value: true
           help: 开启后图片将显示 alt 文本
+        - $formkit: switch
+          onValue: true
+          offValue: false
+          name: enable_edit
+          label: 启用编辑按钮
+          value: false
+          help: 开启后文章/页面将显示编辑按钮
     - group: development
       label: 开发设置
       formSchema:

@@ -255,7 +255,15 @@
     <section th:if="${haloCommentEnabled}" class="z-comment" id="comment">
       <halo:comment group="content.halo.run" kind="Post" th:attr="name=${post.metadata.name}" />
     </section>
-
+    <button
+      id="edit-post-btn"
+      class="edit-post-btn"
+      th:if="${theme.config.custom.enable_edit and #authentication.name == post.owner.name}"
+      th:data-url="@{${'/console/posts/editor'}(name=${post.metadata.name}, returnToView=true)}"
+      title="编辑文章"
+    >
+      <span class="icon-[ph--pencil-bold]"></span>
+    </button>
     <div id="poster-modal" class="poster-modal" style="display: none">
       <div class="poster-modal-overlay"></div>
       <div class="poster-modal-content">
@@ -341,6 +349,17 @@
         const posterDownload = document.getElementById("poster-download");
         const posterQrcode = document.getElementById("poster-qrcode");
         const posterCard = document.getElementById("poster-card");
+
+        // 编辑文章
+        const editPostBtn = document.getElementById("edit-post-btn");
+        if (editPostBtn) {
+          editPostBtn.addEventListener("click", () => {
+            const editUrl = editPostBtn.dataset.url;
+            if (editUrl) {
+              window.location.href = editUrl;
+            }
+          });
+        }
 
         if (posterBtn && posterModal) {
           let qrGenerated = false;

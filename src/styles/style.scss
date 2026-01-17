@@ -31,7 +31,8 @@ $breakpoint-widescreen: 1080px;
 );
 @use "./scss/components/slide";
 @use "./scss/components/image";
-@use "./scss/components/post" with (
+@use "./scss/components/post";
+@use "./scss/components/page" with (
   $breakpoint-mobile: $breakpoint-mobile
 );
 @use "./scss/components/comment";
