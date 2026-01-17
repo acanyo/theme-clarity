@@ -1,8 +1,19 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = null)}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = null)}"
+>
   <th:block th:fragment="content">
-    <div class="post-header" th:classappend="${(singlePage.spec.cover != null and singlePage.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}">
-      <img th:if="${singlePage.spec.cover}" th:src="${singlePage.spec.cover}" class="post-cover" th:alt="${singlePage.spec.title}" />
+    <div
+      class="post-header"
+      th:classappend="${(singlePage.spec.cover != null and singlePage.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}"
+    >
+      <img
+        th:if="${singlePage.spec.cover != null and singlePage.spec.cover  != ''}"
+        th:src="${singlePage.spec.cover}"
+        class="post-cover"
+        th:alt="${singlePage.spec.title}"
+      />
 
       <div class="post-nav">
         <div class="operations">
@@ -31,7 +42,7 @@
           </span>
         </div>
       </div>
-      
+
       <h1 class="post-title text-creative" th:text="${singlePage.spec.title}"></h1>
     </div>
 
@@ -44,7 +55,15 @@
     <section th:if="${haloCommentEnabled}" class="z-comment" id="comment">
       <halo:comment group="content.halo.run" kind="SinglePage" th:attr="name=${singlePage.metadata.name}" />
     </section>
-
+    <button
+      id="edit-page-btn"
+      class="edit-page-btn"
+      th:if="${theme.config.custom.enable_edit and #authentication.name == singlePage.owner.name}"
+      th:data-url="@{/console/single-pages/editor(name=${singlePage.metadata.name}, returnToView=true)}"
+      title="编辑页面"
+    >
+      <span class="icon-[ph--pencil-bold]"></span>
+    </button>
     <script th:inline="javascript">
       (function () {
         const shareBtn = document.getElementById("share-btn");
@@ -68,6 +87,16 @@
               }, 2000);
             } catch (err) {
               console.error("复制失败:", err);
+            }
+          });
+        }
+
+        const editPageBtn = document.getElementById("edit-page-btn");
+        if (editPageBtn) {
+          editPageBtn.addEventListener("click", () => {
+            const editUrl = editPageBtn.dataset.url;
+            if (editUrl) {
+              window.location.href = editUrl;
             }
           });
         }

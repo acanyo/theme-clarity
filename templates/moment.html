@@ -1,5 +1,8 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = null)}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true , pageTitle = (${theme.config.plugins?.moments?.moment_title} ?: '瞬间详情'))}"
+>
   <th:block th:fragment="content">
     <div class="moment-back">
       <a href="/moments" class="back-link">
@@ -11,58 +14,40 @@
     <article th:with="content=${moment.spec.content}" class="moment-detail" style="--delay: 0.1s">
       <header class="moment-header">
         <div th:if="${moment.owner != null}" class="author-info">
-          <img 
-            th:if="${moment.owner.avatar != null}" 
-            th:src="${moment.owner.avatar}" 
-            th:alt="${moment.owner.displayName}" 
+          <img
+            th:if="${moment.owner.avatar != null}"
+            th:src="${moment.owner.avatar}"
+            th:alt="${moment.owner.displayName}"
             class="author-avatar"
             loading="lazy"
           />
           <span class="author-name" th:text="${moment.owner.displayName}"></span>
         </div>
-        <time 
-          class="moment-time" 
-          th:datetime="${moment.spec.releaseTime}"
-        >
+        <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
           <span class="icon-[ph--calendar-dots-bold]"></span>
           <span th:text="${#temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd HH:mm')}"></span>
         </time>
       </header>
 
       <div class="moment-body">
-        <div 
-          th:if="${not #strings.isEmpty(content.html)}" 
-          class="moment-text"
-          th:utext="${content.html}"
-        ></div>
+        <div th:if="${not #strings.isEmpty(content.html)}" class="moment-text" th:utext="${content.html}"></div>
 
-        <div 
-          th:if="${not #lists.isEmpty(content.medium)}" 
+        <div
+          th:if="${not #lists.isEmpty(content.medium)}"
           class="moment-media"
           th:classappend="${#lists.size(content.medium) == 1 ? 'single' : (#lists.size(content.medium) == 2 ? 'double' : 'grid')}"
         >
           <th:block th:each="mediaItem : ${content.medium}">
             <figure th:if="${mediaItem.type.name == 'PHOTO'}" class="media-item photo">
-              <img 
-                th:src="${mediaItem.url}" 
-                alt="瞬间图片"
-                loading="lazy"
-              />
+              <img th:src="${mediaItem.url}" alt="瞬间图片" loading="lazy" />
             </figure>
-            
+
             <figure th:if="${mediaItem.type.name == 'VIDEO'}" class="media-item video">
-              <video 
-                th:src="${mediaItem.url}" 
-                controls
-                preload="metadata"
-              ></video>
+              <video th:src="${mediaItem.url}" controls preload="metadata"></video>
             </figure>
-            
+
             <figure th:if="${mediaItem.type.name == 'AUDIO'}" class="media-item audio">
-              <audio 
-                th:src="${mediaItem.url}" 
-                controls
-              ></audio>
+              <audio th:src="${mediaItem.url}" controls></audio>
             </figure>
           </th:block>
         </div>
@@ -70,15 +55,13 @@
 
       <footer class="moment-footer">
         <div th:if="${not #lists.isEmpty(moment.spec.tags)}" class="moment-tags">
-          <a th:each="tag : ${moment.spec.tags}" 
-             th:href="@{/moments(tag=${tag})}" 
-             class="moment-tag">
+          <a th:each="tag : ${moment.spec.tags}" th:href="@{/moments(tag=${tag})}" class="moment-tag">
             <span class="tag-hash">#</span>
             <span th:text="${tag}"></span>
           </a>
         </div>
         <div class="moment-actions">
-          <button 
+          <button
             class="action-btn like"
             title="点赞"
             x-data="{ 
@@ -117,17 +100,21 @@
             th:data-count="${moment.stats.upvote ?: 0}"
           >
             <span class="icon-[ph--heart-bold]" x-show="!liked"></span>
-            <span class="icon-[ph--heart-fill]" x-show="liked" style="display: none; color: #ef4444;"></span>
+            <span class="icon-[ph--heart-fill]" x-show="liked" style="display: none; color: #ef4444"></span>
             <span x-text="count"></span>
           </button>
           <a href="#comment" class="action-btn comment" title="查看评论">
             <span class="icon-[ph--chat-circle-bold]"></span>
             <span th:text="${moment.stats.approvedComment ?: 0}"></span>
           </a>
-          <button 
-            class="action-btn share" 
+          <button
+            class="action-btn share"
             title="复制链接"
-            onclick="navigator.clipboard.writeText(location.href); this.classList.add('copied'); setTimeout(() => this.classList.remove('copied'), 2000)"
+            onclick="
+              navigator.clipboard.writeText(location.href);
+              this.classList.add('copied');
+              setTimeout(() => this.classList.remove('copied'), 2000);
+            "
           >
             <span class="icon-[ph--link-bold]"></span>
           </button>

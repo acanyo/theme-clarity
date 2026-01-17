@@ -335,3 +335,67 @@ mark {
 	margin: 0 0.25em;
 	font-size: 0.85rem;
 }
+
+// ========================================
+// 浮动按钮 Mixin
+// ========================================
+@mixin floating-button($hover-text) {
+	position: fixed;
+	right: 2.5rem;
+	bottom: calc(2.5rem + 60px);
+	width: 50px;
+	height: 50px;
+	border-radius: 50%;
+	background-color: var(--ld-bg-card);
+	border: 1px solid var(--c-border);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+	cursor: pointer;
+	transition-duration: 0.3s;
+	overflow: hidden;
+	z-index: 99;
+	color: var(--c-text);
+	font-size: 1rem;
+
+	@media (max-width: $breakpoint-mobile) {
+		display: none;
+	}
+
+	&::before {
+		position: absolute;
+		bottom: -20px;
+		content: $hover-text;
+		color: white;
+		font-size: 0px;
+		white-space: nowrap;
+	}
+
+	&:hover {
+		width: 120px;
+		border-radius: 50px;
+		background-color: var(--c-primary);
+		border-color: var(--c-primary);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+		transition-duration: 0.3s;
+		transform: translateY(-4px);
+		color: white;
+
+		> span {
+			transition-duration: 0.3s;
+			transform: translateY(-200%);
+		}
+
+		&::before {
+			font-size: 13px;
+			opacity: 1;
+			bottom: unset;
+			transition-duration: 0.3s;
+		}
+	}
+
+	> span {
+		transition-duration: 0.3s;
+	}
+}

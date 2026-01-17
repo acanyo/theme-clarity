@@ -367,22 +367,22 @@
             th:data-no-text="${noTextConfig}"
           >
             <th:block th:with="momentCount = ${item.count ?: 3}">
-              <th:block th:each="moment : ${momentFinder.list(1, momentCount).items}">
+              <th:block th:each="momentItem : ${momentFinder.list(1, momentCount).items}">
                 <article
                   class="moment-item"
-                  th:if="${not #strings.isEmpty(moment.spec.content.html) or (moment.spec.content.medium != null and not #lists.isEmpty(moment.spec.content.medium))}"
-                  th:data-has-media="${moment.spec.content.medium != null and not #lists.isEmpty(moment.spec.content.medium)}"
+                  th:if="${(not #strings.isEmpty(momentItem.spec.content.html) or (momentItem.spec.content.medium != null and not #lists.isEmpty(momentItem.spec.content.medium))) and (moment == null or momentItem.metadata.name != moment.metadata.name)}"
+                  th:data-has-media="${momentItem.spec.content.medium != null and not #lists.isEmpty(momentItem.spec.content.medium)}"
                 >
-                  <script type="text/plain" class="moment-raw-html" th:utext="${moment.spec.content.html}"></script>
-                  <a class="moment-content" th:href="|/moments/${moment.metadata.name}|"></a>
+                  <script type="text/plain" class="moment-raw-html" th:utext="${momentItem.spec.content.html}"></script>
+                  <a class="moment-content" th:href="|/moments/${momentItem.metadata.name}|"></a>
                   <div class="moment-meta">
-                    <time class="moment-time" th:datetime="${moment.spec.releaseTime}">
+                    <time class="moment-time" th:datetime="${momentItem.spec.releaseTime}">
                       <span class="icon-[ph--clock-bold]"></span>
-                      <span th:text="${#temporals.format(moment.spec.releaseTime, 'MM-dd HH:mm')}"></span>
+                      <span th:text="${#temporals.format(momentItem.spec.releaseTime, 'MM-dd HH:mm')}"></span>
                     </time>
-                    <div th:if="${not #lists.isEmpty(moment.spec.tags)}" class="moment-tags">
+                    <div th:if="${not #lists.isEmpty(momentItem.spec.tags)}" class="moment-tags">
                       <a
-                        th:each="tag,iterStat : ${moment.spec.tags}"
+                        th:each="tag,iterStat : ${momentItem.spec.tags}"
                         th:if="${iterStat.index &lt; 2}"
                         th:href="@{/moments(tag=${tag})}"
                         class="moment-tag"
@@ -419,12 +419,11 @@
                 // 使用 requestIdleCallback 提升页面初渲染流畅度
                 const run = () => {
                   items.forEach((item) => {
-                    const hasMedia = item.dataset.hasMedia === "true";
-                    let displayText = "";
-
                     // 从moment-raw-html脚本标签中获取HTML内容
                     const rawHtmlScript = item.querySelector(".moment-raw-html");
                     const raw = rawHtmlScript ? rawHtmlScript.textContent || rawHtmlScript.innerText || "" : "";
+                    let displayText = "";
+                    let hasMedia = item.dataset.hasMedia === "true";
 
                     // 处理HTML内容
                     if (raw) {
@@ -440,9 +439,19 @@
                       // 提取纯文本
                       const text = doc.body.textContent || doc.body.innerText || "";
                       displayText = text.trim();
+
+                      const mediaSelectors = [
+                        "img[src]",
+                        "video[src]",
+                        "audio[src]",
+                        "figure[data-content-type='image']",
+                        "figure[data-content-type='video']",
+                        "iframe[src]",
+                        "source[src]",
+                      ];
+                      hasMedia = hasMedia || mediaSelectors.some((selector) => doc.querySelector(selector));
                     }
 
-                    // 判断显示逻辑
                     if (!displayText) {
                       if (hasMedia) {
                         // 有媒体资源但无文字，显示提示
