@@ -513,27 +513,29 @@
 
       // 随机穿梭
       function randomVisitLink() {
-        const linkCards = document.querySelectorAll('.feed-card-wrapper[data-link]');
+        const linkCards = document.querySelectorAll(".feed-card-wrapper[data-link]");
         if (linkCards.length === 0) {
-          alert('暂无友链可访问');
+          alert("暂无友链可访问");
           return;
         }
-        const linksInfo = Array.from(linkCards).map(card => ({
-          url: card.getAttribute('data-link') || '',
-          name: card.querySelector('.author')?.textContent?.trim() || '',
-          logo: card.querySelector('.avatar img')?.src || '',
-          desc: card.querySelector('.desc-content p')?.textContent?.trim() || ''
-        })).filter(item => item.url);
-        
+        const linksInfo = Array.from(linkCards)
+          .map((card) => ({
+            url: card.getAttribute("data-link") || "",
+            name: card.querySelector(".author")?.textContent?.trim() || "",
+            logo: card.querySelector(".avatar img")?.src || "",
+            desc: card.querySelector(".desc-content p")?.textContent?.trim() || "",
+          }))
+          .filter((item) => item.url);
+
         // 随机选择
         const randomLink = linksInfo[Math.floor(Math.random() * linksInfo.length)];
-        
+
         // 调用全局穿梭组件
         if (window.openShuttle) {
           window.openShuttle(randomLink);
         } else {
           // 降级：直接跳转
-          window.open(randomLink.url, '_blank');
+          window.open(randomLink.url, "_blank");
         }
       }
 
@@ -573,6 +575,39 @@
           let hash = 0;
           for (const char of link) hash = hash * 31 + char.charCodeAt(0);
           wrapper.style.setProperty("--delay", (Math.abs(hash) % 1000) / 1000 + "s");
+        });
+
+        // Tooltip 定位：检测是否会被顶部截断
+        document.querySelectorAll(".feed-card-wrapper").forEach((wrapper) => {
+          wrapper.addEventListener("mouseenter", function () {
+            const tooltip = this.querySelector(".feed-tooltip");
+            if (!tooltip) return;
+
+            // 临时显示 tooltip 以获取位置
+            tooltip.style.visibility = "visible";
+            tooltip.style.opacity = "0";
+
+            const rect = tooltip.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // 检测 tooltip 是否会被顶部截断
+            if (rect.top < 10) {
+              tooltip.classList.add("tooltip-bottom");
+            } else {
+              tooltip.classList.remove("tooltip-bottom");
+            }
+
+            // 恢复显示动画
+            tooltip.style.visibility = "";
+            tooltip.style.opacity = "";
+          });
+
+          wrapper.addEventListener("mouseleave", function () {
+            const tooltip = this.querySelector(".feed-tooltip");
+            if (tooltip) {
+              tooltip.classList.remove("tooltip-bottom");
+            }
+          });
         });
       })();
     </script>

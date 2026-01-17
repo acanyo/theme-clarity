@@ -151,6 +151,12 @@ $breakpoint-phone: 528px !default;
 
   .author {
     flex-grow: 1;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    word-break: break-word;
   }
 
   .title {
@@ -193,6 +199,21 @@ $breakpoint-phone: 528px !default;
 
   @media (max-width: 640px) {
     display: none;
+  }
+
+  &.tooltip-bottom {
+    top: 100%;
+    bottom: auto;
+    transform: translateX(-50%) translateY(-10px);
+    margin-bottom: 0;
+    margin-top: 0.5rem;
+
+    &::after {
+      top: auto;
+      bottom: 100%;
+      border-top-color: transparent;
+      border-bottom-color: var(--c-bg-1);
+    }
   }
 
   // 箭头
