@@ -859,6 +859,17 @@ spec:
           label: 启用图片 alt 文本
           value: true
           help: 开启后图片将显示 alt 文本
+        - $formkit: date
+          name: owner_birthday
+          label: 你的生日
+          value: "2001-01-01"
+          help: 用于计算你的年龄
+        - $formkit: switch
+          name: archives_years
+          id: archives_years
+          label: 切换年龄来源
+          value: true
+          help: 开启后，年龄来源为建站时间，关闭后，年龄来源为网站拥有者的生日
         - $formkit: switch
           onValue: true
           offValue: false
