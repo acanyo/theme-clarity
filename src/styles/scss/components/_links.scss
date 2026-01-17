@@ -1,3 +1,5 @@
+@use "../reusable" as *;
+
 // ========================================
 // 友链页面样式 (Links Page)
 // 移植自 blog-v3-source
@@ -973,62 +975,5 @@ $breakpoint-phone: 528px !default;
 
 // PC端随机访问按钮 - 与返回顶部按钮风格一致
 .random-link-btn {
-  position: fixed;
-  right: 2.5rem;
-  bottom: calc(2.5rem + 60px); // 在返回顶部按钮上方
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: var(--ld-bg-card);
-  border: 1px solid var(--c-border);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  cursor: pointer;
-  transition-duration: 0.3s;
-  overflow: hidden;
-  z-index: 99;
-  color: var(--c-text);
-  font-size: 1rem;
-
-  @media (max-width: 768px) {
-    display: none;
-  }
-
-  &::before {
-    position: absolute;
-    bottom: -20px;
-    content: "随机穿梭";
-    color: white;
-    font-size: 0px;
-    white-space: nowrap;
-  }
-
-  &:hover {
-    width: 120px;
-    border-radius: 50px;
-    background-color: var(--c-primary);
-    border-color: var(--c-primary);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-    transition-duration: 0.3s;
-    transform: translateY(-4px);
-    color: white;
-
-    > span {
-      transition-duration: 0.3s;
-      transform: translateY(-200%);
-    }
-
-    &::before {
-      font-size: 13px;
-      opacity: 1;
-      bottom: unset;
-      transition-duration: 0.3s;
-    }
-  }
-
-  > span {
-    transition-duration: 0.3s;
-  }
+  @include floating-button("随机穿梭");
 }

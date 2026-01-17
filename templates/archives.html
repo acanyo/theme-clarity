@@ -1,5 +1,8 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '归档')}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '归档')}"
+>
   <th:block th:fragment="content">
     <div class="archive proper-height">
       <th:block th:replace="~{modules/order-toggle :: toolbar}" />
@@ -9,9 +12,13 @@
           <div class="archive-title">
             <h2 class="archive-year" th:text="${yearGroup.year}"></h2>
 
-            <div class="archive-age" 
-                 th:data-year="${yearGroup.year}"
-                 th:data-start-year="${theme.config.aside.basic.site_start_time}">
+            <div
+              class="archive-age"
+              th:data-year="${yearGroup.year}"
+              th:data-start-year="${theme.config.aside.basic.site_start_time}"
+              th:data-owner-birthday="${theme.config.custom.owner_birthday}"
+              th:data-archives-years="${theme.config.custom.archives_years}"
+            >
               <span class="age-num">-</span>
               <span class="age-label">岁</span>
             </div>
@@ -23,11 +30,27 @@
 
           <menu class="archive-list">
             <th:block th:each="monthGroup : ${yearGroup.months}">
-              <li th:each="post,postStat : ${monthGroup.posts}" class="article-item" th:style="'--delay: ' + ${postStat.index * 0.03} + 's'">
+              <li
+                th:each="post,postStat : ${monthGroup.posts}"
+                class="article-item"
+                th:style="'--delay: ' + ${postStat.index * 0.03} + 's'"
+              >
                 <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
-                <a th:href="${post.status.permalink}" class="article-link gradient-card" th:title="${post.status.excerpt}">
+                <a
+                  th:href="${post.status.permalink}"
+                  class="article-link gradient-card"
+                  th:title="${post.status.excerpt}"
+                >
                   <span class="article-title" th:text="${post.spec.title}"></span>
-                  <img th:if="${post.spec.cover}" th:src="${post.spec.cover}" th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w|" sizes="100px" class="article-cover" loading="lazy" th:alt="${post.spec.title}" />
+                  <img
+                    th:if="${post.spec.cover}"
+                    th:src="${post.spec.cover}"
+                    th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w|"
+                    sizes="100px"
+                    class="article-cover"
+                    loading="lazy"
+                    th:alt="${post.spec.title}"
+                  />
                 </a>
               </li>
             </th:block>
@@ -38,16 +61,18 @@
       <th:block th:replace="~{modules/pagination :: pagination(data=${archives})}" />
 
       <script>
-        (function() {
-          document.querySelectorAll('.archive-age').forEach(el => {
+        (function () {
+          document.querySelectorAll(".archive-age").forEach((el) => {
             const currentYear = parseInt(el.dataset.year);
-            const startStr = el.dataset.startYear;
+            const useSiteStartTime = el.dataset.archivesYears === "true";
+            const startStr = useSiteStartTime ? el.dataset.startYear : el.dataset.ownerBirthday;
+
             if (startStr && startStr.length >= 4) {
               const startYear = parseInt(startStr.substring(0, 4));
               const age = currentYear - startYear;
-              el.querySelector('.age-num').textContent = age < 0 ? 0 : age;
+              el.querySelector(".age-num").textContent = age < 0 ? 0 : age;
             } else {
-              el.style.display = 'none'; // 没配置建站时间则隐藏
+              el.style.display = "none";
             }
           });
         })();

@@ -1,0 +1,12 @@
+@use "../reusable" as *;
+
+$breakpoint-mobile: 768px !default;
+
+// ========================================
+// 编辑按钮 (Edit Button)
+// ========================================
+
+// PC端编辑按钮 - 与返回顶部按钮风格一致
+.edit-page-btn {
+  @include floating-button("编辑页面");
+}
