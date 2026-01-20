@@ -1,0 +1,160 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '我的追番')}"
+>
+  <div th:fragment="content">
+    <div class="bangumi-header">
+      <div class="bangumi-title">
+        <span class="icon-[ph--television-bold]"></span>
+        <h1 class="text-creative">追番</h1>
+      </div>
+    </div>
+
+    <nav class="bangumi-tags scrollcheck-x">
+      <a href="javascript:void(0)" class="tag-item active" data-tab="tab-1" onclick="switchBangumiTab(this)">
+        <span>想看</span>
+        <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,1))}"></span>
+      </a>
+      <a href="javascript:void(0)" class="tag-item" data-tab="tab-2" onclick="switchBangumiTab(this)">
+        <span>在看</span>
+        <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,2))}"></span>
+      </a>
+      <a href="javascript:void(0)" class="tag-item" data-tab="tab-3" onclick="switchBangumiTab(this)">
+        <span>已看</span>
+        <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,3))}"></span>
+      </a>
+    </nav>
+
+    <div class="bangumi-tabs-content">
+      <div id="tab-1" class="bangumi-tab-pane active">
+        <div class="bangumi-list">
+          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,1)}">
+            <div class="bangumi-item">
+              <img
+                th:src="${bangumi.spec.cover}"
+                alt="${bangumi.spec.title}"
+                class="bangumi-cover"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+
+              <div class="bangumi-info">
+                <h2 th:text="${bangumi.spec.title}">番剧标题</h2>
+                <div class="bangumi-meta">
+                  <span th:text="'类型: ' + ${bangumi.spec.type}">类型</span>
+                  <span th:text="'地区: ' + ${bangumi.spec.area}">地区</span>
+                  <span th:text="'集数: ' + ${bangumi.spec.totalCount}">集数</span>
+                </div>
+
+                <div class="bangumi-stats">
+                  <span th:text="'关注: ' + ${bangumi.spec.follow}">关注</span>
+                  <span th:text="'观看: ' + ${bangumi.spec.view}">观看</span>
+                  <span th:text="'弹幕: ' + ${bangumi.spec.danmaku}">弹幕</span>
+                  <span th:text="'投币: ' + ${bangumi.spec.coin}">投币</span>
+                  <span th:text="'评分: ' + ${bangumi.spec.score}">评分</span>
+                </div>
+
+                <p class="bangumi-des" th:text="${bangumi.spec.des}">简介</p>
+
+                <a th:if="${bangumi.spec.url}" th:href="${bangumi.spec.url}" target="_blank" class="bangumi-link">
+                  查看详情
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-2" class="bangumi-tab-pane">
+        <div class="bangumi-list">
+          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,2)}">
+            <div class="bangumi-item">
+              <img
+                th:src="${bangumi.spec.cover}"
+                alt="${bangumi.spec.title}"
+                class="bangumi-cover"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+
+              <div class="bangumi-info">
+                <h2 th:text="${bangumi.spec.title}">番剧标题</h2>
+                <div class="bangumi-meta">
+                  <span th:text="'类型: ' + ${bangumi.spec.type}">类型</span>
+                  <span th:text="'地区: ' + ${bangumi.spec.area}">地区</span>
+                  <span th:text="'集数: ' + ${bangumi.spec.totalCount}">集数</span>
+                </div>
+
+                <div class="bangumi-stats">
+                  <span th:text="'关注: ' + ${bangumi.spec.follow}">关注</span>
+                  <span th:text="'观看: ' + ${bangumi.spec.view}">观看</span>
+                  <span th:text="'弹幕: ' + ${bangumi.spec.danmaku}">弹幕</span>
+                  <span th:text="'投币: ' + ${bangumi.spec.coin}">投币</span>
+                  <span th:text="'评分: ' + ${bangumi.spec.score}">评分</span>
+                </div>
+
+                <p class="bangumi-des" th:text="${bangumi.spec.des}">简介</p>
+
+                <a th:if="${bangumi.spec.url}" th:href="${bangumi.spec.url}" target="_blank" class="bangumi-link">
+                  查看详情
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div id="tab-3" class="bangumi-tab-pane">
+        <div class="bangumi-list">
+          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,3)}">
+            <div class="bangumi-item">
+              <img
+                th:src="${bangumi.spec.cover}"
+                alt="${bangumi.spec.title}"
+                class="bangumi-cover"
+                loading="lazy"
+                referrerpolicy="no-referrer"
+              />
+
+              <div class="bangumi-info">
+                <h2 th:text="${bangumi.spec.title}">番剧标题</h2>
+                <div class="bangumi-meta">
+                  <span th:text="'类型: ' + ${bangumi.spec.type}">类型</span>
+                  <span th:text="'地区: ' + ${bangumi.spec.area}">地区</span>
+                  <span th:text="'集数: ' + ${bangumi.spec.totalCount}">集数</span>
+                </div>
+
+                <div class="bangumi-stats">
+                  <span th:text="'关注: ' + ${bangumi.spec.follow}">关注</span>
+                  <span th:text="'观看: ' + ${bangumi.spec.view}">观看</span>
+                  <span th:text="'弹幕: ' + ${bangumi.spec.danmaku}">弹幕</span>
+                  <span th:text="'投币: ' + ${bangumi.spec.coin}">投币</span>
+                  <span th:text="'评分: ' + ${bangumi.spec.score}">评分</span>
+                </div>
+
+                <p class="bangumi-des" th:text="${bangumi.spec.des}">简介</p>
+
+                <a th:if="${bangumi.spec.url}" th:href="${bangumi.spec.url}" target="_blank" class="bangumi-link">
+                  查看详情
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      function switchBangumiTab(btn) {
+        const targetId = btn.getAttribute("data-tab");
+        const tagsContainer = btn.closest(".bangumi-tags");
+        tagsContainer.querySelectorAll(".tag-item").forEach((t) => t.classList.remove("active"));
+        btn.classList.add("active");
+        document.querySelectorAll(".bangumi-tab-pane").forEach((content) => {
+          content.classList.toggle("active", content.id === targetId);
+        });
+      }
+    </script>
+  </div>
+</html>

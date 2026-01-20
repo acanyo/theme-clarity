@@ -1,0 +1,243 @@
+// 番剧页面样式
+// Bangumi page styles
+
+// 页面头部
+.bangumi-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin: 1.5rem 1rem 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--c-border);
+}
+
+.bangumi-title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+
+  > [class^="icon-"], > .iconify {
+    font-size: 1.75em;
+    color: var(--c-primary);
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  > h1 {
+    margin: 0;
+    font-size: 1.75rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--c-text) 0%, var(--c-text-2) 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 1;
+    filter: drop-shadow(0 0 0 transparent);
+  }
+  50% {
+    opacity: 0.85;
+    filter: drop-shadow(0 0 6px var(--c-primary-soft));
+  }
+}
+
+// 标签筛选 - 横向滚动
+.bangumi-tags {
+  display: flex;
+  gap: 0.5rem;
+  margin: 0 1rem 1rem;
+  padding: 0.5rem 0;
+  white-space: nowrap;
+
+  .tag-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.4em 0.85em;
+    border-radius: 2em;
+    background-color: var(--c-bg-soft);
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--c-text-2);
+    transition: all 0.2s;
+    flex-shrink: 0;
+    border: 1px solid transparent;
+
+    &:hover:not(.active) {
+      background-color: var(--c-primary-soft);
+      color: var(--c-primary);
+      border-color: var(--c-primary-soft);
+    }
+
+    &.active {
+      background: linear-gradient(135deg, var(--c-primary), color-mix(in srgb, var(--c-primary), var(--c-accent) 30%));
+      color: white;
+      box-shadow: 0 2px 6px color-mix(in srgb, var(--c-primary), transparent 50%);
+
+      .tag-count {
+        background-color: rgba(255, 255, 255, 0.2);
+        color: white;
+      }
+    }
+
+    .tag-count {
+      padding: 0.15em 0.5em;
+      border-radius: 1em;
+      background-color: var(--c-bg-3);
+      font-size: 0.75em;
+      font-weight: 600;
+      color: var(--c-text-2);
+      min-width: 1.5em;
+      text-align: center;
+    }
+  }
+}
+
+.bangumi-tabs-content {
+  padding: 0.5em 0;
+}
+
+.bangumi-tab-pane {
+  display: none;
+
+  &.active {
+    display: block;
+  }
+}
+
+// 番剧列表
+.bangumi-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin: 0 1rem;
+}
+
+// 番剧卡片
+.bangumi-item {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: var(--ld-bg-card);
+  box-shadow: 0 1px 3px var(--ld-shadow);
+  transition: all 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 4px 12px var(--ld-shadow);
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+  }
+}
+
+// 番剧封面
+.bangumi-cover {
+  flex-shrink: 0;
+  width: 150px;
+  height: 200px;
+  aspect-ratio: 3 / 4;
+  border-radius: 0.5rem;
+  object-fit: cover;
+  box-shadow: 0 2px 8px var(--ld-shadow);
+
+  @media (max-width: 768px) {
+    width: 100%;
+    height: auto;
+    max-height: 200px;
+  }
+}
+
+// 番剧信息
+.bangumi-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+// 番剧标题
+.bangumi-info h2 {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--c-text-1);
+  line-height: 1.4;
+}
+
+// 番剧元信息
+.bangumi-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--c-text-2);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25em 0.6em;
+    border-radius: 1em;
+    background-color: var(--c-bg-soft);
+  }
+}
+
+// 番剧统计数据
+.bangumi-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--c-text-2);
+
+  span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.25em 0.6em;
+    border-radius: 1em;
+    background-color: var(--c-primary-soft);
+    color: var(--c-primary);
+  }
+}
+
+// 番剧简介
+.bangumi-des {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--c-text-1);
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+// 查看详情链接
+.bangumi-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5em 1em;
+  border-radius: 0.5rem;
+  background: linear-gradient(135deg, var(--c-primary), var(--c-accent));
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  align-self: flex-end;
+  margin-left: auto;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--c-primary), transparent 60%);
+  }
+}
