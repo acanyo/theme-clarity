@@ -14,7 +14,7 @@
 
     <th:block
       th:if="${not #strings.isEmpty(theme.config.header.primary_menu)}"
-      th:with="menu = ${menuFinder.getByName(theme.config.header.primary_menu)}"
+      th:with="menu = ${menuFinder.getByName(theme.config.header.primary_menu)}, currentPath = ${#httpServletRequest.requestURI}"
     >
       <menu th:if="${menu != null and menu.menuItems != null}">
         <li
@@ -23,7 +23,7 @@
         >
           <th:block th:if="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}">
             <a
-              class="sidebar-nav-item has-dropdown"
+              th:class="${currentPath != null and menuItem.status?.href != null and currentPath == menuItem.status.href ? 'sidebar-nav-item has-dropdown active' : 'sidebar-nav-item has-dropdown'}"
               th:href="${menuItem.status.href}"
               th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK' or menuItem.spec.target?.name == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT' or menuItem.spec.target?.name == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP' or menuItem.spec.target?.name == 'TOP') ? '_top' : ((menuItem.spec.target == '_self' or menuItem.spec.target == 'SELF' or menuItem.spec.target?.name == 'SELF') ? '_self' : null)))}"
             >
@@ -40,7 +40,7 @@
               <a
                 th:each="child : ${menuItem.children}"
                 th:href="${child.status.href}"
-                class="dropdown-item"
+                th:class="${currentPath != null and child.status?.href != null and currentPath == child.status.href ? 'dropdown-item active' : 'dropdown-item'}"
                 th:attr="target=${(child.spec.target == '_blank' or child.spec.target == 'BLANK' or child.spec.target?.name == 'BLANK') ? '_blank' : ((child.spec.target == '_parent' or child.spec.target == 'PARENT' or child.spec.target?.name == 'PARENT') ? '_parent' : ((child.spec.target == '_top' or child.spec.target == 'TOP' or child.spec.target?.name == 'TOP') ? '_top' : ((child.spec.target == '_self' or child.spec.target == 'SELF' or child.spec.target?.name == 'SELF') ? '_self' : null)))}"
               >
                 <img
@@ -55,7 +55,7 @@
           <a
             th:unless="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}"
             th:href="${menuItem.status.href}"
-            class="sidebar-nav-item"
+            th:class="${currentPath != null and menuItem.status?.href != null and currentPath == menuItem.status.href ? 'sidebar-nav-item active' : 'sidebar-nav-item'}"
             th:attr="target=${(menuItem.spec.target == '_blank' or menuItem.spec.target == 'BLANK' or menuItem.spec.target?.name == 'BLANK') ? '_blank' : ((menuItem.spec.target == '_parent' or menuItem.spec.target == 'PARENT' or menuItem.spec.target?.name == 'PARENT') ? '_parent' : ((menuItem.spec.target == '_top' or menuItem.spec.target == 'TOP' or menuItem.spec.target?.name == 'TOP') ? '_top' : ((menuItem.spec.target == '_self' or menuItem.spec.target == 'SELF' or menuItem.spec.target?.name == 'SELF') ? '_self' : null)))}"
           >
             <img

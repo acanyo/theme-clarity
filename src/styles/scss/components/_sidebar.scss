@@ -187,6 +187,11 @@ $breakpoint-mobile: 768px !default;
 		&:hover {
 			color: var(--c-primary);
 		}
+
+		&.active {
+			color: var(--c-primary);
+			font-weight: 500;
+		}
 	}
 }
 
