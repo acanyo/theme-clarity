@@ -196,6 +196,7 @@ $breakpoint-phone: 528px !default;
   transition: all 0.2s;
   z-index: 100;
   overflow: hidden;
+  pointer-events: none;
 
   @media (max-width: 640px) {
     display: none;
