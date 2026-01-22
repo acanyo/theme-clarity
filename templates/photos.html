@@ -1,46 +1,58 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.plugins?.photos?.title} ?: '图库'))}">
-  <th:block th:fragment="content">
-    <div class="page-header">
-      <h1 class="page-title text-creative">
-        <span class="icon-[ph--images-bold]"></span>
-        <span th:text="${theme.config.plugins?.photos?.title} ?: '图库'">图库</span>
-      </h1>
-      <p class="page-desc" th:text="${theme.config.plugins?.photos?.description} ?: '记录生活中的美好瞬间'">记录生活中的美好瞬间</p>
+<html xmlns:th="https://www.thymeleaf.org"
+      th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.plugins?.photos?.title} ?: '图库'))}">
+<th:block th:fragment="content">
+  <div class="page-header">
+    <h1 class="page-title text-creative">
+      <span class="icon-[ph--images-bold]"></span>
+      <span th:text="${theme.config.plugins?.photos?.title} ?: '图库'">图库</span>
+    </h1>
+    <p class="page-desc" th:text="${theme.config.plugins?.photos?.description} ?: '记录生活中的美好瞬间'">记录生活中的美好瞬间</p>
+  </div>
+
+  <div class="photos-container">
+    <th:block th:if="${groups != null and not #lists.isEmpty(groups)}">
+      <div class="photo-tabs">
+        <a th:href="@{/photos}"
+           th:class="${param.group == null or #lists.isEmpty(param.group) ? 'photo-tab active' : 'photo-tab'}">
+          <span class="icon-[ph--squares-four-bold]"></span>
+          <span>全部</span>
+          <span class="tab-count" th:text="${#lists.isEmpty(photos.items) ? 0 : photos.total}">0</span>
+        </a>
+        <a th:each="group : ${groups}"
+           th:href="@{/photos(group=${group.metadata.name})}"
+           th:class="${param.group != null and not #lists.isEmpty(param.group) and param.group[0] == group.metadata.name ? 'photo-tab active' : 'photo-tab'}">
+          <span class="icon-[ph--images-bold]"></span>
+          <span th:text="${group.spec.displayName}">分组名称</span>
+          <span class="tab-count" th:text="${group.status?.photoCount != null ? group.status.photoCount : (group.photos != null ? #lists.size(group.photos) : 0)}">0</span>
+        </a>
+      </div>
+    </th:block>
+
+    <th:block th:if="${photos != null and not #lists.isEmpty(photos.items)}">
+      <div class="photo-masonry">
+        <!--https://www.w3school.com.cn/tags/tag_figure.asp-->
+        <figure th:each="photo, iterStat : ${photos.items}"
+                class="photo-item gallery-item"
+                th:style="'--delay: ' + (${iterStat.index} * 0.05) + 's'">
+          <img th:src="${photo.spec.cover != null and not #strings.isEmpty(photo.spec.cover) ? photo.spec.cover : photo.spec.url}"
+               th:alt="${photo.spec.displayName}"
+               loading="lazy"/>
+          <figcaption th:if="${photo.spec.displayName != null and not #strings.isEmpty(photo.spec.displayName)}">
+            <span th:text="${photo.spec.displayName}">图片标题</span>
+            <p th:if="${photo.spec.description != null and not #strings.isEmpty(photo.spec.description)}"
+               th:text="${photo.spec.description}">图片描述</p>
+          </figcaption>
+        </figure>
+      </div>
+
+      <th:block th:replace="~{modules/pagination :: pagination(data=${photos})}"></th:block>
+    </th:block>
+
+    <div th:if="${photos == null or #lists.isEmpty(photos.items)}" class="empty-state">
+      <span class="icon-[ph--image-broken]"></span>
+      <p>暂无图片</p>
     </div>
-
-    <div id="photo-gallery-root" class="photos-container"></div>
-
-    <script th:inline="javascript">
-      (function() {
-        const groups = /*[[${groups}]]*/ [];
-        // 转换数据格式
-        const formattedGroups = groups.map(group => ({
-          name: group.metadata.name,
-          displayName: group.spec.displayName,
-          photoCount: group.status?.photoCount || group.photos?.length || 0,
-          photos: (group.photos || []).map(photo => ({
-            url: photo.spec.url,
-            cover: photo.spec.cover,
-            displayName: photo.spec.displayName,
-            description: photo.spec.description
-          }))
-        }));
-
-        // 等待 DOM 和 JS 加载完成
-        if (document.readyState === 'loading') {
-          document.addEventListener('DOMContentLoaded', mount);
-        } else {
-          mount();
-        }
-
-        function mount() {
-          const container = document.getElementById('photo-gallery-root');
-          if (container && window.mountPhotoGallery) {
-            window.mountPhotoGallery(container, formattedGroups);
-          }
-        }
-      })();
-    </script>
-  </th:block>
+  </div>
+</th:block>
 </html>

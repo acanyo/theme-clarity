@@ -131,6 +131,7 @@
     width: 100%;
     height: auto;
     transition: transform 0.3s;
+    cursor: url("/themes/theme-clarity/assets/images/zoom-in.cur"), zoom-in;
     
     // 懒加载占位
     &[loading="lazy"] {
@@ -163,6 +164,7 @@
     transform: translateY(100%);
     transition: opacity 0.3s, transform 0.3s;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    cursor: url("/themes/theme-clarity/assets/images/zoom-in.cur"), zoom-in;
 
     @media (max-width: 480px) {
       padding: 1.5rem 0.5rem 0.5rem;
