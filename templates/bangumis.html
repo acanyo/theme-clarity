@@ -12,27 +12,47 @@
     </div>
 
     <nav class="bangumi-tags scrollcheck-x">
-      <a href="javascript:void(0)" class="tag-item active" data-tab="tab-1" onclick="switchBangumiTab(this)">
+      <a
+        th:href="@{/bangumis(status=0)}"
+        class="tag-item"
+        th:classappend="${#lists.isEmpty(param.status) or #lists.contains(param.status, '0') ? 'active' : ''}"
+      >
+        <span>全部</span>
+        <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,0))}"></span>
+      </a>
+      <a
+        th:href="@{/bangumis(status=1)}"
+        class="tag-item"
+        th:classappend="${param.status != null and #lists.contains(param.status, '1') ? 'active' : ''}"
+      >
         <span>想看</span>
         <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,1))}"></span>
       </a>
-      <a href="javascript:void(0)" class="tag-item" data-tab="tab-2" onclick="switchBangumiTab(this)">
+      <a
+        th:href="@{/bangumis(status=2)}"
+        class="tag-item"
+        th:classappend="${param.status != null and #lists.contains(param.status, '2') ? 'active' : ''}"
+      >
         <span>在看</span>
         <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,2))}"></span>
       </a>
-      <a href="javascript:void(0)" class="tag-item" data-tab="tab-3" onclick="switchBangumiTab(this)">
+      <a
+        th:href="@{/bangumis(status=3)}"
+        class="tag-item"
+        th:classappend="${param.status != null and #lists.contains(param.status, '3') ? 'active' : ''}"
+      >
         <span>已看</span>
         <span class="tag-count" th:text="${#lists.size(bangumiFinder.getBiliDataAll(1,3))}"></span>
       </a>
     </nav>
 
     <div class="bangumi-tabs-content">
-      <div id="tab-1" class="bangumi-tab-pane active">
-        <div class="bangumi-list" id="bangumi-list-1" data-page="1" data-page-size="12">
-          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,1)}" class="bangumi-item">
+      <div class="bangumi-tab-pane active">
+        <div class="bangumi-list">
+          <div th:each="bangumi : ${bangumis.items}" class="bangumi-item">
             <img
               th:src="${#strings.replace(bangumi.spec.cover, 'http://', '//')}"
-              alt="${bangumi.spec.title}"
+              th:alt="${bangumi.spec.title}"
               class="bangumi-cover"
               loading="lazy"
               referrerpolicy="no-referrer"
@@ -62,193 +82,8 @@
             </div>
           </div>
         </div>
-        <nav class="pagination-wrapper" id="pagination-1" style="display: none">
-          <div class="pagination">
-            <a class="page-btn page-prev" onclick="changeBangumiPage(1, -1)">
-              <span class="icon-[ph--caret-left-bold]"></span>
-            </a>
-            <span class="page-info">
-              <span class="page-current" id="page-current-1">1</span>
-              <span class="page-sep">/</span>
-              <span class="page-total" id="page-total-1">1</span>
-            </span>
-            <a class="page-btn page-next" onclick="changeBangumiPage(1, 1)">
-              <span class="icon-[ph--caret-right-bold]"></span>
-            </a>
-          </div>
-        </nav>
-      </div>
-
-      <div id="tab-2" class="bangumi-tab-pane">
-        <div class="bangumi-list" id="bangumi-list-2" data-page="1" data-page-size="12">
-          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,2)}" class="bangumi-item">
-            <img
-              th:src="${#strings.replace(bangumi.spec.cover, 'http://', '//')}"
-              alt="${bangumi.spec.title}"
-              class="bangumi-cover"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-
-            <div class="bangumi-info">
-              <h2 th:text="${bangumi.spec.title}">番剧标题</h2>
-              <div class="bangumi-meta">
-                <span th:text="'类型: ' + ${bangumi.spec.type}">类型</span>
-                <span th:text="'地区: ' + ${bangumi.spec.area}">地区</span>
-                <span th:text="'集数: ' + ${bangumi.spec.totalCount}">集数</span>
-              </div>
-
-              <div class="bangumi-stats">
-                <span th:text="'关注: ' + ${bangumi.spec.follow}">关注</span>
-                <span th:text="'观看: ' + ${bangumi.spec.view}">观看</span>
-                <span th:text="'弹幕: ' + ${bangumi.spec.danmaku}">弹幕</span>
-                <span th:text="'投币: ' + ${bangumi.spec.coin}">投币</span>
-                <span th:text="'评分: ' + ${bangumi.spec.score}">评分</span>
-              </div>
-
-              <p class="bangumi-des" th:text="${bangumi.spec.des}">简介</p>
-
-              <a th:if="${bangumi.spec.url}" th:href="${bangumi.spec.url}" target="_blank" class="bangumi-link">
-                查看详情
-              </a>
-            </div>
-          </div>
-        </div>
-        <nav class="pagination-wrapper" id="pagination-2" style="display: none">
-          <div class="pagination">
-            <a class="page-btn page-prev" onclick="changeBangumiPage(2, -1)">
-              <span class="icon-[ph--caret-left-bold]"></span>
-            </a>
-            <span class="page-info">
-              <span class="page-current" id="page-current-2">1</span>
-              <span class="page-sep">/</span>
-              <span class="page-total" id="page-total-2">1</span>
-            </span>
-            <a class="page-btn page-next" onclick="changeBangumiPage(2, 1)">
-              <span class="icon-[ph--caret-right-bold]"></span>
-            </a>
-          </div>
-        </nav>
-      </div>
-
-      <div id="tab-3" class="bangumi-tab-pane">
-        <div class="bangumi-list" id="bangumi-list-3" data-page="1" data-page-size="10">
-          <div th:each="bangumi : ${bangumiFinder.getBiliDataAll(1,3)}" class="bangumi-item">
-            <img
-              th:src="${#strings.replace(bangumi.spec.cover, 'http://', '//')}"
-              alt="${bangumi.spec.title}"
-              class="bangumi-cover"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-
-            <div class="bangumi-info">
-              <h2 th:text="${bangumi.spec.title}">番剧标题</h2>
-              <div class="bangumi-meta">
-                <span th:text="'类型: ' + ${bangumi.spec.type}">类型</span>
-                <span th:text="'地区: ' + ${bangumi.spec.area}">地区</span>
-                <span th:text="'集数: ' + ${bangumi.spec.totalCount}">集数</span>
-              </div>
-
-              <div class="bangumi-stats">
-                <span th:text="'关注: ' + ${bangumi.spec.follow}">关注</span>
-                <span th:text="'观看: ' + ${bangumi.spec.view}">观看</span>
-                <span th:text="'弹幕: ' + ${bangumi.spec.danmaku}">弹幕</span>
-                <span th:text="'投币: ' + ${bangumi.spec.coin}">投币</span>
-                <span th:text="'评分: ' + ${bangumi.spec.score}">评分</span>
-              </div>
-
-              <p class="bangumi-des" th:text="${bangumi.spec.des}">简介</p>
-
-              <a th:if="${bangumi.spec.url}" th:href="${bangumi.spec.url}" target="_blank" class="bangumi-link">
-                查看详情
-              </a>
-            </div>
-          </div>
-        </div>
-        <nav class="pagination-wrapper" id="pagination-3" style="display: none">
-          <div class="pagination">
-            <a class="page-btn page-prev" onclick="changeBangumiPage(3, -1)">
-              <span class="icon-[ph--caret-left-bold]"></span>
-            </a>
-            <span class="page-info">
-              <span class="page-current" id="page-current-3">1</span>
-              <span class="page-sep">/</span>
-              <span class="page-total" id="page-total-3">1</span>
-            </span>
-            <a class="page-btn page-next" onclick="changeBangumiPage(3, 1)">
-              <span class="icon-[ph--caret-right-bold]"></span>
-            </a>
-          </div>
-        </nav>
+        <th:block th:replace="~{modules/pagination :: pagination(data=${bangumis})}" />
       </div>
     </div>
-
-    <script>
-      function switchBangumiTab(btn) {
-        const targetId = btn.getAttribute("data-tab");
-        const tagsContainer = btn.closest(".bangumi-tags");
-        tagsContainer.querySelectorAll(".tag-item").forEach((t) => t.classList.remove("active"));
-        btn.classList.add("active");
-        document.querySelectorAll(".bangumi-tab-pane").forEach((content) => {
-          content.classList.toggle("active", content.id === targetId);
-        });
-      }
-
-      const bangumiPaginationState = { 1: 1, 2: 1, 3: 1 };
-
-      function initBangumiPagination() {
-        for (let i = 1; i <= 3; i++) {
-          const list = document.getElementById(`bangumi-list-${i}`);
-          const pagination = document.getElementById(`pagination-${i}`);
-          const items = list.querySelectorAll(".bangumi-item");
-          const pageSize = parseInt(list.dataset.pageSize) || 10;
-          const totalPages = Math.ceil(items.length / pageSize);
-
-          if (totalPages > 1) {
-            pagination.style.display = "block";
-            document.getElementById(`page-total-${i}`).textContent = totalPages;
-            updateBangumiPage(i);
-          }
-        }
-      }
-
-      function updateBangumiPage(tabId) {
-        const list = document.getElementById(`bangumi-list-${tabId}`);
-        const items = list.querySelectorAll(".bangumi-item");
-        const pageSize = parseInt(list.dataset.pageSize) || 10;
-        const currentPage = bangumiPaginationState[tabId];
-        const totalPages = Math.ceil(items.length / pageSize);
-
-        items.forEach((item, index) => {
-          item.style.display = index >= (currentPage - 1) * pageSize && index < currentPage * pageSize ? "" : "none";
-        });
-
-        const pagination = document.getElementById(`pagination-${tabId}`);
-        const prevBtn = pagination.querySelector(".page-prev");
-        const nextBtn = pagination.querySelector(".page-next");
-
-        document.getElementById(`page-current-${tabId}`).textContent = currentPage;
-        prevBtn.classList.toggle("disabled", currentPage === 1);
-        nextBtn.classList.toggle("disabled", currentPage === totalPages);
-      }
-
-      function changeBangumiPage(tabId, delta) {
-        const list = document.getElementById(`bangumi-list-${tabId}`);
-        const items = list.querySelectorAll(".bangumi-item");
-        const pageSize = parseInt(list.dataset.pageSize) || 10;
-        const totalPages = Math.ceil(items.length / pageSize);
-        const currentPage = bangumiPaginationState[tabId];
-        const newPage = currentPage + delta;
-
-        if (newPage >= 1 && newPage <= totalPages) {
-          bangumiPaginationState[tabId] = newPage;
-          updateBangumiPage(tabId);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      }
-
-      document.addEventListener("DOMContentLoaded", initBangumiPagination);
-    </script>
   </div>
 </html>
