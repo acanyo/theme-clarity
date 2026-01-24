@@ -44,6 +44,7 @@
           class="page-input"
           min="1"
           th:max="${data.totalPages}"
+          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
           placeholder="页码"
         />
         <button class="page-jump-btn" th:onclick="'jumpToPage(this)'">跳转</button>
@@ -119,6 +120,7 @@
           class="page-input"
           min="1"
           th:max="${data.totalPages}"
+          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
           placeholder="页码"
         />
         <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">跳转</button>
@@ -202,6 +204,7 @@
           class="page-input"
           min="1"
           th:max="${data.totalPages}"
+          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
           placeholder="页码"
         />
         <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">跳转</button>
