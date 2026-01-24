@@ -1,0 +1,51 @@
+<!--
+  页码输入跳转组件
+  用法：
+    <th:block th:replace="~{modules/page-jump :: pageJump(data=${data})}" />
+    
+  参数：
+    - data: 分页数据 (需要 page, totalPages)
+-->
+
+<th:block th:fragment="pageJump(data)">
+  <div class="page-jump">
+    <input
+      type="number"
+      th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}"
+      class="page-input"
+      min="1"
+      th:max="${data.totalPages}"
+      th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
+      th:onkeypress="'if(event.keyCode==13) jumpToPage(this.nextElementSibling)'"
+      placeholder="页码"
+    />
+    <button class="page-jump-btn" th:onclick="'jumpToPage(this)'">跳转</button>
+  </div>
+</th:block>
+
+<!--
+  页码输入跳转组件 - 带自定义 URL 模式
+  用法：
+    <th:block th:replace="~{modules/page-jump :: pageJumpWithPattern(data=${data}, urlPattern='/page/{page}', firstPageUrl='/')}" />
+    
+  参数：
+    - data: 分页数据 (需要 page, totalPages)
+    - urlPattern: URL 模式，{page} 会被替换为页码
+    - firstPageUrl: 第一页的 URL
+-->
+
+<th:block th:fragment="pageJumpWithPattern(data, urlPattern, firstPageUrl)">
+  <div class="page-jump">
+    <input
+      type="number"
+      th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-url-pattern=${urlPattern}, data-first-page-url=${firstPageUrl}"
+      class="page-input"
+      min="1"
+      th:max="${data.totalPages}"
+      th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
+      th:onkeypress="'if(event.keyCode==13) jumpToPageWithPattern(this.nextElementSibling)'"
+      placeholder="页码"
+    />
+    <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">跳转</button>
+  </div>
+</th:block>

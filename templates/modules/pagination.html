@@ -37,19 +37,7 @@
       </span>
 
       <!-- 页码输入跳转 -->
-      <div class="page-jump">
-        <input
-          type="number"
-          th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}"
-          class="page-input"
-          min="1"
-          th:max="${data.totalPages}"
-          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
-          th:onkeypress="'if(event.keyCode==13) jumpToPage(this.nextElementSibling)'"
-          placeholder="页码"
-        />
-        <button class="page-jump-btn" th:onclick="'jumpToPage(this)'">跳转</button>
-      </div>
+      <th:block th:replace="~{modules/page-jump :: pageJump(data=${data})}" />
     </div>
   </nav>
 </th:block>
@@ -114,19 +102,9 @@
       </span>
 
       <!-- 页码输入跳转 -->
-      <div class="page-jump">
-        <input
-          type="number"
-          th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-url-pattern='/page/{page}', data-first-page-url='/'"
-          class="page-input"
-          min="1"
-          th:max="${data.totalPages}"
-          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
-          th:onkeypress="'if(event.keyCode==13) jumpToPageWithPattern(this.nextElementSibling)'"
-          placeholder="页码"
-        />
-        <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">跳转</button>
-      </div>
+      <th:block
+        th:replace="~{modules/page-jump :: pageJumpWithPattern(data=${data}, urlPattern='/page/{page}', firstPageUrl='/')}"
+      />
     </div>
   </nav>
 </th:block>
@@ -199,19 +177,9 @@
       </span>
 
       <!-- 页码输入跳转 -->
-      <div class="page-jump">
-        <input
-          type="number"
-          th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-url-pattern=${urlPattern}, data-first-page-url=${firstUrl}"
-          class="page-input"
-          min="1"
-          th:max="${data.totalPages}"
-          th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
-          th:onkeypress="'if(event.keyCode==13) jumpToPageWithPattern(this.nextElementSibling)'"
-          placeholder="页码"
-        />
-        <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">跳转</button>
-      </div>
+      <th:block
+        th:replace="~{modules/page-jump :: pageJumpWithPattern(data=${data}, urlPattern=${urlPattern}, firstPageUrl=${firstUrl})}"
+      />
     </div>
   </nav>
 </th:block>
