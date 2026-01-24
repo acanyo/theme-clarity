@@ -72,9 +72,23 @@ window.jumpToPage = function (button: HTMLElement) {
   const search = window.location.search;
   const params = new URLSearchParams(search);
 
-  if (params.has("keyword")) {
+  if (params.has("page")) {
     params.set("page", String(targetPage));
     window.location.href = `${path}?${params.toString()}`;
+    return;
+  }
+
+  if (params.size > 0) {
+    let baseUrl = path.replace(/\/page\/\d+$/, "");
+    if (baseUrl.length > 1 && baseUrl.endsWith("/")) {
+      baseUrl = baseUrl.slice(0, -1);
+    }
+
+    if (targetPage === 1) {
+      window.location.href = `${baseUrl || "/"}?${params.toString()}`;
+    } else {
+      window.location.href = `${baseUrl === "/" ? "" : baseUrl}/page/${targetPage}?${params.toString()}`;
+    }
     return;
   }
 
@@ -112,9 +126,20 @@ window.jumpToPageWithPattern = function (button: HTMLElement) {
     return;
   }
 
+  const search = window.location.search;
+  const params = new URLSearchParams(search);
+
+  let targetUrl: string;
   if (targetPage === 1) {
-    window.location.href = firstPageUrl;
+    targetUrl = firstPageUrl;
   } else {
-    window.location.href = urlPattern.replace("{page}", String(targetPage));
+    targetUrl = urlPattern.replace("{page}", String(targetPage));
   }
+
+  if (params.size > 0) {
+    const separator = targetUrl.includes("?") ? "&" : "?";
+    targetUrl = `${targetUrl}${separator}${params.toString()}`;
+  }
+
+  window.location.href = targetUrl;
 };
