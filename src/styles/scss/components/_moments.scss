@@ -71,12 +71,32 @@
 }
 
 // 标签筛选 - 横向滚动
+.moments-tags-wrapper {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	margin: 0 1rem 1rem;
+	position: relative;
+}
+
 .moments-tags {
 	display: flex;
 	gap: 0.5rem;
-	margin: 0 1rem 1rem;
 	padding: 0.5rem 0;
 	white-space: nowrap;
+	flex: 1;
+	overflow: hidden;
+	scrollbar-width: none;
+	-ms-overflow-style: none;
+
+	&::-webkit-scrollbar {
+		display: none;
+	}
+
+	&:hover .at-slide-hover {
+		opacity: 1;
+		transform: translateY(0);
+	}
 
 	.tag-item {
 		display: inline-flex;
@@ -120,6 +140,31 @@
 			text-align: center;
 		}
 	}
+}
+
+.at-slide-hover {
+	opacity: 1;
+	transition: none;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	padding: 0.35em 0.75em;
+	border-radius: 2em;
+	background-color: var(--c-bg-soft);
+	font-size: 0.75rem;
+	font-weight: 500;
+	color: var(--c-text-3);
+	border: 1px solid var(--c-border);
+	flex-shrink: 0;
+
+	[class^="icon-"], .iconify {
+		font-size: 1.1em;
+	}
+}
+
+/* 移除悬停触发效果 */
+.moments-tags-wrapper:hover .at-slide-hover {
+	opacity: 1;
 }
 
 // 瞬间列表

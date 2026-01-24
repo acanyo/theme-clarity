@@ -46,6 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageLoaded();
   initImageCaption();
   initActiveNavItem();
+  initHorizontalScroll();
 });
 
 // 侧边栏菜单激活状态
@@ -63,9 +64,7 @@ function initActiveNavItem() {
 
     // 精确匹配或路径前缀匹配
     const isActive =
-      currentPath === href ||
-      (href !== "/" && currentPath.startsWith(href)) ||
-      (href === "/" && currentPath === "/");
+      currentPath === href || (href !== "/" && currentPath.startsWith(href)) || (href === "/" && currentPath === "/");
 
     if (isActive) {
       link.classList.add("active");
@@ -205,4 +204,38 @@ function initBackToTop() {
       }
     });
   }
+}
+
+function initHorizontalScroll() {
+  const scrollContainers = document.querySelectorAll<HTMLElement>(".scrollcheck-x");
+
+  scrollContainers.forEach((container) => {
+    const wrapper = container.closest<HTMLElement>(".moments-tags-wrapper");
+    const hoverHint = wrapper?.querySelector<HTMLElement>(".at-slide-hover");
+
+    const checkScrollable = () => {
+      const isScrollable = container.scrollWidth > container.clientWidth;
+      if (hoverHint) {
+        if (isScrollable) {
+          hoverHint.style.display = "inline-flex";
+        } else {
+          hoverHint.style.display = "none";
+        }
+      }
+    };
+
+    container.addEventListener(
+      "wheel",
+      (e) => {
+        if (e.deltaY !== 0) {
+          e.preventDefault();
+          container.scrollLeft += e.deltaY;
+        }
+      },
+      { passive: false },
+    );
+
+    checkScrollable();
+    window.addEventListener("resize", checkScrollable);
+  });
 }
