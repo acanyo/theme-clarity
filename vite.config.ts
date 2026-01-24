@@ -40,6 +40,7 @@ export default ({ mode }: { mode: string }) => {
             if (id.includes("node_modules")) {
               if (id.includes("lodash-es")) return "lodash";
               if (id.includes("preact")) return "preact";
+              if (id.includes("@fancyapps")) return "fancybox";
               return "vendor";
             }
             return undefined;

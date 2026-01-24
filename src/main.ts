@@ -1,9 +1,7 @@
 import "./styles/tailwind.css";
 import "./styles/style.scss";
 import "@chinese-fonts/kksjt/dist/kuaikanshijieti20231213/result.css";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-import { Fancybox } from "@fancyapps/ui";
 import Alpine from "alpinejs";
 import collapse from "@alpinejs/collapse";
 
@@ -14,7 +12,6 @@ import { generateQRCode, generatePoster } from "./utils/poster";
 import { registerAlpineComponents } from "./alpine";
 
 // 注册全局函数
-window.Fancybox = Fancybox;
 window.mountPhotoGallery = mountPhotoGallery;
 window.mountWeather = mountWeather;
 window.generateQRCode = generateQRCode;

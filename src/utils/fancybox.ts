@@ -1,5 +1,3 @@
-import { Fancybox } from "@fancyapps/ui";
-
 const fancyboxOptions = {
   Hash: false,
   Thumbs: { showOnStart: true },
@@ -18,7 +16,9 @@ function shouldExclude(img: HTMLImageElement): boolean {
   return excludeClasses.some((cls) => img.classList.contains(cls));
 }
 
-export function initFancybox() {
+export async function initFancybox() {
+  await import("@fancyapps/ui/dist/fancybox/fancybox.css");
+  const { Fancybox } = await import("@fancyapps/ui");
   Fancybox.destroy();
 
   const selectors = [
