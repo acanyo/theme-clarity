@@ -894,6 +894,13 @@ spec:
           label: 启用编辑按钮
           value: false
           help: 开启后文章/页面将显示编辑按钮
+        - $formkit: switch
+          onValue: true
+          offValue: false
+          name: enable_page_jump
+          label: 启用分页跳转
+          value: false
+          help: 开启后分页将显示跳转功能
     - group: development
       label: 开发设置
       formSchema:

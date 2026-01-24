@@ -8,7 +8,10 @@
 -->
 
 <th:block th:fragment="pageJump(data)">
-  <div class="page-jump">
+  <div
+    class="page-jump"
+    th:if="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}"
+  >
     <input
       type="number"
       th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}"
@@ -35,7 +38,10 @@
 -->
 
 <th:block th:fragment="pageJumpWithPattern(data, urlPattern, firstPageUrl)">
-  <div class="page-jump">
+  <div
+    class="page-jump"
+    th:if="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}"
+  >
     <input
       type="number"
       th:attr="data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-url-pattern=${urlPattern}, data-first-page-url=${firstPageUrl}"
