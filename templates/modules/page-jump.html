@@ -21,9 +21,12 @@
       th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
       th:onkeypress="'if(event.keyCode==13) jumpToPage(this.nextElementSibling)'"
       placeholder="页码"
+      aria-label="输入页码"
+      aria-valuemin="1"
+      th:attrappend="aria-valuemax=${data.totalPages}"
     />
-    <button class="page-jump-btn" th:onclick="'jumpToPage(this)'">
-      <span class="icon-[ph--arrow-right-bold]"></span>
+    <button class="page-jump-btn" th:onclick="'jumpToPage(this)'" aria-label="跳转到指定页" title="跳转到指定页">
+      <span class="icon-[ph--arrow-right-bold]" aria-hidden="true"></span>
     </button>
   </div>
 </th:block>
@@ -53,9 +56,17 @@
       th:oninput="'if(this.value>' + ${data.totalPages} + ') this.value=' + ${data.totalPages}"
       th:onkeypress="'if(event.keyCode==13) jumpToPageWithPattern(this.nextElementSibling)'"
       placeholder="页码"
+      aria-label="输入页码"
+      aria-valuemin="1"
+      th:attrappend="aria-valuemax=${data.totalPages}"
     />
-    <button class="page-jump-btn" th:onclick="'jumpToPageWithPattern(this)'">
-      <span class="icon-[ph--arrow-right-bold]"></span>
+    <button
+      class="page-jump-btn"
+      th:onclick="'jumpToPageWithPattern(this)'"
+      aria-label="跳转到指定页"
+      title="跳转到指定页"
+    >
+      <span class="icon-[ph--arrow-right-bold]" aria-hidden="true"></span>
     </button>
   </div>
 </th:block>
