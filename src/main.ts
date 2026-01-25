@@ -235,6 +235,36 @@ function initHorizontalScroll() {
       { passive: false },
     );
 
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    container.addEventListener(
+      "touchstart",
+      (e) => {
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+      },
+      { passive: true },
+    );
+
+    container.addEventListener(
+      "touchmove",
+      (e) => {
+        const touchCurrentX = e.touches[0].clientX;
+        const touchCurrentY = e.touches[0].clientY;
+        const diffX = touchStartX - touchCurrentX;
+        const diffY = touchStartY - touchCurrentY;
+
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+          e.preventDefault();
+          container.scrollLeft += diffX;
+          touchStartX = touchCurrentX;
+          touchStartY = touchCurrentY;
+        }
+      },
+      { passive: false },
+    );
+
     checkScrollable();
     window.addEventListener("resize", checkScrollable);
   });
