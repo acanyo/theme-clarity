@@ -58,40 +58,52 @@
         <span class="icon-[ph--caret-left-bold]"></span>
       </span>
 
-      <!-- 页码列表 -->
-      <div class="page-numbers">
-        <!-- 第一页 -->
-        <a th:if="${data.page > 2}" href="/" class="page-num">1</a>
-        <span th:if="${data.page > 3}" class="page-ellipsis">...</span>
+      <!-- 页码：根据设置显示简洁版或完整版 -->
+      <th:block th:if="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}">
+        <span class="page-info">
+          <span class="page-current" th:text="${data.page}"></span>
+          <span class="page-sep">/</span>
+          <span class="page-total" th:text="${data.totalPages}"></span>
+        </span>
+      </th:block>
 
-        <!-- 当前页前一页 -->
-        <a
-          th:if="${data.page > 1}"
-          th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}"
-          class="page-num"
-          th:text="${data.page - 1}"
-        ></a>
+      <th:block
+        th:unless="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}"
+      >
+        <div class="page-numbers">
+          <!-- 第一页 -->
+          <a th:if="${data.page > 2}" href="/" class="page-num">1</a>
+          <span th:if="${data.page > 3}" class="page-ellipsis">...</span>
 
-        <!-- 当前页 -->
-        <span class="page-num active" th:text="${data.page}"></span>
+          <!-- 当前页前一页 -->
+          <a
+            th:if="${data.page > 1}"
+            th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}"
+            class="page-num"
+            th:text="${data.page - 1}"
+          ></a>
 
-        <!-- 当前页后一页 -->
-        <a
-          th:if="${data.page < data.totalPages}"
-          th:href="${'/page/' + (data.page + 1)}"
-          class="page-num"
-          th:text="${data.page + 1}"
-        ></a>
+          <!-- 当前页 -->
+          <span class="page-num active" th:text="${data.page}"></span>
 
-        <!-- 最后一页 -->
-        <span th:if="${data.page < data.totalPages - 2}" class="page-ellipsis">...</span>
-        <a
-          th:if="${data.page < data.totalPages - 1}"
-          th:href="${'/page/' + data.totalPages}"
-          class="page-num"
-          th:text="${data.totalPages}"
-        ></a>
-      </div>
+          <!-- 当前页后一页 -->
+          <a
+            th:if="${data.page < data.totalPages}"
+            th:href="${'/page/' + (data.page + 1)}"
+            class="page-num"
+            th:text="${data.page + 1}"
+          ></a>
+
+          <!-- 最后一页 -->
+          <span th:if="${data.page < data.totalPages - 2}" class="page-ellipsis">...</span>
+          <a
+            th:if="${data.page < data.totalPages - 1}"
+            th:href="${'/page/' + data.totalPages}"
+            class="page-num"
+            th:text="${data.totalPages}"
+          ></a>
+        </div>
+      </th:block>
 
       <!-- 下一页 -->
       <a th:if="${data.hasNext}" th:href="${'/page/' + (data.page + 1)}" class="page-btn page-next">
