@@ -46,7 +46,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initImageLoaded();
   initImageCaption();
   initActiveNavItem();
-  initHorizontalScroll();
+  moments_tags();
 });
 
 // 侧边栏菜单激活状态
@@ -206,7 +206,7 @@ function initBackToTop() {
   }
 }
 
-function initHorizontalScroll() {
+function moments_tags() {
   const scrollContainers = document.querySelectorAll<HTMLElement>(".scrollcheck-x");
 
   scrollContainers.forEach((container) => {
