@@ -1,5 +1,8 @@
 <!doctype html>
-<html xmlns:th="https://www.thymeleaf.org" th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '朋友圈')}">
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = '朋友圈')}"
+>
   <th:block th:fragment="content">
     <div class="friends-header">
       <div class="friends-title">
@@ -10,7 +13,7 @@
         <span class="friends-count" th:if="${friends.total > 0}">
           共 <strong th:text="${friends.total}"></strong> 篇订阅
         </span>
-        <a th:if="${theme.config.links?.enable_submit}" href="/links#add" class="apply-link" title="申请友链">
+        <a th:if="${theme.config.links?.enable_submit_lywq}" href="/links#add" class="apply-link" title="申请友链">
           <span class="icon-[ph--handshake-bold]"></span>
           申请友链
         </a>
@@ -18,18 +21,18 @@
     </div>
 
     <div class="friends-list proper-height">
-      <article 
-        th:each="friend,iterStat : ${friends.items}" 
+      <article
+        th:each="friend,iterStat : ${friends.items}"
         th:with="spec=${friend.spec}"
         class="friend-card"
         th:style="'--delay: ' + ${iterStat.index * 0.03} + 's'"
       >
         <header class="friend-header">
           <a th:href="${spec.authorUrl}" target="_blank" rel="noopener" class="author-info">
-            <img 
-              th:if="${spec.logo != null and spec.logo != ''}" 
-              th:src="${spec.logo}" 
-              th:alt="${spec.author}" 
+            <img
+              th:if="${spec.logo != null and spec.logo != ''}"
+              th:src="${spec.logo}"
+              th:alt="${spec.author}"
               class="author-avatar"
               loading="lazy"
             />
@@ -38,9 +41,9 @@
             </span>
             <span class="author-name" th:text="${spec.author}">作者</span>
           </a>
-          <time 
+          <time
             th:if="${spec.pubDate != null}"
-            class="friend-time" 
+            class="friend-time"
             th:datetime="${spec.pubDate}"
             th:text="${#temporals.format(spec.pubDate, 'MM-dd')}"
           ></time>
@@ -48,7 +51,11 @@
 
         <a th:href="${spec.postLink}" target="_blank" rel="noopener" class="friend-content">
           <h2 class="friend-title" th:text="${spec.title}">文章标题</h2>
-          <p th:if="${spec.description != null and spec.description != ''}" class="friend-desc" th:text="${spec.description}"></p>
+          <p
+            th:if="${spec.description != null and spec.description != ''}"
+            class="friend-desc"
+            th:text="${spec.description}"
+          ></p>
         </a>
 
         <footer class="friend-footer">

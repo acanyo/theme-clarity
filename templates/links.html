@@ -169,7 +169,7 @@
                 </th:block>
               </div>
 
-              <th:block th:if="${theme.config.links?.enable_submit}">
+              <th:block th:if="${theme.config.links?.enable_submit_lywq}">
                 <div class="link-submit-actions">
                   <div id="link-submit-entry" class="link-submit-entry" style="display: none">
                     <button type="button" class="z-btn primary" onclick="openLinkSubmitModal()">
@@ -199,7 +199,7 @@
         </div>
       </div>
 
-      <div th:if="${theme.config.links?.enable_submit}" id="link-submit-modal" class="link-submit-modal">
+      <div th:if="${theme.config.links?.enable_submit_lywq}" id="link-submit-modal" class="link-submit-modal">
         <div class="link-submit-overlay" onclick="closeLinkSubmitModal()"></div>
         <div class="link-submit-content">
           <div class="link-submit-header">
@@ -331,7 +331,7 @@
       </div>
 
       <div
-        th:if="${theme.config.links?.enable_submit and theme.config.links?.enable_update}"
+        th:if="${theme.config.links?.enable_submit_lywq and theme.config.links?.enable_update}"
         id="link-update-modal"
         class="link-submit-modal"
       >
@@ -501,11 +501,22 @@
       <span class="icon-[ph--shuffle-bold]"></span>
     </button>
 
+    <!-- 友链提交按钮 -->
+    <button
+      th:if="${pluginFinder.available('link-submit') and theme.config.links?.enable_submit_kky != false}"
+      id="submit-link-btn"
+      class="random-link-btn"
+      onclick="LinkSubmitWidget.open()"
+      title="提交友链"
+    >
+      <span class="icon-[ph--plus-bold]"></span>
+    </button>
+
     <script th:inline="javascript">
       /*<![CDATA[*/
       // 配置传递给 JS 模块
       window.linkSubmitConfig = {
-        enableSubmit: /*[[${theme.config.links?.enable_submit}]]*/ false,
+        enableSubmit: /*[[${theme.config.links?.enable_submit_lywq}]]*/ false,
         enableUpdate: /*[[${theme.config.links?.enable_update}]]*/ false,
         verifyType: /*[[${theme.config.links?.verify_type ?: 'email'}]]*/ "email",
       };
@@ -576,6 +587,13 @@
           for (const char of link) hash = hash * 31 + char.charCodeAt(0);
           wrapper.style.setProperty("--delay", (Math.abs(hash) % 1000) / 1000 + "s");
         });
+
+        // 动态调整随机访问按钮位置
+        const submitLinkBtn = document.getElementById("submit-link-btn");
+        const randomLinkBtn = document.getElementById("random-link-btn");
+        if (randomLinkBtn && !submitLinkBtn) {
+          randomLinkBtn.style.bottom = "calc(2.5rem + 60px)";
+        }
 
         // Tooltip 定位：检测是否会被顶部截断
         document.querySelectorAll(".feed-card-wrapper").forEach((wrapper) => {
