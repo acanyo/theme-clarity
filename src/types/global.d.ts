@@ -1,4 +1,3 @@
-import type { Fancybox } from "@fancyapps/ui";
 import type Alpine from "alpinejs";
 
 declare module "@alpinejs/collapse";
@@ -6,7 +5,6 @@ declare module "@alpinejs/collapse";
 declare global {
   interface Window {
     Alpine: typeof Alpine;
-    Fancybox: typeof Fancybox;
     mountPhotoGallery: (container: HTMLElement, groups: unknown[]) => void;
     mountWeather: (container: HTMLElement, apiKey: string, iconBase: string) => void;
     generateQRCode: (container: HTMLElement, url: string) => Promise<void>;
@@ -17,6 +15,7 @@ declare global {
     themeConfig?: {
       custom?: {
         img_alt?: boolean;
+        enable_fancybox?: boolean;
       };
     };
   }

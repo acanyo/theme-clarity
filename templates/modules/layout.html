@@ -1,5 +1,10 @@
 <!doctype html>
-<html lang="zh-CN" th:fragment="html (content, showAside, pageTitle)" th:data-page-transition="${theme.config.style.page_transition ?: 'fade-scale'}" th:data-nav-active="${theme.config.style.nav_active_indicator != false}">
+<html
+  lang="zh-CN"
+  th:fragment="html (content, showAside, pageTitle)"
+  th:data-page-transition="${theme.config.style.page_transition ?: 'fade-scale'}"
+  th:data-nav-active="${theme.config.style.nav_active_indicator != false}"
+>
   <head>
     <th:block th:replace="~{modules/seo :: seo(pageTitle=${pageTitle})}" />
 
@@ -71,6 +76,7 @@
       window.themeConfig = window.themeConfig || {};
       window.themeConfig.custom = window.themeConfig.custom || {};
       window.themeConfig.custom.img_alt = /*[[${theme.config.custom.img_alt}]]*/ false;
+      window.themeConfig.custom.enable_fancybox = /*[[${theme.config.custom.enable_fancybox}]]*/ true;
     </script>
   </head>
   <body id="clarity-root">

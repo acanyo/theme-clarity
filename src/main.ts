@@ -1,9 +1,7 @@
 import "./styles/tailwind.css";
 import "./styles/style.scss";
 import "@chinese-fonts/kksjt/dist/kuaikanshijieti20231213/result.css";
-import "@fancyapps/ui/dist/fancybox/fancybox.css";
 
-import { Fancybox } from "@fancyapps/ui";
 import Alpine from "alpinejs";
 import collapse from "@alpinejs/collapse";
 
@@ -14,7 +12,6 @@ import { generateQRCode, generatePoster } from "./utils/poster";
 import { registerAlpineComponents } from "./alpine";
 
 // 注册全局函数
-window.Fancybox = Fancybox;
 window.mountPhotoGallery = mountPhotoGallery;
 window.mountWeather = mountWeather;
 window.generateQRCode = generateQRCode;
@@ -40,7 +37,9 @@ document.addEventListener("keydown", (e) => {
 // 页面初始加载
 document.addEventListener("DOMContentLoaded", () => {
   initDropdownMenus();
-  initFancybox();
+  if (window.themeConfig?.custom?.enable_fancybox !== true) {
+    initFancybox();
+  }
   initBackToTop();
   initLinkSubmit();
   initImageLoaded();
@@ -63,9 +62,7 @@ function initActiveNavItem() {
 
     // 精确匹配或路径前缀匹配
     const isActive =
-      currentPath === href ||
-      (href !== "/" && currentPath.startsWith(href)) ||
-      (href === "/" && currentPath === "/");
+      currentPath === href || (href !== "/" && currentPath.startsWith(href)) || (href === "/" && currentPath === "/");
 
     if (isActive) {
       link.classList.add("active");
