@@ -35,6 +35,9 @@
       <span th:unless="${data.hasNext}" class="page-btn page-next disabled">
         <span class="icon-[ph--caret-right-bold]"></span>
       </span>
+
+      <!-- 页码输入跳转 -->
+      <th:block th:replace="~{modules/page-jump :: pageJump(data=${data})}" />
     </div>
   </nav>
 </th:block>
@@ -44,32 +47,63 @@
   <nav class="pagination-wrapper" th:if="${data.totalPages > 1}">
     <div class="pagination">
       <!-- 上一页 -->
-      <a th:if="${data.hasPrevious}" th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}" class="page-btn page-prev">
+      <a
+        th:if="${data.hasPrevious}"
+        th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}"
+        class="page-btn page-prev"
+      >
         <span class="icon-[ph--caret-left-bold]"></span>
       </a>
       <span th:unless="${data.hasPrevious}" class="page-btn page-prev disabled">
         <span class="icon-[ph--caret-left-bold]"></span>
       </span>
 
-      <!-- 页码列表 -->
-      <div class="page-numbers">
-        <!-- 第一页 -->
-        <a th:if="${data.page > 2}" href="/" class="page-num">1</a>
-        <span th:if="${data.page > 3}" class="page-ellipsis">...</span>
-        
-        <!-- 当前页前一页 -->
-        <a th:if="${data.page > 1}" th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}" class="page-num" th:text="${data.page - 1}"></a>
-        
-        <!-- 当前页 -->
-        <span class="page-num active" th:text="${data.page}"></span>
-        
-        <!-- 当前页后一页 -->
-        <a th:if="${data.page < data.totalPages}" th:href="${'/page/' + (data.page + 1)}" class="page-num" th:text="${data.page + 1}"></a>
-        
-        <!-- 最后一页 -->
-        <span th:if="${data.page < data.totalPages - 2}" class="page-ellipsis">...</span>
-        <a th:if="${data.page < data.totalPages - 1}" th:href="${'/page/' + data.totalPages}" class="page-num" th:text="${data.totalPages}"></a>
-      </div>
+      <!-- 页码：根据设置显示简洁版或完整版 -->
+      <th:block th:if="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}">
+        <span class="page-info">
+          <span class="page-current" th:text="${data.page}"></span>
+          <span class="page-sep">/</span>
+          <span class="page-total" th:text="${data.totalPages}"></span>
+        </span>
+      </th:block>
+
+      <th:block
+        th:unless="${theme.config.custom.enable_page_jump != null ? theme.config.custom.enable_page_jump : false}"
+      >
+        <div class="page-numbers">
+          <!-- 第一页 -->
+          <a th:if="${data.page > 2}" href="/" class="page-num">1</a>
+          <span th:if="${data.page > 3}" class="page-ellipsis">...</span>
+
+          <!-- 当前页前一页 -->
+          <a
+            th:if="${data.page > 1}"
+            th:href="${data.page == 2 ? '/' : '/page/' + (data.page - 1)}"
+            class="page-num"
+            th:text="${data.page - 1}"
+          ></a>
+
+          <!-- 当前页 -->
+          <span class="page-num active" th:text="${data.page}"></span>
+
+          <!-- 当前页后一页 -->
+          <a
+            th:if="${data.page < data.totalPages}"
+            th:href="${'/page/' + (data.page + 1)}"
+            class="page-num"
+            th:text="${data.page + 1}"
+          ></a>
+
+          <!-- 最后一页 -->
+          <span th:if="${data.page < data.totalPages - 2}" class="page-ellipsis">...</span>
+          <a
+            th:if="${data.page < data.totalPages - 1}"
+            th:href="${'/page/' + data.totalPages}"
+            class="page-num"
+            th:text="${data.totalPages}"
+          ></a>
+        </div>
+      </th:block>
 
       <!-- 下一页 -->
       <a th:if="${data.hasNext}" th:href="${'/page/' + (data.page + 1)}" class="page-btn page-next">
@@ -78,19 +112,29 @@
       <span th:unless="${data.hasNext}" class="page-btn page-next disabled">
         <span class="icon-[ph--caret-right-bold]"></span>
       </span>
+
+      <!-- 页码输入跳转 -->
+      <th:block
+        th:replace="~{modules/page-jump :: pageJumpWithPattern(data=${data}, urlPattern='/page/{page}', firstPageUrl='/')}"
+      />
     </div>
   </nav>
 </th:block>
 
 <!-- 通用页码版本：需要传入 urlPattern -->
 <th:block th:fragment="paginationWithNumbers(data, urlPattern, firstPageUrl)">
-  <nav class="pagination-wrapper" th:if="${data.totalPages > 1}" 
-       th:with="firstUrl=${firstPageUrl != null ? firstPageUrl : #strings.replace(urlPattern, '{page}', '1')}">
+  <nav
+    class="pagination-wrapper"
+    th:if="${data.totalPages > 1}"
+    th:with="firstUrl=${firstPageUrl != null ? firstPageUrl : #strings.replace(urlPattern, '{page}', '1')}"
+  >
     <div class="pagination">
       <!-- 上一页 -->
-      <a th:if="${data.hasPrevious}" 
-         th:href="${data.page == 2 ? firstUrl : #strings.replace(urlPattern, '{page}', '' + (data.page - 1))}" 
-         class="page-btn page-prev">
+      <a
+        th:if="${data.hasPrevious}"
+        th:href="${data.page == 2 ? firstUrl : #strings.replace(urlPattern, '{page}', '' + (data.page - 1))}"
+        class="page-btn page-prev"
+      >
         <span class="icon-[ph--caret-left-bold]"></span>
       </a>
       <span th:unless="${data.hasPrevious}" class="page-btn page-prev disabled">
@@ -102,36 +146,52 @@
         <!-- 第一页 -->
         <a th:if="${data.page > 2}" th:href="${firstUrl}" class="page-num">1</a>
         <span th:if="${data.page > 3}" class="page-ellipsis">...</span>
-        
+
         <!-- 当前页前一页 -->
-        <a th:if="${data.page > 1}" 
-           th:href="${data.page == 2 ? firstUrl : #strings.replace(urlPattern, '{page}', '' + (data.page - 1))}" 
-           class="page-num" th:text="${data.page - 1}"></a>
-        
+        <a
+          th:if="${data.page > 1}"
+          th:href="${data.page == 2 ? firstUrl : #strings.replace(urlPattern, '{page}', '' + (data.page - 1))}"
+          class="page-num"
+          th:text="${data.page - 1}"
+        ></a>
+
         <!-- 当前页 -->
         <span class="page-num active" th:text="${data.page}"></span>
-        
+
         <!-- 当前页后一页 -->
-        <a th:if="${data.page < data.totalPages}" 
-           th:href="${#strings.replace(urlPattern, '{page}', '' + (data.page + 1))}" 
-           class="page-num" th:text="${data.page + 1}"></a>
-        
+        <a
+          th:if="${data.page < data.totalPages}"
+          th:href="${#strings.replace(urlPattern, '{page}', '' + (data.page + 1))}"
+          class="page-num"
+          th:text="${data.page + 1}"
+        ></a>
+
         <!-- 最后一页 -->
         <span th:if="${data.page < data.totalPages - 2}" class="page-ellipsis">...</span>
-        <a th:if="${data.page < data.totalPages - 1}" 
-           th:href="${#strings.replace(urlPattern, '{page}', '' + data.totalPages)}" 
-           class="page-num" th:text="${data.totalPages}"></a>
+        <a
+          th:if="${data.page < data.totalPages - 1}"
+          th:href="${#strings.replace(urlPattern, '{page}', '' + data.totalPages)}"
+          class="page-num"
+          th:text="${data.totalPages}"
+        ></a>
       </div>
 
       <!-- 下一页 -->
-      <a th:if="${data.hasNext}" 
-         th:href="${#strings.replace(urlPattern, '{page}', '' + (data.page + 1))}" 
-         class="page-btn page-next">
+      <a
+        th:if="${data.hasNext}"
+        th:href="${#strings.replace(urlPattern, '{page}', '' + (data.page + 1))}"
+        class="page-btn page-next"
+      >
         <span class="icon-[ph--caret-right-bold]"></span>
       </a>
       <span th:unless="${data.hasNext}" class="page-btn page-next disabled">
         <span class="icon-[ph--caret-right-bold]"></span>
       </span>
+
+      <!-- 页码输入跳转 -->
+      <th:block
+        th:replace="~{modules/page-jump :: pageJumpWithPattern(data=${data}, urlPattern=${urlPattern}, firstPageUrl=${firstUrl})}"
+      />
     </div>
   </nav>
 </th:block>

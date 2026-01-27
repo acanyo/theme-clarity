@@ -12,6 +12,8 @@ declare global {
     generateQRCode: (container: HTMLElement, url: string) => Promise<void>;
     generatePoster: (element: HTMLElement, title: string) => Promise<void>;
     openShuttle: (options: ShuttleOptions) => void;
+    jumpToPage: (button: HTMLElement) => void;
+    jumpToPageWithPattern: (button: HTMLElement) => void;
     themeConfig?: {
       custom?: {
         img_alt?: boolean;
@@ -27,9 +29,11 @@ declare global {
   }
 
   // Halo 搜索插件提供的全局对象
-  const SearchWidget: {
-    open: () => void;
-  } | undefined;
+  const SearchWidget:
+    | {
+        open: () => void;
+      }
+    | undefined;
 
   // View Transitions API
   interface Document {

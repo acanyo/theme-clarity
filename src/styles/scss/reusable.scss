@@ -399,3 +399,73 @@ mark {
 		transition-duration: 0.3s;
 	}
 }
+
+// ========================================
+// 页码跳转样式
+// ========================================
+.page-jump {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0 0.75rem;
+	margin-left: 0.5rem;
+	border-left: 1px solid var(--c-border);
+}
+
+.page-input {
+	width: 4.5em;
+	height: 2em;
+	padding: 0 0.6em;
+	font-size: 0.85rem;
+	font-weight: 500;
+	font-variant-numeric: tabular-nums;
+	color: var(--c-text);
+	background-color: var(--c-bg-2);
+	border: 1px solid var(--c-border);
+	border-radius: 0.375rem;
+	text-align: center;
+	transition: all 0.15s ease;
+
+	&:focus {
+		outline: none;
+		border-color: var(--c-primary);
+		box-shadow: 0 0 0 2px rgba(var(--c-primary-rgb), 0.2);
+	}
+
+	&::placeholder {
+		color: var(--c-text-3);
+		font-size: 0.8rem;
+		opacity: 0.8;
+	}
+}
+
+.page-jump-btn {
+	height: 2em;
+	width: 2em;
+	padding: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 0.8rem;
+	font-weight: 500;
+	color: var(--c-text-2);
+	background-color: var(--c-bg-soft);
+	border: 1px solid var(--c-border);
+	border-radius: 0.375rem;
+	cursor: pointer;
+	transition: all 0.15s ease;
+
+	[class^="icon-"] {
+		font-size: 1rem;
+	}
+
+	&:hover {
+		background-color: var(--c-primary);
+		color: white;
+		border-color: var(--c-primary);
+	}
+
+	&:active {
+		transform: scale(0.95);
+	}
+}
