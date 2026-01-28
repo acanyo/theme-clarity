@@ -22,6 +22,26 @@
         <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
         <a th:href="${post.status.permalink}" class="article-link gradient-card" th:title="${post.status.excerpt}">
           <span class="article-title" th:text="${post.spec.title}"></span>
+          <th:block th:if="${post.spec.pinned}">
+            <span class="pinned-post">
+              <svg
+                t="1765477590308"
+                class="icon"
+                viewBox="0 0 1024 1024"
+                version="1.1"
+                xmlns="http://www.w3.org/2000/svg"
+                p-id="9679"
+                width="200"
+                height="200"
+              >
+                <path
+                  d="M450 230c37.16-33.787 94.508-31.666 129 5l319 344c8.957 9.352 14 22.087 14 35 0 29.03-23.404 52.012-52 52H733a8 8 0 0 0-8 8v150c0 70.692-57.308 128-128 128H427c-70.692 0-128-57.308-128-128V674a8 8 0 0 0-8-8H164c-13.106 0.012-25.431-4.704-35-13v-1c-21.566-19.037-22.505-51.627-3-73l318-343c1.757-1.842 3.36-3.467 5-5z m78.351 57.65c-9.674-9.061-24.861-8.565-33.923 1.109L213.618 588.53A8 8 0 0 0 219.455 602H311c28.418 0 51.483 22.81 52 51v171c0 35.346 28.654 64 64 64h170c35.346 0 64-28.654 64-64V654c0.01-28.709 23.253-51.982 52-52h89.625a8 8 0 0 0 5.856-13.45l-278.97-299.735a24 24 0 0 0-1.16-1.164zM838 81c17.673 0 32 14.327 32 32 0 17.673-14.327 32-32 32H182c-17.673 0-32-14.327-32-32 0-17.673 14.327-32 32-32h656z"
+                  fill="#333333"
+                  p-id="9680"
+                ></path>
+              </svg>
+            </span>
+          </th:block>
           <img
             th:if="${post.spec.cover}"
             th:src="${post.spec.cover}"
