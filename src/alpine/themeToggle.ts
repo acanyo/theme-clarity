@@ -2,7 +2,7 @@ import type Alpine from "alpinejs";
 
 export function registerThemeToggle(alpine: typeof Alpine) {
   alpine.data("themeToggle", () => ({
-    theme: localStorage.getItem("theme") || "system",
+    theme: localStorage.getItem("theme") || (window as any).themeConfig?.style?.theme_mode || "system",
 
     init() {
       this.applyTheme(false);

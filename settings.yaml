@@ -165,6 +165,18 @@ spec:
           label: 切换标签文章样式布局
           value: false
           help: 切换标签页面的文章列表样式布局
+        - $formkit: radio
+          name: theme_mode
+          id: theme_mode
+          label: 主题默认模式
+          value: light
+          options:
+            - value: light
+              label: 浅色模式
+            - value: dark
+              label: 深色模式
+            - value: system
+              label: 跟随系统
     - group: footer
       label: 页脚 & 社交
       formSchema:

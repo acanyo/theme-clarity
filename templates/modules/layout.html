@@ -62,21 +62,25 @@
         --c-accent: [(${theme.config.style.accent_color})] !important;
       }
     </style>
-    <script>
-      (function () {
-        const theme = localStorage.getItem("theme") || "system";
-        const isDark =
-          theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
-        if (isDark) {
-          document.documentElement.classList.add("dark");
-        }
-      })();
-    </script>
     <script th:inline="javascript">
       window.themeConfig = window.themeConfig || {};
       window.themeConfig.custom = window.themeConfig.custom || {};
       window.themeConfig.custom.img_alt = /*[[${theme.config.custom.img_alt}]]*/ false;
       window.themeConfig.custom.enable_fancybox = /*[[${theme.config.custom.enable_fancybox}]]*/ true;
+      window.themeConfig.style = window.themeConfig.style || {};
+      window.themeConfig.style.theme_mode = /*[[${theme.config.style.theme_mode}]]*/ "light";
+    </script>
+    <script>
+      (function () {
+        const theme = localStorage.getItem("theme") || window.themeConfig?.style?.theme_mode || "system";
+
+        const isDark =
+          theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+        if (isDark) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
     </script>
   </head>
   <body id="clarity-root">
