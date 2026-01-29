@@ -992,10 +992,20 @@ $breakpoint-phone: 528px !default;
 }
 
 // ========================================
+// 友链提交按钮 (Link Submit Button)
+// ========================================
+
+// PC端友链提交按钮 - 与返回顶部按钮风格一致
+#submit-link-btn {
+  @include floating-button("提交友链");
+}
+
+// ========================================
 // 随机穿梭按钮 (Random Link Button)
 // ========================================
 
 // PC端随机访问按钮 - 与返回顶部按钮风格一致
 .random-link-btn {
   @include floating-button("随机穿梭");
+  bottom: calc(2.5rem + 120px);
 }

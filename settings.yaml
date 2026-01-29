@@ -755,13 +755,13 @@ spec:
               label: RSS 地址
               placeholder: 如 /rss.xml
         - $formkit: switch
-          name: enable_submit
-          id: enable_submit
-          label: 启用自主提交
+          name: enable_submit_lywq
+          id: enable_submit_lywq
+          label: 启用自主提交（柳意梧情版）
           value: false
           help: 开启后访客可自助提交友链申请
         - $el: div
-          if: "$get(enable_submit).value === true"
+          if: "$get(enable_submit_lywq).value === true"
           attrs:
             class: "text-sm"
             style: |
@@ -783,13 +783,13 @@ spec:
                 style: |
                   color: #d97706;
                   text-decoration: underline;
-              children: "友链自主提交插件"
+              children: "友链自主提交插件（柳意梧情版）"
         - $formkit: select
           name: verify_type
           label: 验证方式
           value: email
           help: 选择提交时的验证方式（只能选一种）
-          if: "$get(enable_submit).value === true"
+          if: "$get(enable_submit_lywq).value === true"
           options:
             - label: 邮箱验证码
               value: email
@@ -802,7 +802,37 @@ spec:
           label: 允许修改友链
           value: false
           help: 开启后已提交的友链可凭邮箱验证修改信息
-          if: "$get(enable_submit).value === true"
+          if: "$get(enable_submit_lywq).value === true"
+        - $formkit: switch
+          name: enable_submit_kky
+          id: enable_submit_kky
+          label: 启用自主提交（困困鱼版）
+          value: false
+          help: 开启后访客可自助提交友链申请
+        - $el: div
+          if: "$get(enable_submit_kky).value === true"
+          attrs:
+            class: "text-sm"
+            style: |
+              display: inline-block;
+              margin-top: 0.5rem;
+              padding: 0.5rem 0.75rem;
+              background: #fffbeb;
+              border-radius: 0.375rem;
+              border: 1px solid #fcd34d;
+          children:
+            - $el: span
+              attrs:
+                style: "color: #92400e;"
+              children: "⚠️ 需要安装 "
+            - $el: a
+              attrs:
+                href: "/console/app-store?keyword=友链"
+                target: "_self"
+                style: |
+                  color: #d97706;
+                  text-decoration: underline;
+              children: "友链自主提交插件（困困鱼版）"
         - $formkit: code
           name: title_font_css
           label: 友链标题字体样式
