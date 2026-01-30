@@ -8,6 +8,7 @@ export default ({ mode }: { mode: string }) => {
   const isProduction = mode === "production";
   const entries = {
     main: path.resolve(__dirname, "src/main.ts"),
+    auth: path.resolve(__dirname, "src/auth.ts"),
   };
 
   return defineConfig({

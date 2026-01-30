@@ -1,0 +1,130 @@
+<!doctype html>
+<html th:lang="${#locale.toLanguageTag}" th:fragment="layout (title,head,body)">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2" />
+    <title th:text="${title}"></title>
+
+    <link
+      rel="preload"
+      th:href="@{/assets/fonts/JetBrainsMono-Regular/6096f8ea8ec1ddec37a08da471025894.woff2}"
+      as="font"
+      type="font/woff2"
+      crossorigin
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/fonts/JetBrainsMono-Regular/jetBrainsMonoRegular.css?v={version}(version=${theme.spec.version})}"
+      media="print"
+      onload="this.media = 'all'"
+    />
+    <link
+      rel="stylesheet"
+      th:href="@{/assets/fonts/JetBrainsMono-Italic/jetBrainsMonoItalic.css?v={version}(version=${theme.spec.version})}"
+      media="print"
+      onload="this.media = 'all'"
+    />
+
+    <th:block th:if="${theme.config.development.enabled}">
+      <script type="module" src="http://localhost:5173/@vite/client"></script>
+      <script type="module" src="http://localhost:5173/main.ts"></script>
+    </th:block>
+
+    <th:block th:unless="${theme.config.development.enabled}">
+      <link rel="stylesheet" th:href="@{/assets/dist/vendor.css?v={version}(version=${theme.spec.version})}" />
+      <link rel="stylesheet" th:href="@{/assets/dist/main.css?v={version}(version=${theme.spec.version})}" />
+      <link rel="stylesheet" th:href="@{/assets/dist/auth.css?v={version}(version=${theme.spec.version})}" />
+      <script type="module" th:src="@{/assets/dist/main.js?v={version}(version=${theme.spec.version})}"></script>
+    </th:block>
+    <th:block th:replace="~{gateway_fragments/common::basicScriptResources}"></th:block>
+    <style th:inline="text">
+      :root,
+      :root.light,
+      :root.dark {
+        --c-primary: [(${theme.config.style.primary_color})] !important;
+        --c-primary-soft: color-mix(in srgb, [(${theme.config.style.primary_color})], transparent 85%) !important;
+        --c-accent: [(${theme.config.style.accent_color})] !important;
+      }
+      .halo-logo {
+        display: none !important;
+      }
+      .returntosite-content {
+        display: none !important;
+      }
+    </style>
+    <script>
+      (function () {
+        const theme = localStorage.getItem("theme") || "system";
+        const isDark =
+          theme === "dark" || (theme === "system" && window.matchMedia("(prefers-color-scheme: dark)").matches);
+        if (isDark) {
+          document.documentElement.classList.add("dark");
+        }
+      })();
+    </script>
+    <th:block th:if="${head != null}">
+      <th:block th:replace="${head}" />
+    </th:block>
+  </head>
+  <body id="clarity-root">
+    <div
+      id="z-sidebar-bgmask"
+      class="hidden"
+      onclick="
+        document.getElementById('z-sidebar').classList.remove('show');
+        this.classList.add('hidden');
+        document.getElementById('toggle-sidebar')?.classList.remove('active');
+      "
+    ></div>
+
+    <div
+      id="z-aside-bgmask"
+      class="hidden"
+      onclick="
+        document.getElementById('z-aside').classList.remove('show');
+        this.classList.add('hidden');
+        document.getElementById('toggle-aside')?.classList.remove('active');
+      "
+    ></div>
+
+    <th:block th:replace="~{modules/sidebar :: sidebar}" />
+
+    <div id="content">
+      <main id="main-content">
+        <th:block th:replace="${body}" />
+
+        <th:block th:replace="~{modules/footer :: footer}" />
+      </main>
+    </div>
+
+    <div id="z-panel">
+      <button
+        id="toggle-sidebar"
+        aria-label="切换菜单"
+        onclick="
+          (function (btn) {
+            var sb = document.getElementById('z-sidebar'),
+              mk = document.getElementById('z-sidebar-bgmask');
+            sb.classList.toggle('show');
+            mk.classList.toggle('hidden');
+            btn.classList.toggle('active');
+          })(this)
+        "
+      >
+        <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display: block"></span>
+      </button>
+      <button id="back-to-top" aria-label="返回顶部" style="display: none">
+        <span class="icon-[ph--arrow-up-bold]" style="display: block"></span>
+      </button>
+    </div>
+
+    <button id="pc-back-to-top" class="pc-back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">
+      <svg class="svgIcon" viewBox="0 0 384 512">
+        <path
+          d="M214.6 41.4c-12.5-12.5-32.8-12.5-45.3 0l-160 160c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L160 141.2V448c0 17.7 14.3 32 32 32s32-14.3 32-32V141.2L329.4 246.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3l-160-160z"
+        ></path>
+      </svg>
+    </button>
+  </body>
+</html>
