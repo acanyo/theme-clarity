@@ -602,7 +602,7 @@ spec:
         - $formkit: number
           name: per_page
           label: 每页文章数
-          help: 已失效，请使用附件配置中的管理端设置-文章设置-文章列表显示条数进行配置
+          help: 已失效，请使用设置-文章设置-文章列表显示条数进行配置
         - $formkit: radio
           name: cursor
           id: cursor
