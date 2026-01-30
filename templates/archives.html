@@ -10,7 +10,13 @@
       <th:block th:each="yearGroup,yearStat : ${archives.items}">
         <section class="archive-group">
           <div class="archive-title">
-            <h2 class="archive-year" th:text="${yearGroup.year}"></h2>
+            <h2 class="archive-year">
+              <a
+                th:href="'/archives/' + ${yearGroup.year}"
+                th:text="${yearGroup.year}"
+                th:title="'查看' + ${yearGroup.year} + '年的归档'"
+              ></a>
+            </h2>
 
             <div
               class="archive-age"
