@@ -602,10 +602,7 @@ spec:
         - $formkit: number
           name: per_page
           label: 每页文章数
-          value: 10
-          min: 1
-          max: 50
-          validation: required
+          help: 已失效，请使用设置-文章设置-文章列表显示条数进行配置
         - $formkit: radio
           name: cursor
           id: cursor

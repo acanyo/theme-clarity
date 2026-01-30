@@ -41,13 +41,6 @@
 
     <th:block th:replace="~{modules/post-slide :: slide}" />
 
-    <th:block
-      th:with="pageSize = ${theme.config.post != null and theme.config.post.per_page != null ? theme.config.post.per_page : 10}, 
-               currentPage = ${posts.page != null ? posts.page : 1}"
-    >
-      <th:block
-        th:replace="~{modules/post-list :: list(posts=${postFinder.list(currentPage, pageSize)}, caller='index')}"
-      />
-    </th:block>
+    <th:block th:replace="~{modules/post-list :: list(posts=${posts}, caller='index')}" />
   </th:block>
 </html>
