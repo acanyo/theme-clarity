@@ -103,13 +103,9 @@
         </div>
         <div class="user-info">
           <span class="user-name" x-text="currentUser?.name"></span>
-          <span class="user-desc" x-text="currentUser?.isAdmin ? '管理员' : '个人中心'"></span>
+          <span class="user-desc" x-text="currentUser?.roleDisplayName || '用户角色'"></span>
         </div>
-        <span
-          x-show="currentUser?.isAdmin"
-          class="icon-[ph--caret-down-bold] menu-arrow"
-          :class="{ 'rotate': showMenu }"
-        ></span>
+        <span class="icon-[ph--caret-down-bold] menu-arrow" :class="{ 'rotate': showMenu }"></span>
       </div>
 
       <div x-show="ready && showMenu" x-cloak x-transition class="user-menu">
@@ -117,7 +113,7 @@
           <span class="icon-[ph--user-bold]"></span>
           <span>个人中心</span>
         </a>
-        <a href="/console" class="user-menu-item">
+        <a sec:authorize="hasRole('super-role')" href="/console" class="user-menu-item">
           <span class="icon-[ph--gear-six-bold]"></span>
           <span>管理中心</span>
         </a>
