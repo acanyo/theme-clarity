@@ -124,6 +124,18 @@ spec:
       key: post_license_url
       name: post_license_url
       label: 协议链接
+    - $formkit: checkbox
+      name: enable_post_title_color
+      id: enable_post_title_color
+      label: 自定义标题颜色
+      value: "false"
+      on-value: "true"
+      off-value: "false"
+    - $formkit: color
+      if: "$get(enable_post_title_color).value == 'true'"
+      name: post_title_color
+      label: 标题颜色
+      value: "#FFFFFF"
 ---
 apiVersion: v1alpha1
 kind: AnnotationSetting

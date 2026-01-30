@@ -51,7 +51,11 @@
           </span>
         </div>
       </div>
-      <h1 class="post-title text-creative" th:text="${post.spec.title}"></h1>
+      <h1
+        class="post-title text-creative"
+        th:text="${post.spec.title}"
+        th:style="${#annotations.getOrDefault(post, 'enable_post_title_color', 'false') == 'true' ? 'color: ' + #annotations.getOrDefault(post, 'post_title_color', '#FFFFFF') : null}"
+      ></h1>
     </div>
     <div
       th:if="${theme.config.post.show_excerpt != false and post.status.excerpt != null and post.status.excerpt != ''}"
