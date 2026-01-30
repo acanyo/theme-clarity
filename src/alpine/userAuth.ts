@@ -3,7 +3,7 @@ import type Alpine from "alpinejs";
 interface UserInfo {
   name: string;
   avatar?: string;
-  isAdmin: boolean;
+  roleDisplayName?: string;
 }
 
 export function registerUserAuth(alpine: typeof Alpine) {
@@ -23,13 +23,12 @@ export function registerUserAuth(alpine: typeof Alpine) {
           const data = await res.json();
           const userName = data.user?.metadata?.name;
           if (userName && userName !== "anonymousUser") {
-            const roles = data.user?.metadata?.annotations?.["rbac.authorization.halo.run/role-names"] || "";
-            const isAdmin = roles.includes("super-role") || roles.includes("admin") || userName === "admin";
-
+            const roleDisplayName =
+              data.roles?.[0]?.metadata?.annotations?.["rbac.authorization.halo.run/display-name"];
             this.currentUser = {
               name: data.user?.spec?.displayName || userName,
               avatar: data.user?.spec?.avatar,
-              isAdmin,
+              roleDisplayName: roleDisplayName,
             };
           } else {
             this.currentUser = null;
@@ -49,11 +48,7 @@ export function registerUserAuth(alpine: typeof Alpine) {
     },
 
     handleClick() {
-      if (this.currentUser?.isAdmin) {
-        this.toggleMenu();
-      } else {
-        window.location.href = "/uc";
-      }
+      this.toggleMenu();
     },
   }));
 }
