@@ -1,7 +1,7 @@
 <div
   class="z-slide"
   th:fragment="random-post"
-  th:if="${site.version != null and site.version.compareTo('2.24.1') >= 0 and theme.config.post.random_post != null and T(java.lang.Integer).parseInt(theme.config.post.random_post.post_number) > 0}"
+  th:if="${theme.config.post.random_post != null and T(java.lang.Integer).parseInt(theme.config.post.random_post.post_number) > 0}"
 >
   <div
     th:replace="~{modules/home-widgets/slide-widget-base::header(${theme.config.post.random_post.title ?: '随机文章'})}"
