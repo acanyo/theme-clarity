@@ -1394,6 +1394,21 @@ spec:
               label: 在文档内容启用 H1 标题
               help: 开启后文档内容将显示 H1 标题
               value: true
+        - $formkit: group
+          name: interaction_plus
+          label: 互动增强
+          help: interaction-plus
+          children:
+            - $formkit: switch
+              name: enable
+              label: 启用装扮展示
+              value: true
+              help: 作者行出用户卡，作者页展示装扮。关闭或未装插件则回退主题原样。
+            - $formkit: switch
+              name: enable_list
+              label: 在列表页启用装扮
+              value: false
+              help: 默认关闭。开启后文章列表作者行也会出用户卡。需先开总开关。
     - group: custom
       label: 自定义
       formSchema:

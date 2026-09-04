@@ -1,9 +1,24 @@
-<a
-  th:fragment="capsule(author)"
+<th:block
+  th:fragment="capsule(author, inList)"
   th:if="${author != null and author.displayName != null}"
-  th:href="${author.permalink}"
-  class="author-capsule"
+  th:with="hipEnabled=${theme.config.plugins?.interaction_plus?.enable != false and pluginFinder.available('interaction-plus') and author.name != null and (inList != true or theme.config.plugins?.interaction_plus?.enable_list == true)}"
 >
-  <img th:if="${author.avatar != null}" th:src="${author.avatar}" th:alt="${author.displayName}" loading="lazy" />
-  <span th:text="${author.displayName}"></span>
-</a>
+  <!-- 总开关开、插件在场：组件自己画头像 + 框，点头像出卡；scene 按文档推荐词表区分列表 / 正文 -->
+  <span th:if="${hipEnabled}" class="author-capsule" style="--hip-avatar-size: 1.25rem">
+    <hip-user-card th:attr="user-name=${author.name}" th:scene="${inList == true} ? 'list' : 'post'">
+      <hip-user-avatar
+        th:attr="user-name=${author.name}"
+        th:scene="${inList == true} ? 'list' : 'post'"
+      ></hip-user-avatar>
+    </hip-user-card>
+    <hip-user-identity
+      th:attr="user-name=${author.name}"
+      th:scene="${inList == true} ? 'list' : 'post'"
+    ></hip-user-identity>
+  </span>
+  <!-- 未启用 / 插件未装 / 列表开关关：主题原链接胶囊 -->
+  <a th:unless="${hipEnabled}" th:href="${author.permalink}" class="author-capsule">
+    <img th:if="${author.avatar != null}" th:src="${author.avatar}" th:alt="${author.displayName}" loading="lazy" />
+    <span th:text="${author.displayName}"></span>
+  </a>
+</th:block>

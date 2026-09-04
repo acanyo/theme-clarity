@@ -14,24 +14,53 @@
     color: var(--c-primary);
   }
 
+  a {
+    display: inline-flex;
+    align-items: center;
+    color: inherit;
+    text-decoration: none;
+  }
+
   img {
     width: 1.25rem;
     height: 1.25rem;
     border-radius: 50%;
     object-fit: cover;
   }
+
+  // 盖过 .post-info img { 1em }，避免兜底头像被压小
+  .post-info & img {
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 50%;
+  }
+
+  hip-user-card,
+  hip-user-avatar,
+  hip-user-identity {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+  }
+
+  hip-user-card {
+    line-height: 0;
+    cursor: pointer;
+  }
 }
 
 // ========================================
-// 作者页面信息卡片
+// 作者页面信息卡片（基础 = 主题原布局）
 // ========================================
 .author-profile {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 1.5rem;
   padding: 1.5rem;
   margin-bottom: 1.5rem;
+  overflow: visible;
   border-radius: 1rem;
   background: linear-gradient(135deg, var(--c-bg-2), var(--c-bg-3));
   box-shadow: 0 0.2rem 0.5rem var(--ld-shadow);
@@ -44,6 +73,8 @@
 }
 
 .author-avatar-wrapper {
+  position: relative;
+  z-index: 1;
   flex-shrink: 0;
 }
 
@@ -78,14 +109,81 @@
 }
 
 .author-info {
+  position: relative;
+  z-index: 1;
   flex: 1;
   min-width: 180px;
 }
 
-.author-name {
+.author-name-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.6rem;
   margin: 0 0 0.25rem;
+
+  @media (max-width: 640px) {
+    justify-content: center;
+  }
+}
+
+.author-name {
+  margin: 0;
   font-size: 1.5rem;
   color: var(--c-text);
+}
+
+// 必须用 background-image 而不是 background 简写，否则会冲掉 clip
+.author-name--gradient {
+  background-color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+.author-primary-badge {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
+}
+
+.author-title {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.2rem 0.55rem;
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: var(--c-text-2);
+}
+
+.author-title-img {
+  max-width: 12rem;
+  max-height: 48px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  vertical-align: middle;
+}
+
+.author-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.15rem 0.45rem;
+  border: 1px solid var(--c-border, var(--c-text-3));
+  border-radius: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1.2;
+  color: var(--c-text-2);
+}
+
+.author-mark-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  object-fit: contain;
 }
 
 .author-bio {
@@ -100,10 +198,17 @@
   flex-wrap: wrap;
   gap: 0.5rem 1.25rem;
   font-size: 0.8rem;
-  color: var(--c-text-3);
+  // 原 --c-text-3 在资料卡底色上过淡，提到 --c-text-2 保证可读性
+  color: var(--c-text-2);
 
   @media (max-width: 640px) {
     justify-content: center;
+  }
+
+  b {
+    color: var(--c-text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
   }
 }
 
@@ -114,7 +219,7 @@
 }
 
 .meta-link {
-  color: var(--c-text-3);
+  color: var(--c-text-2);
   transition: color 0.2s;
 
   &:hover {
@@ -122,7 +227,378 @@
   }
 }
 
-// 空状态 (复用)
+// ========================================
+// 插件在场：资料卡仍用主题原横排，只叠加框 / 渐变名 / 称号
+// ========================================
+.author-banner {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  // 遮罩相对卡片：从行尾实起到行首化开，换素材尺寸也不跑味
+  -webkit-mask-image: linear-gradient(to var(--start, left), #000 0%, #000 28%, transparent 72%);
+  mask-image: linear-gradient(to var(--start, left), #000 0%, #000 28%, transparent 72%);
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+
+  .author-banner-img {
+    position: absolute;
+    inset-block: 0;
+    inset-inline-end: 0;
+    display: block;
+    width: 55%;
+    height: 100%;
+    max-width: none;
+    object-fit: cover;
+    object-position: var(--end, right) center;
+  }
+
+  @media (max-width: 640px) {
+    -webkit-mask-image: linear-gradient(to var(--start, left), #000 0%, #000 10%, transparent 50%);
+    mask-image: linear-gradient(to var(--start, left), #000 0%, #000 10%, transparent 50%);
+
+    .author-banner-img {
+      width: 70%;
+      opacity: 0.7;
+    }
+  }
+}
+
+.author-avatar-stack {
+  position: relative;
+  display: block;
+  width: 80px;
+  height: 80px;
+  overflow: visible;
+}
+
+.author-profile--hip .author-avatar {
+  position: absolute;
+  inset: 0;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+
+  &:hover {
+    transform: none;
+  }
+}
+
+.author-avatar-stack > .author-deco-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 124%;
+  height: 124%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+}
+
+.author-avatar-fallback {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  background: var(--c-bg-soft);
+  color: var(--c-text-3);
+  font-size: 1.75rem;
+  font-weight: 600;
+}
+
+.author-avatar-stack:has(.author-deco-frame) .author-avatar,
+.author-avatar-stack:has(.author-deco-frame) .author-avatar-fallback {
+  border: 0;
+  box-shadow: none;
+}
+
+.author-profile--hip .author-name-row {
+  margin-bottom: 0.25rem;
+}
+
+.author-title-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 0.35rem;
+}
+
+// ========================================
+// 装扮展厅：独立区块，对齐归档页头部语言
+// ========================================
+.author-gallery {
+  margin: 0 0 1.75rem;
+  overflow: visible;
+}
+
+.author-gallery-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.85rem;
+}
+
+.author-gallery-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--c-text);
+
+  > span:first-child {
+    font-size: 1.1rem;
+    color: var(--c-primary);
+  }
+}
+
+.author-gallery-count {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--c-text-3);
+
+  strong {
+    color: var(--c-text);
+    font-weight: 600;
+  }
+}
+
+.author-gallery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem 0.8rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  overflow: visible;
+}
+
+.author-gallery-item {
+  --slot-accent: var(--wall-rarity, var(--c-border));
+  --slot-size: 6.25rem;
+
+  position: relative;
+  z-index: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  width: var(--slot-size);
+
+  &:hover,
+  &:focus-within {
+    z-index: 3;
+  }
+}
+
+.author-gallery-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--slot-size);
+  height: var(--slot-size);
+  min-width: 0;
+  padding: 0.5rem;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--slot-accent) 55%, var(--c-border));
+  border-radius: 0.75rem;
+  background: var(--c-bg-2);
+  box-shadow: 0 0.1rem 0.25rem var(--ld-shadow);
+  transition:
+    transform 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  img {
+    width: 100%;
+    height: 100%;
+    max-width: none;
+    object-fit: contain;
+  }
+
+  .author-gallery-item:hover &,
+  .author-gallery-item:focus-within & {
+    transform: translateY(-2px);
+    border-color: var(--slot-accent);
+    box-shadow: 0 0.3rem 0.7rem var(--ld-shadow);
+  }
+}
+
+.author-gallery-fallback {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  overflow: hidden;
+  padding: 0.1rem 0.25rem;
+  border-radius: 0.25rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.author-gallery-item.card_background .author-gallery-media {
+  padding: 0.35rem;
+
+  img {
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
+.author-gallery-item.name_style .author-gallery-fallback {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.author-gallery-item.title .author-gallery-media {
+  padding: 0.35rem;
+
+  img {
+    object-fit: contain;
+  }
+}
+
+.author-gallery-name {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  font-size: 0.72rem;
+  line-height: 1.3;
+  color: var(--c-text-3);
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+
+.author-gallery-pop {
+  position: absolute;
+  left: 50%;
+  bottom: calc(100% + 0.55rem);
+  z-index: 24;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: max-content;
+  max-width: min(18rem, 72vw);
+  padding: 0.7rem 0.7rem 0.6rem;
+  border: 1px solid var(--c-border);
+  border-radius: 0.85rem;
+  background: var(--ld-bg-card);
+  box-shadow: 0 0.6rem 1.6rem var(--ld-shadow);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(6px);
+  transition:
+    opacity 0.16s ease,
+    transform 0.16s ease,
+    visibility 0.16s;
+}
+
+.author-gallery-item:hover .author-gallery-pop,
+.author-gallery-item:focus-within .author-gallery-pop {
+  opacity: 1;
+  visibility: visible;
+  transform: translateX(-50%) translateY(0);
+}
+
+.author-gallery-pop-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 7.5rem;
+  min-height: 4.5rem;
+
+  img {
+    width: auto;
+    height: auto;
+    max-width: 15.5rem;
+    max-height: 8.5rem;
+    object-fit: contain;
+  }
+
+  .author-gallery-fallback {
+    font-size: 1.35rem;
+    font-weight: 700;
+    line-height: 1.35;
+    white-space: normal;
+    word-break: break-word;
+  }
+}
+
+.author-gallery-item.card_background .author-gallery-pop-media img {
+  width: 15.5rem;
+  height: auto;
+  aspect-ratio: 560 / 304;
+  object-fit: contain;
+  object-position: center top;
+  border-radius: 0.45rem;
+}
+
+.author-gallery-item.avatar_frame .author-gallery-pop-media img,
+.author-gallery-item.badge .author-gallery-pop-media img {
+  width: 7.5rem;
+  height: 7.5rem;
+  max-height: none;
+}
+
+.author-gallery-item.title .author-gallery-pop-media img {
+  max-width: 16rem;
+  max-height: 5.5rem;
+}
+
+.author-gallery-pop-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.12rem;
+  margin-top: 0.5rem;
+  text-align: center;
+
+  strong {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--c-text);
+  }
+
+  em {
+    font-size: 0.7rem;
+    font-style: normal;
+    color: var(--wall-rarity, var(--c-text-3));
+  }
+}
+
+@media (hover: none) {
+  .author-gallery-pop {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .author-gallery-pop,
+  .author-gallery-media {
+    transition: none;
+  }
+}
+
 .empty-state {
   display: flex;
   flex-direction: column;

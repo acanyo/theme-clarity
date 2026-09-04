@@ -23,7 +23,7 @@
       </div>
 
       <div class="post-info">
-        <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner})}" />
+        <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner}, inList=false)}" />
 
         <span th:if="${post.spec.publishTime}">
           <span class="icon-[ph--calendar-dots-bold]"></span>

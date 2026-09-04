@@ -4,44 +4,250 @@
   th:replace="~{modules/layout :: html(content = ~{::content}, showAside = true, pageTitle = null, head = ~{::head})}"
 >
   <th:block th:fragment="content">
-    <div class="archive proper-height">
-      <section class="author-profile">
-        <div class="author-avatar-wrapper">
-          <img
-            th:if="${author.spec.avatar}"
-            th:src="${author.spec.avatar}"
-            th:alt="${author.spec.displayName}"
-            class="author-avatar"
-          />
-          <div th:unless="${author.spec.avatar}" class="author-avatar-placeholder">
-            <span class="icon-[ph--user-circle-bold]"></span>
+    <div
+      class="archive proper-height"
+      th:with="hipWanted=${theme.config.plugins?.interaction_plus?.enable != false}, hipEnabled=${hipWanted and pluginFinder.available('interaction-plus')}, hipId=${hipEnabled ? interactionPlus.getIdentity(author.metadata.name) : null}, hipWall=${hipEnabled ? interactionPlus.getDecorations(author.metadata.name) : null}, worn=${hipId?.decorations}"
+    >
+      <!--
+        产品闸门只看主题开关。Finder 仍必须先确认插件在场，否则 interactionPlus 未绑定会整页 500。
+        方案 D：资料卡保持主题原横排；装扮展览独立、格子统一尺寸。
+      -->
+      <section class="author-profile" th:classappend="${hipEnabled and hipId != null} ? 'author-profile--hip' : null">
+        <th:block
+          th:if="${hipEnabled and hipId != null}"
+          th:with="ns=${worn?.nameStyle?.nameStyle}, nsColors=${ns?.colors}, nsGradient=${ns != null and ns.mode == 'gradient' and nsColors != null and #lists.size(nsColors) >= 2}, nsFirst=${nsColors != null and not #lists.isEmpty(nsColors) ? nsColors[0] : null}, nsSecond=${nsColors != null and #lists.size(nsColors) > 1 ? nsColors[1] : null}, nsThird=${nsColors != null and #lists.size(nsColors) > 2 ? nsColors[2] : null}, title=${worn?.title}, showName=${hipId.displayName != null ? hipId.displayName : author.spec.displayName}, showAvatar=${hipId.avatar != null ? hipId.avatar : author.spec.avatar}, showBio=${hipId.bio != null ? hipId.bio : author.spec.bio}, joinedAt=${hipId.registeredAt != null ? hipId.registeredAt : author.spec.registeredAt}"
+        >
+          <!-- 佩戴中的名片背景：右侧定槽 cover，相对卡片向左淡出 -->
+          <div class="author-banner" th:if="${not #strings.isEmpty(worn?.cardBackground?.url)}">
+            <img
+              class="author-banner-img"
+              th:src="${worn.cardBackground.url}"
+              alt=""
+              onerror="this.parentElement.remove()"
+            />
           </div>
-        </div>
 
-        <div class="author-info">
-          <h1 class="author-name text-creative" th:text="${author.spec.displayName}"></h1>
-
-          <p th:if="${author.spec.bio}" class="author-bio" th:text="${author.spec.bio}"></p>
-
-          <div class="author-meta">
-            <span th:if="${author.spec.registeredAt}" class="meta-item">
-              <span class="icon-[ph--calendar-dots-bold]"></span>
-              <span>加入于 </span>
-              <time th:text="${#temporals.format(author.spec.registeredAt, 'yyyy-MM-dd')}"></time>
+          <div class="author-avatar-wrapper">
+            <span class="author-avatar-stack">
+              <span
+                class="author-avatar-fallback"
+                th:text="${#strings.isEmpty(showName) ? '?' : #strings.toUpperCase(#strings.substring(showName, 0, 1))}"
+              ></span>
+              <img
+                th:if="${showAvatar}"
+                class="author-avatar"
+                th:src="${showAvatar}"
+                th:alt="${showName}"
+                onerror="this.style.display='none'"
+              />
+              <img
+                th:if="${worn?.avatarFrame?.url}"
+                class="author-deco-frame"
+                th:src="${worn.avatarFrame.url}"
+                alt=""
+                onerror="this.style.display='none'"
+              />
             </span>
-
-            <span class="meta-item">
-              <span class="icon-[ph--article-bold]"></span>
-              <span th:text="${posts.total}"></span>
-              <span> 篇文章</span>
-            </span>
-
-            <a th:if="${author.spec.email}" th:href="'mailto:' + ${author.spec.email}" class="meta-item meta-link">
-              <span class="icon-[ph--envelope-simple-bold]"></span>
-              <span th:text="${author.spec.email}"></span>
-            </a>
           </div>
-        </div>
+
+          <div class="author-info">
+            <div class="author-name-row">
+              <h1
+                class="author-name text-creative"
+                th:text="${showName}"
+                th:classappend="${nsGradient} ? 'author-name--gradient' : null"
+                th:style="${nsGradient} ? (${nsThird != null} ? |background-image:linear-gradient(90deg, ${nsFirst}, ${nsSecond}, ${nsThird});color:${nsFirst}| : |background-image:linear-gradient(90deg, ${nsFirst}, ${nsSecond});color:${nsFirst}|) : (${nsFirst != null} ? |color:${nsFirst}| : null)"
+              ></h1>
+              <th:block th:if="${hipId.identityMarks != null and not #lists.isEmpty(hipId.identityMarks)}">
+                <th:block th:each="mark : ${hipId.identityMarks}">
+                  <img
+                    th:if="${mark.icon != null}"
+                    class="author-mark-icon"
+                    th:src="${mark.icon}"
+                    th:alt="${mark.displayName}"
+                    th:title="${mark.displayName}"
+                    onerror="this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display=''"
+                  />
+                  <span
+                    th:if="${mark.icon != null}"
+                    class="author-mark"
+                    style="display: none"
+                    th:text="${mark.displayName}"
+                  ></span>
+                  <span
+                    th:unless="${mark.icon != null}"
+                    class="author-mark"
+                    th:text="${mark.displayName}"
+                    th:style="${mark.color != null} ? |color:${mark.color};border-color:${mark.color}| : null"
+                  ></span>
+                </th:block>
+              </th:block>
+              <img
+                th:if="${worn?.primaryBadge?.url}"
+                class="author-primary-badge"
+                th:src="${worn.primaryBadge.url}"
+                th:alt="${worn.primaryBadge.displayName}"
+                th:title="${worn.primaryBadge.displayName}"
+                onerror="this.style.display='none'"
+              />
+            </div>
+
+            <div class="author-title-row" th:if="${title != null and title.titleText != null}">
+              <img
+                th:if="${not #strings.isEmpty(title.url)}"
+                class="author-title-img"
+                th:src="${title.url}"
+                th:alt="${title.titleText}"
+                th:title="${title.titleText}"
+                onerror="this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display=''"
+              />
+              <span
+                class="author-title"
+                th:if="${#strings.isEmpty(title.url)}"
+                th:text="${title.titleText}"
+                th:style="${title.titleBackground != null and title.titleBackgroundSecondary != null} ? (${title.titleColor != null} ? |color:${title.titleColor};background-image:linear-gradient(135deg, ${title.titleBackground}, ${title.titleBackgroundSecondary})| : |background-image:linear-gradient(135deg, ${title.titleBackground}, ${title.titleBackgroundSecondary})|) : (${title.titleBackground != null} ? (${title.titleColor != null} ? |color:${title.titleColor};background-color:${title.titleBackground}| : |background-color:${title.titleBackground}|) : (${title.titleColor != null} ? |color:${title.titleColor}| : null))"
+              ></span>
+              <!-- 裂图时再露出文字称号 -->
+              <span
+                class="author-title"
+                style="display: none"
+                th:if="${not #strings.isEmpty(title.url)}"
+                th:text="${title.titleText}"
+              ></span>
+            </div>
+
+            <p th:if="${showBio}" class="author-bio" th:text="${showBio}"></p>
+
+            <div class="author-meta">
+              <span th:if="${joinedAt}" class="meta-item">
+                <span>加入于 </span>
+                <time th:text="${#temporals.format(joinedAt, 'yyyy-MM-dd')}"></time>
+              </span>
+              <span th:if="${hipId.stats != null}" class="meta-item">
+                <b th:text="${hipId.stats.posts}"></b>
+                <span> 篇文章</span>
+              </span>
+              <span th:if="${hipId.stats != null}" class="meta-item">
+                <b th:text="${hipId.stats.comments}"></b>
+                <span> 条评论</span>
+              </span>
+              <span th:if="${hipId.stats != null and hipId.stats.decorations != null}" class="meta-item">
+                <b th:text="${hipId.stats.decorations.badge}"></b>
+                <span> 枚勋章</span>
+              </span>
+              <span
+                class="meta-item"
+                th:each="extra : ${hipId.stats?.extras}"
+                th:if="${extra.label != null and extra.value != null}"
+              >
+                <b th:text="${extra.value}"></b>
+                <span th:text="' ' + ${extra.label}"></span>
+              </span>
+              <a th:if="${author.spec.email}" th:href="'mailto:' + ${author.spec.email}" class="meta-item meta-link">
+                <span th:text="${author.spec.email}"></span>
+              </a>
+            </div>
+          </div>
+        </th:block>
+
+        <th:block th:unless="${hipEnabled and hipId != null}">
+          <div class="author-avatar-wrapper">
+            <img
+              th:if="${author.spec.avatar}"
+              th:src="${author.spec.avatar}"
+              th:alt="${author.spec.displayName}"
+              class="author-avatar"
+            />
+            <div th:unless="${author.spec.avatar}" class="author-avatar-placeholder">
+              <span class="icon-[ph--user-circle-bold]"></span>
+            </div>
+          </div>
+          <div class="author-info">
+            <h1 class="author-name text-creative" th:text="${author.spec.displayName}"></h1>
+            <p th:if="${author.spec.bio}" class="author-bio" th:text="${author.spec.bio}"></p>
+            <div class="author-meta">
+              <span th:if="${author.spec.registeredAt}" class="meta-item">
+                <span class="icon-[ph--calendar-dots-bold]"></span>
+                <span>加入于 </span>
+                <time th:text="${#temporals.format(author.spec.registeredAt, 'yyyy-MM-dd')}"></time>
+              </span>
+              <span class="meta-item">
+                <span class="icon-[ph--article-bold]"></span>
+                <span th:text="${posts.total}"></span>
+                <span> 篇文章</span>
+              </span>
+              <a th:if="${author.spec.email}" th:href="'mailto:' + ${author.spec.email}" class="meta-item meta-link">
+                <span class="icon-[ph--envelope-simple-bold]"></span>
+                <span th:text="${author.spec.email}"></span>
+              </a>
+            </div>
+          </div>
+        </th:block>
+      </section>
+
+      <section
+        class="author-gallery"
+        th:if="${hipEnabled and hipId != null and hipWall != null and not #lists.isEmpty(hipWall)}"
+        th:with="wallName=${hipId.displayName != null ? hipId.displayName : author.spec.displayName}"
+      >
+        <header class="author-gallery-head">
+          <h2 class="author-gallery-title">
+            <span class="icon-[ph--confetti-bold]"></span>
+            <span>装扮展览</span>
+          </h2>
+          <p class="author-gallery-count">共 <strong th:text="${#lists.size(hipWall)}">0</strong> 件</p>
+        </header>
+        <ul class="author-gallery-grid">
+          <li
+            th:each="d : ${hipWall}"
+            class="author-gallery-item"
+            th:classappend="${d.type}"
+            tabindex="0"
+            th:with="dNs=${d.nameStyle}, dColors=${dNs?.colors}, dGrad=${d.type == 'name_style' and dNs != null and dNs.mode == 'gradient' and dColors != null and #lists.size(dColors) >= 2}, dFirst=${dColors != null and not #lists.isEmpty(dColors) ? dColors[0] : null}, dSecond=${dColors != null and #lists.size(dColors) > 1 ? dColors[1] : null}, dThird=${dColors != null and #lists.size(dColors) > 2 ? dColors[2] : null}, faceName=${d.type == 'name_style' ? (#strings.isEmpty(wallName) ? 'Aa' : wallName) : (d.type == 'title' and d.titleText != null ? d.titleText : d.displayName)}, faceHide=${not #strings.isEmpty(d.url)}, faceCss=${dGrad} ? (${dThird != null} ? |background-image:linear-gradient(90deg, ${dFirst}, ${dSecond}, ${dThird});color:${dFirst}| : |background-image:linear-gradient(90deg, ${dFirst}, ${dSecond});color:${dFirst}|) : (${d.type == 'name_style' and dFirst != null} ? |color:${dFirst}| : (${d.type == 'title' and d.titleBackground != null and d.titleBackgroundSecondary != null} ? (${d.titleColor != null} ? |color:${d.titleColor};background-image:linear-gradient(135deg, ${d.titleBackground}, ${d.titleBackgroundSecondary})| : |background-image:linear-gradient(135deg, ${d.titleBackground}, ${d.titleBackgroundSecondary})|) : (${d.type == 'title' and d.titleBackground != null} ? (${d.titleColor != null} ? |color:${d.titleColor};background-color:${d.titleBackground}| : |background-color:${d.titleBackground}|) : (${d.titleColor != null} ? |color:${d.titleColor}| : null))))"
+            th:style="${d.rarityColor != null} ? |--wall-rarity:${d.rarityColor}| : null"
+            th:title="${d.rarityDisplayName != null} ? |${d.displayName} · ${d.rarityDisplayName}| : ${d.displayName}"
+          >
+            <span class="author-gallery-media">
+              <img
+                th:if="${not #strings.isEmpty(d.url)}"
+                class="author-gallery-img"
+                th:src="${d.url}"
+                th:alt="${d.displayName}"
+                loading="lazy"
+                onerror="this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display=''"
+              />
+              <span
+                class="author-gallery-fallback"
+                th:classappend="${dGrad} ? 'author-name--gradient' : null"
+                th:text="${faceName}"
+                th:style="${faceHide} ? (${faceCss != null} ? |display:none;${faceCss}| : 'display:none') : ${faceCss}"
+              ></span>
+            </span>
+            <span class="author-gallery-name" th:text="${d.displayName}"></span>
+            <span class="author-gallery-pop" aria-hidden="true">
+              <span class="author-gallery-pop-media">
+                <img
+                  th:if="${not #strings.isEmpty(d.url)}"
+                  class="author-gallery-img no-lightbox"
+                  th:src="${d.url}"
+                  alt=""
+                  loading="lazy"
+                  onerror="this.style.display='none';var n=this.nextElementSibling;if(n)n.style.display=''"
+                />
+                <span
+                  class="author-gallery-fallback"
+                  th:classappend="${dGrad} ? 'author-name--gradient' : null"
+                  th:text="${faceName}"
+                  th:style="${faceHide} ? (${faceCss != null} ? |display:none;${faceCss}| : 'display:none') : ${faceCss}"
+                ></span>
+              </span>
+              <span class="author-gallery-pop-meta">
+                <strong th:text="${d.displayName}"></strong>
+                <em th:if="${d.rarityDisplayName}" th:text="${d.rarityDisplayName}"></em>
+              </span>
+            </span>
+          </li>
+        </ul>
       </section>
 
       <menu class="archive-list">

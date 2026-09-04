@@ -54,7 +54,7 @@
             </span>
 
             <th:block th:if="${theme.config.style.show_post_author != false}">
-              <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner})}" />
+              <th:block th:replace="~{modules/author-capsule :: capsule(author=${post.owner}, inList=true)}" />
             </th:block>
           </div>
         </div>

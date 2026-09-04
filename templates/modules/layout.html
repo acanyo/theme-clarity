@@ -97,6 +97,12 @@
         }
       })();
     </script>
+    <!-- interaction-plus：主题开关开启且插件已启用时才注册 hip-*（资源地址含插件版本号，由 Finder 提供） -->
+    <th:block
+      th:if="${pluginFinder.available('interaction-plus') and (theme.config.plugins?.interaction_plus?.enable != false)}"
+    >
+      <script th:src="${interactionPlus.getRuntimeUrl()}"></script>
+    </th:block>
   </head>
   <body id="clarity-root">
     <div
