@@ -65,6 +65,35 @@
   </button>
 </th:block>
 
+<th:block th:fragment="poster-button">
+  <button
+    id="moment-poster-btn"
+    class="action-btn poster"
+    title="生成海报"
+    aria-label="生成海报"
+    th:with="
+      photos=${content.medium != null ? content.medium.?[type != null and type.name == 'PHOTO'] : null},
+      posterTags=${moment.spec.tags != null and !moment.spec.tags.isEmpty() ? T(java.lang.String).join('、', moment.spec.tags) : ''},
+      posterTitle=${#strings.isEmpty(posterTags) ? (theme.config.plugins?.moments?.title ?: '瞬间') : (theme.config.plugins?.moments?.title ?: '瞬间') + '-' + posterTags}
+    "
+    th:attr="
+      data-title=${posterTitle},
+      data-filename=${posterTitle + (moment.spec.releaseTime != null ? '-' + #temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd') : '')},
+      data-excerpt-html=${content.html},
+      data-cover=${photos != null and !#lists.isEmpty(photos) ? photos[0].url : ''},
+      data-default-cover=${theme.config?.post?.poster_default},
+      data-permalink=@{/moments/{name}(name=${moment.metadata.name})},
+      data-site=${site.title},
+      data-author=${moment.owner?.displayName},
+      data-avatar=${!#strings.isEmpty(moment.owner?.avatar) ? thumbnail.gen(moment.owner.avatar, 's') : ''},
+      data-date=${moment.spec.releaseTime != null ? #temporals.format(moment.spec.releaseTime, 'yyyy-MM-dd') : ''},
+      data-date-label=${'发布于'}
+    "
+  >
+    <span class="icon-[ph--image-bold]"></span>
+  </button>
+</th:block>
+
 <th:block th:fragment="share-button(url)">
   <button
     class="action-btn share"

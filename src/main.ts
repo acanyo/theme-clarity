@@ -8,6 +8,7 @@ import collapse from "@alpinejs/collapse";
 import { mountPhotoGallery, mountWeather } from "./preact";
 import { initFancybox } from "./utils/fancybox";
 import { generateQRCode, generatePoster } from "./utils/poster";
+import { generateMomentPoster } from "./utils/moment-poster";
 import { initActivityCalendar } from "./utils/activity-calendar";
 import { initTwikooComments } from "./utils/twikoo";
 import { registerAlpineComponents } from "./alpine";
@@ -29,6 +30,7 @@ window.mountPhotoGallery = mountPhotoGallery;
 window.mountWeather = mountWeather;
 window.generateQRCode = generateQRCode;
 window.generatePoster = generatePoster;
+window.generateMomentPoster = generateMomentPoster;
 window.reinitializeComponents = reinitializeComponents;
 
 // 注册 Alpine.js 组件和插件

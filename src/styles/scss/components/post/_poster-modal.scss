@@ -51,6 +51,62 @@
 	}
 }
 
+// 海报预览（瞬间海报：Canvas 生成图片，非 DOM 卡片）
+.poster-preview {
+	display: flex;
+	justify-content: center;
+	width: min(360px, 90vw);
+}
+
+.poster-image {
+	display: block;
+	width: auto;
+	height: auto;
+	max-width: 100%;
+	max-height: calc(90vh - 8rem);
+	margin: 0 auto;
+	border-radius: 1rem;
+	background: #fff;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+.poster-status {
+	width: 100%;
+	margin: 0;
+	padding: 6rem 1rem;
+	border-radius: 1rem;
+	background: rgba(255, 255, 255, 0.12);
+	color: rgba(255, 255, 255, 0.85);
+	text-align: center;
+	font-size: 0.9rem;
+	line-height: 1.6;
+}
+
+.poster-preview [hidden],
+.poster-actions [hidden] {
+	display: none !important;
+}
+
+.poster-download {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.6rem 1.25rem;
+	border: 1px solid #e0e0e0;
+	border-radius: 0.5rem;
+	background: white;
+	color: #333;
+	font-size: 0.9rem;
+	text-decoration: none;
+	cursor: pointer;
+	transition: all 0.2s;
+
+	&:hover {
+		background: #f5f5f5;
+		border-color: #ccc;
+	}
+}
+
 // 海报卡片
 .poster-card {
 	width: 360px;

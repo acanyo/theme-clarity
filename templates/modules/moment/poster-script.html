@@ -1,0 +1,101 @@
+<th:block th:fragment="poster-script">
+  <script>
+    (function () {
+      const trigger = document.getElementById("moment-poster-btn");
+      const modal = document.getElementById("poster-modal");
+      if (!trigger || !modal || trigger.dataset.posterBound === "true") return;
+      trigger.dataset.posterBound = "true";
+
+      const preview = document.getElementById("poster-preview");
+      const status = document.getElementById("poster-status");
+      const download = document.getElementById("poster-download");
+      const closeBtn = document.getElementById("poster-close");
+      const overlay = modal.querySelector(".poster-modal-overlay");
+
+      /** 同一瞬间且主题配色未变时复用已生成的 objectURL */
+      let cache = null;
+
+      /** 正文 HTML 转纯文本，并移除插件渲染在正文里的标签链接 */
+      const htmlToText = (html) => {
+        const template = document.createElement("template");
+        template.innerHTML = html;
+        template.content.querySelectorAll("a.tag").forEach((tag) => tag.remove());
+        return (template.content.textContent || "").replace(/\s+/g, " ").trim();
+      };
+
+      const readData = () => {
+        const data = trigger.dataset;
+        return {
+          title: data.title || document.title,
+          filename: data.filename || "",
+          excerpt: data.excerptHtml ? htmlToText(data.excerptHtml) : "",
+          cover: data.cover || "",
+          defaultCover: data.defaultCover || "",
+          permalink: data.permalink || window.location.pathname,
+          site: data.site || "",
+          author: data.author || "",
+          avatar: data.avatar || "",
+          date: data.date || "",
+          dateLabel: data.dateLabel || "",
+        };
+      };
+
+      const showResult = (result) => {
+        status.hidden = true;
+        preview.src = result.url;
+        preview.hidden = false;
+        download.href = result.url;
+        download.download = result.filename + ".png";
+        download.hidden = false;
+      };
+
+      const cacheKey = () => {
+        const bg = getComputedStyle(document.documentElement).getPropertyValue("--c-bg-1").trim();
+        return (trigger.dataset.permalink || "") + "|" + bg;
+      };
+
+      const closeModal = () => {
+        modal.style.display = "none";
+        document.body.style.overflow = "";
+        document.removeEventListener("keydown", onKeydown);
+      };
+
+      const onKeydown = (event) => {
+        if (event.key === "Escape") closeModal();
+      };
+
+      const openModal = async () => {
+        modal.style.display = "flex";
+        document.body.style.overflow = "hidden";
+        document.addEventListener("keydown", onKeydown);
+
+        const key = cacheKey();
+        if (cache && cache.key === key) {
+          showResult(cache.result);
+          return;
+        }
+
+        status.hidden = false;
+        status.textContent = "海报生成中…";
+        preview.hidden = true;
+        download.hidden = true;
+
+        try {
+          if (!window.generateMomentPoster) throw new Error("poster generator unavailable");
+          const result = await window.generateMomentPoster(readData());
+          if (cache) URL.revokeObjectURL(cache.result.url);
+          cache = { key: key, result: result };
+          showResult(result);
+        } catch (err) {
+          console.error("海报生成失败:", err);
+          status.hidden = false;
+          status.textContent = "生成失败，请关闭后重试";
+        }
+      };
+
+      trigger.addEventListener("click", openModal);
+      closeBtn.addEventListener("click", closeModal);
+      overlay.addEventListener("click", closeModal);
+    })();
+  </script>
+</th:block>

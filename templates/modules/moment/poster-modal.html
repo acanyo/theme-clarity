@@ -1,0 +1,27 @@
+<th:block th:fragment="poster-modal">
+  <div
+    id="poster-modal"
+    class="poster-modal"
+    style="display: none"
+    role="dialog"
+    aria-modal="true"
+    aria-label="分享海报"
+  >
+    <div class="poster-modal-overlay"></div>
+    <div class="poster-modal-content">
+      <button class="poster-close" id="poster-close" aria-label="关闭">
+        <span class="icon-[ph--x-bold]"></span>
+      </button>
+      <div class="poster-preview">
+        <img id="poster-preview" class="poster-image" alt="海报预览" hidden />
+        <p id="poster-status" class="poster-status">海报生成中…</p>
+      </div>
+      <div class="poster-actions">
+        <a class="poster-download" id="poster-download" href="#" download hidden>
+          <span class="icon-[ph--download-bold]"></span>
+          <span>保存海报</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</th:block>
