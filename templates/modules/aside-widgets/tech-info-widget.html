@@ -3,10 +3,6 @@
   <div class="widget-body widget-card">
     <dl class="dl-group medium">
       <div>
-        <dt>构建平台</dt>
-        <dd class="platform-halo"><img th:src="@{/assets/images/logo.png}" alt="Halo" /> Halo</dd>
-      </div>
-      <div>
         <dt>图片存储</dt>
         <dd th:text="${theme.config.aside.basic.image_hosting}">本地存储</dd>
       </div>
@@ -48,10 +44,6 @@
           <div>
             <dt>Version</dt>
             <dd th:text="${theme.spec.version}">1.0.0</dd>
-          </div>
-          <div>
-            <dt>Framework</dt>
-            <dd>Halo 2.x</dd>
           </div>
         </dl>
       </div>

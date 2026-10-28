@@ -76,7 +76,9 @@ export default ({ mode }: { mode: string }) => {
               if (id.includes("qrcode")) return "qrcode";
               if (id.includes("swup")) return "swup";
               if (id.includes("@chinese-fonts")) return "chinese-fonts";
-              return "vendor";
+              // Let Rollup split optional libraries and their dependencies by usage.
+              // A catch-all vendor chunk would pull Mermaid into the homepage.
+              return undefined;
             }
             return undefined;
           },

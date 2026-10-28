@@ -23,26 +23,48 @@ $breakpoint-widescreen: 1080px !default;
 }
 
 #content {
-	display: flex;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr) 280px;
+	column-gap: 1rem;
+	align-items: start;
 	flex: 1;
 	max-width: $breakpoint-widescreen;
 	min-width: 0;
 
 	> main {
-		flex-grow: 1;
+		grid-area: 1 / 1;
 		min-width: 0;
-		margin-inline-end: 1rem;
+	}
 
-		@media (max-width: $breakpoint-widescreen) {
-			margin-inline-end: 0;
-		}
+	&:not(:has(> #z-aside-track.has-aside)) {
+		grid-template-columns: minmax(0, 1fr);
+	}
+
+	@media (max-width: $breakpoint-widescreen) {
+		grid-template-columns: minmax(0, 1fr);
 	}
 
 	@media (max-width: $breakpoint-mobile) {
-		flex-direction: column;
 		width: 100%;
 		padding-top: env(safe-area-inset-top, 0);
 	}
+}
+
+#z-aside-track {
+	grid-area: 1 / 2;
+	align-self: stretch;
+	min-width: 0;
+	&:not(.has-aside) { display: none; }
+
+	@media (max-width: $breakpoint-widescreen) {
+		display: contents;
+	}
+}
+
+#z-footer {
+	grid-column: 1 / -1;
+	grid-row: 2;
+	min-width: 0;
 }
 
 #z-aside {
@@ -70,20 +92,30 @@ $breakpoint-widescreen: 1080px !default;
 	}
 }
 
-#z-panel {
+#z-panel-anchor {
 	position: fixed;
-	overflow: hidden;
-	bottom: min(2rem, 5%);
+	bottom: max(env(safe-area-inset-bottom, 0px), min(2rem, 5%));
 	inset-inline-end: min(1rem, 5%);
+	pointer-events: none;
+	z-index: 102;
+
+	@media (min-width: ($breakpoint-widescreen + 1px)) {
+		display: none;
+	}
+}
+
+#z-panel {
+	overflow: hidden;
 	border-radius: 0.5rem;
 	background-color: var(--c-bg-a50, rgba(255, 255, 255, 0.5));
 	backdrop-filter: blur(0.5rem);
 	font-size: 1.4rem;
 	transition: transform 0.1s;
-	z-index: 100;
+	transform: translateY(calc(-1 * var(--panel-shift, 0px)));
+	pointer-events: auto;
 
-	@media (min-width: $breakpoint-mobile) {
-		display: none;
+	@media (max-height: 528px) {
+		display: flex;
 	}
 
 	&.has-active {
@@ -115,6 +147,23 @@ $breakpoint-widescreen: 1080px !default;
 	}
 }
 
+.skip-link {
+	position: fixed;
+	top: 1rem;
+	left: 1rem;
+	padding: 0.7rem 1rem;
+	border-radius: 0.5rem;
+	background: var(--c-bg-1);
+	box-shadow: 0 0 1rem var(--ld-shadow);
+	transform: translateY(-200%);
+	z-index: 10000;
+
+	&:focus-visible {
+		transform: none;
+		outline: 2px solid var(--c-primary);
+	}
+}
+
 .pc-back-to-top {
 	position: fixed;
 	right: 2.5rem;
@@ -136,7 +185,7 @@ $breakpoint-widescreen: 1080px !default;
 	visibility: hidden;
 	transform: translateY(20px);
 
-	@media (max-width: $breakpoint-mobile) {
+	@media (max-width: $breakpoint-widescreen) {
 		display: none;
 	}
 

@@ -1,8 +1,11 @@
 <!-- 导航菜单组件 -->
 <th:block
   th:fragment="nav-menu"
-  th:if="${not #strings.isEmpty(theme.config.header.primary_menu)}"
-  th:with="menu = ${menuFinder.getByName(theme.config.header.primary_menu)}, currentPath = ${#httpServletRequest.requestURI}"
+  th:with="
+    menu = ${multiSiteMenuFinder != null
+      ? multiSiteMenuFinder.getCurrent()
+      : (not #strings.isEmpty(theme.config.header.primary_menu) ? menuFinder.getByName(theme.config.header.primary_menu) : null)},
+    currentPath = ${#httpServletRequest.requestURI}"
 >
   <menu th:if="${menu != null and menu.menuItems != null}">
     <li
@@ -13,8 +16,8 @@
         <div class="nav-item-wrapper">
           <a
             th:class="${currentPath != null and menuItem.status?.href != null and (currentPath == menuItem.status.href or #strings.endsWith(menuItem.status.href, currentPath)) ? 'sidebar-nav-item has-dropdown active' : 'sidebar-nav-item has-dropdown'}"
-            th:href="${menuItem.status.href}"
-            th:attr="target=${menuItem.spec.target?.value}"
+            th:href="@{${menuItem.status.href}}"
+            th:target="${menuItem.spec.target?.value}"
           >
             <img
               th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"
@@ -31,9 +34,9 @@
         <div class="dropdown-menu">
           <a
             th:each="child : ${menuItem.children}"
-            th:href="${child.status.href}"
+            th:href="@{${child.status.href}}"
             th:class="${currentPath != null and child.status?.href != null and (currentPath == child.status.href or #strings.endsWith(child.status.href, currentPath)) ? 'dropdown-item active' : 'dropdown-item'}"
-            th:attr="target=${child.spec.target?.value}"
+            th:target="${child.spec.target?.value}"
           >
             <img
               th:if="${not #strings.isEmpty(child.metadata?.annotations?.get('icon'))}"
@@ -46,9 +49,9 @@
       </th:block>
       <a
         th:unless="${menuItem.children != null and not #lists.isEmpty(menuItem.children)}"
-        th:href="${menuItem.status.href}"
+        th:href="@{${menuItem.status.href}}"
         th:class="${currentPath != null and menuItem.status?.href != null and (currentPath == menuItem.status.href or #strings.endsWith(menuItem.status.href, currentPath)) ? 'sidebar-nav-item active' : 'sidebar-nav-item'}"
-        th:attr="target=${menuItem.spec.target?.value}"
+        th:target="${menuItem.spec.target?.value}"
       >
         <img
           th:if="${not #strings.isEmpty(menuItem.metadata?.annotations?.get('icon'))}"

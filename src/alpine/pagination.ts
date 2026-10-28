@@ -99,6 +99,8 @@ function initKeyboardNavigation() {
   document.addEventListener("keydown", (e: KeyboardEvent) => {
     const target = e.target as HTMLElement;
 
+    if (e.defaultPrevented || target.closest(".z-slide")) return;
+
     // 忽略标准输入元素
     if (
       target instanceof HTMLInputElement ||

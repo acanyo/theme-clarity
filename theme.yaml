@@ -14,7 +14,7 @@ spec:
   issues: https://github.com/acanyo/theme-clarity/issues
   settingName: "theme-clarity-setting"
   configMapName: "theme-clarity-configMap"
-  version: "1.6.7"
+  version: "1.6.16"
   requires: ">=2.26.0"
   customTemplates:
     page:

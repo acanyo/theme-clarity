@@ -5,8 +5,6 @@
 >
   <th:block th:fragment="content">
     <div class="archive proper-height">
-      <th:block th:replace="~{modules/order-toggle :: toolbar}" />
-
       <th:block th:each="yearGroup,yearStat : ${archives.items}">
         <section class="archive-group">
           <div class="archive-title">
@@ -42,7 +40,11 @@
                 th:style="'--delay: ' + ${postStat.index * 0.03} + 's'"
               >
                 <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
-                <a th:href="${post.status.permalink}" class="article-link gradient-card">
+                <a
+                  th:href="${post.status.permalink}"
+                  th:data-article-key="${post.status.permalink}"
+                  class="article-link gradient-card"
+                >
                   <span class="article-title" th:text="${post.spec.title}" th:title="${post.spec.title}"></span>
                   <img
                     th:if="${post.spec.cover}"

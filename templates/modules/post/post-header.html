@@ -1,6 +1,7 @@
 <th:block th:fragment="post-header(post, theme, site)">
   <div
     class="post-header"
+    th:data-article-key="${post.status.permalink}"
     th:classappend="${(post.spec.cover != null and post.spec.cover != '' ? 'has-cover ' : '') + (theme.config.post.center_title ? 'center-title' : '')}"
   >
     <img

@@ -30,6 +30,7 @@ $breakpoint-mobile: 768px !default;
 @use 'article-code';
 // 表格样式
 @use 'article-table';
+@use 'reading';
 // 链接样式
 @use 'article-links';
 // 脚注样式

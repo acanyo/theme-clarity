@@ -8,14 +8,13 @@ import {
   handleSwupTimeout,
 } from "./events";
 import { preloadConditionalStyles, updateMetaTags } from "./meta";
-
-let isSwupHooksRegistered = false;
+import { destroySlides } from "../../modules/slide-loader";
+import { registerArticleTransition } from "../article-transition";
+import { registerHistoryScroll } from "../history-scroll";
 
 export const registerSwupHooks = (swup: Swup) => {
-  if (isSwupHooksRegistered) {
-    return;
-  }
-  isSwupHooksRegistered = true;
+  registerHistoryScroll(swup);
+  registerArticleTransition(swup);
 
   swup.hooks.on("visit:start", (visit) => {
     handleSwupSend(visit);
@@ -25,6 +24,7 @@ export const registerSwupHooks = (swup: Swup) => {
     "content:replace",
     async (_visit, { page }) => {
       await preloadConditionalStyles(page.html);
+      destroySlides();
     },
     { before: true },
   );

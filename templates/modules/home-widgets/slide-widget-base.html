@@ -1,15 +1,34 @@
 <!-- 滑动提示组件 -->
 <div th:fragment="header(title)" class="z-slide-header">
   <span class="title text-creative" th:text="${title}">标题</span>
-  <div class="at-slide-hover">
-    <span class="icon-[ph--mouse-simple-bold]"></span>
-    <span>按住 Shift 横向滚动</span>
+  <div class="slide-header-actions at-slide-hover">
+    <span class="slide-scroll-hint">
+      <span class="icon-[ph--mouse-simple-bold]" aria-hidden="true"></span>
+      <span>按住 Shift 横向滚动</span>
+    </span>
+    <button
+      type="button"
+      class="slide-autoplay"
+      data-slide-autoplay
+      aria-label="暂停轮播"
+      aria-pressed="true"
+      title="暂停轮播"
+      hidden
+    >
+      <span class="slide-pause-icon icon-[ph--pause-bold]" aria-hidden="true"></span>
+      <span class="slide-play-icon icon-[ph--play-bold]" aria-hidden="true"></span>
+    </button>
   </div>
 </div>
 
 <!-- 文章内容组件 -->
-<div th:fragment="post-item(post)" th:remove="tag">
-  <a th:href="${post.status.permalink}" class="slide-item gradient-card" th:title="${post.status.excerpt}">
+<div th:fragment="post-item(post, showCategory)" th:remove="tag">
+  <a
+    th:href="${post.status.permalink}"
+    th:data-article-key="${post.status.permalink}"
+    class="slide-item gradient-card"
+    th:title="${post.status.excerpt}"
+  >
     <img
       th:if="${post.spec.cover}"
       th:src="${post.spec.cover}"
@@ -23,11 +42,21 @@
       <span class="icon-[ph--image-broken] text-4xl opacity-20"></span>
     </div>
 
+    <span class="slide-caption text-creative" th:text="${post.spec.title}"></span>
     <div class="info">
       <div class="title text-creative" th:text="${post.spec.title}" th:title="${post.spec.title}"></div>
-      <div class="desc" th:if="${post.spec.publishTime}">
-        <span class="icon-[ph--calendar-dots-bold]"></span>
-        <span th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></span>
+      <div
+        class="desc"
+        th:if="${post.spec.publishTime != null or (showCategory and not #lists.isEmpty(post.categories))}"
+      >
+        <span class="slide-meta-item" th:if="${post.spec.publishTime}">
+          <span class="icon-[ph--calendar-dots-bold]"></span>
+          <span th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></span>
+        </span>
+        <span class="slide-meta-item" th:if="${showCategory and not #lists.isEmpty(post.categories)}">
+          <span class="icon-[ph--folder-bold]"></span>
+          <span th:text="${post.categories[0].spec.displayName}"></span>
+        </span>
       </div>
     </div>
   </a>
@@ -36,46 +65,21 @@
 <!--- 翻页组件 -->
 <div th:fragment="footer(containerId)" class="z-slide-body" th:remove="tag">
   <button
+    type="button"
     class="carousel-action prev at-slide-hover"
     aria-label="上一页"
-    th:data-container-id="${containerId}"
-    onclick="scrollSlide(this, -300)"
+    th:aria-controls="${containerId}"
+    data-slide-prev
   >
     <span class="icon-[ph--caret-left-bold]"></span>
   </button>
   <button
+    type="button"
     class="carousel-action next at-slide-hover"
     aria-label="下一页"
-    th:data-container-id="${containerId}"
-    onclick="scrollSlide(this, 300)"
+    th:aria-controls="${containerId}"
+    data-slide-next
   >
     <span class="icon-[ph--caret-right-bold]"></span>
   </button>
 </div>
-
-<script th:fragment="script(containerId)" th:inline="javascript">
-  (function () {
-    const containerId = /*[[${containerId}]]*/ "slide-scroll-container";
-    const container = document.getElementById(containerId);
-    if (container) {
-      container.addEventListener(
-        "wheel",
-        (e) => {
-          if (!e.shiftKey && Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
-            e.preventDefault();
-            container.scrollLeft += e.deltaY;
-          }
-        },
-        { passive: false },
-      );
-    }
-  })();
-
-  function scrollSlide(button, offset) {
-    const containerId = button.getAttribute("data-container-id");
-    const container = document.getElementById(containerId);
-    if (container) {
-      container.scrollBy({ left: offset, behavior: "smooth" });
-    }
-  }
-</script>

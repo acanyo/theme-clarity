@@ -1,0 +1,121 @@
+.aside-post-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.aside-post-item {
+  border-bottom: 1px dashed var(--c-border);
+
+  &:last-child {
+    border-bottom: 0;
+  }
+}
+
+.aside-post-link {
+  display: grid;
+  grid-template-columns: 1.35rem 3.75rem minmax(0, 1fr);
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0;
+  color: inherit;
+
+  &:hover {
+    .aside-post-title {
+      color: var(--c-primary);
+    }
+
+    .aside-post-cover {
+      transform: scale(1.04);
+    }
+  }
+}
+
+.aside-post-rank {
+  display: grid;
+  place-items: center;
+  width: 1.35rem;
+  height: 1.35rem;
+  border-radius: 50%;
+  background-color: var(--c-bg-soft);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--c-text-3);
+
+  .aside-post-item:nth-child(-n + 3) & {
+    background-color: var(--c-primary-soft);
+    color: var(--c-primary);
+  }
+}
+
+.aside-post-cover {
+  display: grid;
+  place-items: center;
+  width: 3.75rem;
+  height: 2.75rem;
+  overflow: hidden;
+  border-radius: 0.45rem;
+  background-color: var(--c-bg-soft);
+  object-fit: cover;
+  transition: transform 0.2s;
+}
+
+.aside-post-placeholder {
+  font-size: 1.25rem;
+  color: var(--c-text-3);
+}
+
+.aside-post-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  gap: 0.35rem;
+}
+
+.aside-post-title {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.84rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--c-text-1);
+  transition: color 0.2s;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.aside-post-meta {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  min-width: 0;
+  font-size: 0.7rem;
+  color: var(--c-text-3);
+
+  > span,
+  time {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+}
+
+.aside-post-category {
+  min-width: 0;
+  max-width: 4.5rem;
+}
+
+.aside-post-category-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.aside-post-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 1rem 0;
+  font-size: 0.82rem;
+  color: var(--c-text-3);
+}

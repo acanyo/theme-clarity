@@ -1,0 +1,86 @@
+<th:block
+  th:fragment="popular-posts-widget(item)"
+  th:with="
+    postCount=${T(java.lang.Integer).parseInt(item.post_count ?: '5')},
+    posts=${multiSitePostFinder != null
+      ? multiSitePostFinder.popular(postCount)
+      : postFinder.list({page: 1, size: postCount, sort: {'stats.visit,desc', 'metadata.creationTimestamp,asc'}})}
+  "
+>
+  <th:block
+    th:replace="~{this :: post-list-widget(title=${#strings.isEmpty(item.posts_title) ? '热门文章' : item.posts_title}, posts=${posts})}"
+  ></th:block>
+</th:block>
+
+<th:block
+  th:fragment="latest-posts-widget(item)"
+  th:with="
+    postCount=${T(java.lang.Integer).parseInt(item.post_count ?: '5')},
+    posts=${multiSitePostFinder != null
+      ? multiSitePostFinder.latest(postCount)
+      : postFinder.list({page: 1, size: postCount, sort: {'spec.publishTime,desc', 'metadata.creationTimestamp,desc'}})}
+  "
+>
+  <th:block
+    th:replace="~{this :: post-list-widget(title=${#strings.isEmpty(item.posts_title) ? '最新文章' : item.posts_title}, posts=${posts})}"
+  ></th:block>
+</th:block>
+
+<section th:fragment="post-list-widget(title, posts)" class="widget aside-posts-widget">
+  <hgroup class="widget-title">
+    <span class="title-text text-creative" th:text="${title}">文章</span>
+    <a th:href="@{${site.routes.archivesUri}}" aria-label="查看全部文章" title="查看全部文章">
+      <span class="icon-[ph--arrow-right-bold]"></span>
+    </a>
+  </hgroup>
+
+  <div class="widget-body widget-card">
+    <ol class="aside-post-list" th:if="${not #lists.isEmpty(posts?.items)}">
+      <li th:each="post, iterStat : ${posts.items}" class="aside-post-item">
+        <a class="aside-post-link" th:href="@{${post.status.permalink}}" th:title="${post.spec.title}">
+          <span class="aside-post-rank" th:text="${iterStat.count}">1</span>
+
+          <img
+            th:if="${not #strings.isEmpty(post.spec.cover)}"
+            class="aside-post-cover"
+            th:src="${post.spec.cover}"
+            th:srcset="|${thumbnail.gen(post.spec.cover, 's')} 400w|"
+            sizes="64px"
+            loading="lazy"
+            th:alt="${post.spec.title}"
+          />
+          <span th:unless="${not #strings.isEmpty(post.spec.cover)}" class="aside-post-cover aside-post-placeholder">
+            <span class="icon-[ph--article-bold]" aria-hidden="true"></span>
+          </span>
+
+          <span class="aside-post-content">
+            <span class="aside-post-title" th:text="${post.spec.title}">文章标题</span>
+            <span class="aside-post-meta">
+              <span
+                class="aside-post-category"
+                th:if="${not #lists.isEmpty(post.categories)}"
+                th:title="${post.categories[0].spec.displayName}"
+              >
+                <span class="icon-[ph--folder-bold]" aria-hidden="true"></span>
+                <span class="aside-post-category-name" th:text="${post.categories[0].spec.displayName}">分类</span>
+              </span>
+              <time th:if="${post.spec.publishTime}" th:datetime="${post.spec.publishTime}">
+                <span class="icon-[ph--calendar-dots-bold]" aria-hidden="true"></span>
+                <span th:text="${#temporals.format(post.spec.publishTime, 'MM-dd')}">01-01</span>
+              </time>
+              <span>
+                <span class="icon-[ph--eye-bold]" aria-hidden="true"></span>
+                <span th:text="${post.stats.visit ?: 0}">0</span>
+              </span>
+            </span>
+          </span>
+        </a>
+      </li>
+    </ol>
+
+    <div class="aside-post-empty" th:if="${#lists.isEmpty(posts?.items)}">
+      <span class="icon-[ph--article-bold]" aria-hidden="true"></span>
+      <span>暂无文章</span>
+    </div>
+  </div>
+</section>

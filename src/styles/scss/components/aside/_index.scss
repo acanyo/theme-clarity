@@ -34,6 +34,9 @@ $breakpoint-widescreen: 1080px !default;
 // 最新评论组件
 @use 'recent-comments';
 
+// 热门文章、最新文章组件
+@use 'posts';
+
 // 推广轮播
 @use 'promotion';
 

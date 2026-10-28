@@ -64,17 +64,3 @@
 	text-overflow: ellipsis;
 	white-space: nowrap;
 }
-
-// Halo 平台图标
-.platform-halo {
-	display: flex;
-	align-items: center;
-	gap: 0.3em;
-
-	img {
-		width: 1.2em;
-		height: 1.2em;
-		border-radius: 0.2em;
-		object-fit: cover;
-	}
-}

@@ -1,56 +1,70 @@
 <th:block th:replace="~{modules/aside-widgets/aside-bgmask :: aside-bgmask}"></th:block>
 
-<aside th:fragment="aside" id="z-aside">
+<aside
+  th:fragment="aside"
+  id="z-aside"
+  th:with="
+    articlePage = ${post != null},
+    showToc = ${(post != null and theme.config.custom.enable_post_toc != false and #annotations.getOrDefault(post, 'toc', 'true') == 'true') or (singlePage != null and theme.config.custom.enable_page_toc != false and #annotations.getOrDefault(singlePage, 'toc', 'false') == 'true')}
+  "
+>
   <!-- 目录组件：仅文章页和开启 TOC 的独立页面 -->
-  <th:block
-    th:if="${post != null or (singlePage != null and #annotations.getOrDefault(singlePage, 'toc', 'false') == 'true')}"
-  >
+  <th:block th:if="${showToc}">
     <div th:replace="~{modules/aside-widgets/toc-widget :: toc-widget}"></div>
   </th:block>
 
-  <!-- 侧边栏组件：首页或未开启 TOC 的独立页面 -->
-  <th:block
-    th:unless="${post != null or (singlePage != null and #annotations.getOrDefault(singlePage, 'toc', 'false') == 'true')}"
-  >
+  <!-- 文章页复用首页侧栏配置中的热门文章和最新文章组件；其他页面渲染完整侧栏配置 -->
+  <th:block th:if="${articlePage or not showToc}">
     <th:block th:each="item : ${theme.config.aside.widgets.index}">
-      <th:block th:switch="${item.widget}">
-        <th:block th:case="'stats'">
-          <th:block th:replace="~{modules/aside-widgets/stats-widget :: stats-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'tech-info'">
-          <th:block th:replace="~{modules/aside-widgets/tech-info-widget :: tech-info-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'weather'">
-          <th:block th:replace="~{modules/aside-widgets/weather-widget :: weather-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'moments'">
-          <th:block th:replace="~{modules/aside-widgets/moments-widget :: moments-widget}"></th:block>
-          <!-- 微语组件依赖瞬间插件：未安装/未启用时仅向管理员提示 -->
-          <th:block th:unless="${pluginFinder.available('PluginMoments')}">
+      <th:block th:if="${not articlePage or item.widget == 'popular-posts' or item.widget == 'latest-posts'}">
+        <th:block th:switch="${item.widget}">
+          <th:block th:case="'stats'">
+            <th:block th:replace="~{modules/aside-widgets/stats-widget :: stats-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'tech-info'">
+            <th:block th:replace="~{modules/aside-widgets/tech-info-widget :: tech-info-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'weather'">
+            <th:block th:replace="~{modules/aside-widgets/weather-widget :: weather-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'moments'">
+            <th:block th:replace="~{modules/aside-widgets/moments-widget :: moments-widget}"></th:block>
+            <th:block th:unless="${pluginFinder.available('PluginMoments')}">
+              <th:block
+                th:replace="~{modules/plugin-hint :: hint(feature='侧边栏「微语」组件', plugin='瞬间（PluginMoments）', hintId='moments-widget', extraClass='widget')}"
+              ></th:block>
+            </th:block>
+          </th:block>
+          <th:block th:case="'community'">
+            <th:block th:replace="~{modules/aside-widgets/community-widget :: community-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'sponsor'">
+            <th:block th:replace="~{modules/aside-widgets/sponsor-widget :: sponsor-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'promotion'">
+            <th:block th:replace="~{modules/aside-widgets/promotion-widget :: promotion-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'activity-calendar'">
             <th:block
-              th:replace="~{modules/plugin-hint :: hint(feature='侧边栏「微语」组件', plugin='瞬间（PluginMoments）', hintId='moments-widget', extraClass='widget')}"
+              th:replace="~{modules/aside-widgets/activity-calendar-widget :: activity-calendar-widget}"
             ></th:block>
           </th:block>
-        </th:block>
-        <th:block th:case="'community'">
-          <th:block th:replace="~{modules/aside-widgets/community-widget :: community-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'sponsor'">
-          <th:block th:replace="~{modules/aside-widgets/sponsor-widget :: sponsor-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'promotion'">
-          <th:block th:replace="~{modules/aside-widgets/promotion-widget :: promotion-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'activity-calendar'">
-          <th:block
-            th:replace="~{modules/aside-widgets/activity-calendar-widget :: activity-calendar-widget}"
-          ></th:block>
-        </th:block>
-        <th:block th:case="'recent-comments'">
-          <th:block th:replace="~{modules/aside-widgets/recent-comments-widget :: recent-comments-widget}"></th:block>
-        </th:block>
-        <th:block th:case="'custom'">
-          <th:block th:replace="~{modules/aside-widgets/custom-widget :: custom-widget(item=${item})}"></th:block>
+          <th:block th:case="'recent-comments'">
+            <th:block th:replace="~{modules/aside-widgets/recent-comments-widget :: recent-comments-widget}"></th:block>
+          </th:block>
+          <th:block th:case="'popular-posts'">
+            <th:block
+              th:replace="~{modules/aside-widgets/post-list-widget :: popular-posts-widget(item=${item})}"
+            ></th:block>
+          </th:block>
+          <th:block th:case="'latest-posts'">
+            <th:block
+              th:replace="~{modules/aside-widgets/post-list-widget :: latest-posts-widget(item=${item})}"
+            ></th:block>
+          </th:block>
+          <th:block th:case="'custom'">
+            <th:block th:replace="~{modules/aside-widgets/custom-widget :: custom-widget(item=${item})}"></th:block>
+          </th:block>
         </th:block>
       </th:block>
     </th:block>

@@ -17,7 +17,7 @@ $breakpoint-mobile: 768px !default;
 	}
 
 	// 非移动端隐藏
-	@media (min-width: $breakpoint-mobile) {
+	@media (min-width: ($breakpoint-mobile + 1px)) {
 		display: none;
 	}
 }
@@ -48,15 +48,19 @@ $breakpoint-mobile: 768px !default;
 		inset-inline-start: 0;
 		width: 320px;
 		max-width: 100%;
-		height: 100%;
+		height: 100vh;
+		height: 100dvh;
+		padding-bottom: calc(5rem + env(safe-area-inset-bottom, 0px));
 		background-color: var(--ld-bg-blur);
 		backdrop-filter: blur(0.5rem);
 		color: currentcolor;
 		transform: var(--transform-start-far);
-		transition: transform 0.2s;
+		visibility: hidden;
+		transition: transform 0.2s, visibility 0.2s;
 		z-index: 100;
 
 		&.show {
+			visibility: visible;
 			box-shadow: 0 0 1rem var(--ld-shadow);
 			transform: none;
 		}

@@ -23,6 +23,7 @@
         <time th:text="${#temporals.format(post.spec.publishTime, 'MM/dd')}"></time>
         <a
           th:href="${post.status.permalink + (fromCategory ? '?from=category' : '')}"
+          th:data-article-key="${post.status.permalink}"
           class="article-link gradient-card"
         >
           <span class="article-title" th:text="${post.spec.title}" th:title="${post.spec.title}"></span>

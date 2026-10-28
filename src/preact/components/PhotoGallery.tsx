@@ -71,11 +71,8 @@ export function PhotoGallery({ groups }: Props) {
       src: p.url,
       caption: p.displayName || "",
     }));
-    // @ts-ignore
-    if (window.Fancybox) {
-      // @ts-ignore
-      window.Fancybox.show(items, { startIndex: index });
-    }
+    const fancybox = (window as Window & { Fancybox?: typeof import("@fancyapps/ui").Fancybox }).Fancybox;
+    fancybox?.show(items, { startIndex: index });
   };
 
   return (

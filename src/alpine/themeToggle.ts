@@ -40,8 +40,11 @@ export function registerThemeToggle(alpine: typeof Alpine) {
         }
       };
 
-      if (animate && document.startViewTransition) {
-        document.startViewTransition(updateDOM);
+      if (animate && document.startViewTransition && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        window.dispatchEvent(new Event("clarity:cancel-transition"));
+        html.dataset.themeTransition = isDark ? "dark" : "light";
+        const transition = document.startViewTransition(updateDOM);
+        void transition.finished.catch(() => {}).finally(() => delete html.dataset.themeTransition);
       } else {
         updateDOM();
       }

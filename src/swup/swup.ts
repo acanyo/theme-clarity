@@ -15,11 +15,14 @@ export const initSwup = () => {
   if (!isSwupEnabled()) {
     return null;
   }
+  if (swupInstance) return swupInstance;
 
   const timeout = window.themeConfig?.custom?.swup_timeout || 5000;
 
   swupInstance = new Swup({
-    containers: ["#main-content", "#z-aside", "#z-panel"],
+    containers: ["#main-content", "#z-aside-track", "#z-panel-anchor", "#z-footer"],
+    animationSelector: false,
+    animateHistoryBrowsing: true,
     linkSelector: "a[href]",
     timeout,
     cache: true,

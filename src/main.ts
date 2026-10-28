@@ -15,6 +15,9 @@ import { registerAlpineComponents } from "./alpine";
 import { initSwup } from "./swup/swup";
 import { reinitializeComponents } from "./swup/reinit";
 import { initImageLoaded, initImageCaption } from "./utils/image";
+import { initSlides } from "./modules/slide-loader";
+import { initDrawers } from "./modules/drawers";
+import { initReading } from "./modules/reading";
 import {
   initDropdownMenus,
   initBackToTop,
@@ -43,10 +46,14 @@ Alpine.start();
 // 初始化搜索快捷键
 initSearchShortcut();
 
-// 页面初始加载
-document.addEventListener("DOMContentLoaded", () => {
+// 页面初始加载；缓存恢复或开发入口可能在 DOMContentLoaded 后执行。
+const initPage = () => {
   if (window.themeConfig?.custom?.enable_swup) {
-    initSwup();
+    try {
+      initSwup();
+    } catch (error) {
+      console.error("Swup 初始化失败:", error);
+    }
   }
 
   initDropdownMenus();
@@ -60,9 +67,15 @@ document.addEventListener("DOMContentLoaded", () => {
   initActivityCalendar();
   void initTwikooComments();
   initFloatingPagination();
+  initDrawers();
+  initReading();
+  void initSlides();
   initAsideScrollSync();
   initPluginHints();
-});
+};
+
+if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initPage, { once: true });
+else initPage();
 
 window.addEventListener("swup:success", () => {
   window.setTimeout(() => {

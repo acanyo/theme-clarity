@@ -111,6 +111,11 @@ spec:
           value: false
           help: 鼠标悬停在菜单上时自动展开子菜单
         - $formkit: switch
+          name: show_search
+          label: 显示左侧搜索框
+          value: true
+          help: 关闭后隐藏左侧边栏的搜索入口
+        - $formkit: switch
           name: menu_icon_color_invert
           label: 菜单图标颜色反转
           value: false
@@ -425,13 +430,6 @@ spec:
                   label: 链接
                   placeholder: https://github.com
                   validation: required
-        - $formkit: switch
-          name: halo_version
-          label: 显示 Halo 版本
-          value: false
-          offValue: false
-          onValue: true
-          help: 启用后可以在页脚显示 Halo 版本信息
         - $formkit: text
           name: beian
           label: ICP 备案号
@@ -611,6 +609,12 @@ spec:
                   label: $value.widget
               value:
                 - widget: "stats"
+                - widget: "popular-posts"
+                  posts_title: "热门文章"
+                  post_count: 5
+                - widget: "latest-posts"
+                  posts_title: "最新文章"
+                  post_count: 5
                 - widget: "tech-info"
               children:
                 - $formkit: select
@@ -636,8 +640,27 @@ spec:
                       label: 活跃日历
                     - value: "recent-comments"
                       label: 最新评论
+                    - value: "popular-posts"
+                      label: 热门文章
+                    - value: "latest-posts"
+                      label: 最新文章
                     - value: "custom"
                       label: 自定义
+                - $formkit: text
+                  name: posts_title
+                  key: aside_posts_title
+                  label: 标题
+                  value: ""
+                  placeholder: 留空时使用组件默认标题
+                  if: "$value.widget === 'popular-posts' || $value.widget === 'latest-posts'"
+                - $formkit: number
+                  name: post_count
+                  key: aside_post_count
+                  label: 显示条数
+                  value: 5
+                  min: 1
+                  max: 10
+                  if: "$value.widget === 'popular-posts' || $value.widget === 'latest-posts'"
                 - $formkit: text
                   name: moments_title
                   label: 标题
@@ -954,11 +977,6 @@ spec:
               min: 1
               max: 10
               help: 选择要在首页展示的随机文章数量
-        - $formkit: switch
-          name: enable_toolbar
-          label: 关闭分类栏
-          value: false
-          help: 开启后将关闭分类栏
         - $formkit: radio
           name: cursor
           id: cursor
@@ -1398,6 +1416,12 @@ spec:
     - group: custom
       label: 自定义
       formSchema:
+        - $formkit: text
+          name: keywords_title
+          label: 关键词区标题
+          value: 关键词
+          placeholder: 关键词
+          help: 由主题渲染在页面顶部关键词列表之前
         - $formkit: radio
           name: title_type
           label: 网页标题分隔符

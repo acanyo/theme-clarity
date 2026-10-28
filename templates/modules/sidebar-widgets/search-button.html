@@ -1,5 +1,5 @@
 <!-- 搜索组件 -->
-<th:block th:fragment="search-button">
+<th:block th:fragment="search-button" th:if="${theme.config.header.show_search != false}">
   <div
     th:if="${pluginFinder.available('PluginSearchWidget')}"
     class="search-btn sidebar-nav-item gradient-card"

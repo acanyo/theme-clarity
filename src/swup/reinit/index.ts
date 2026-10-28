@@ -6,12 +6,14 @@ import { initImageLoaded, initImageCaption } from "./image";
 import { initActiveNavItem, initDropdownMenus } from "./navigation";
 import { initBackToTop } from "./back-to-top";
 import { momentsTags } from "./moments-tags";
-import { initMermaid } from "./mermaid";
+import { initReading } from "../../modules/reading";
 import { syncThemeConfig } from "./theme-config";
 import { initTwikooComments } from "../../utils/twikoo";
 import { initActivityCalendar } from "../../utils/activity-calendar";
 import { initAsideScrollSync } from "../../modules/aside-scroll-sync";
 import { initContentWidgets } from "./content-widgets";
+import { initSlides } from "../../modules/slide-loader";
+import { initDrawers } from "../../modules/drawers";
 
 export { syncThemeConfig } from "./theme-config";
 export { reinitializeAlpineComponents } from "./alpine";
@@ -19,7 +21,6 @@ export { initImageLoaded, initImageCaption } from "./image";
 export { initActiveNavItem, initDropdownMenus } from "./navigation";
 export { initBackToTop } from "./back-to-top";
 export { momentsTags } from "./moments-tags";
-export { initMermaid } from "./mermaid";
 export { initContentWidgets } from "./content-widgets";
 
 /**
@@ -43,8 +44,10 @@ export const reinitializeComponents = () => {
   momentsTags();
   initActivityCalendar();
   syncThemeConfig();
-  initMermaid();
+  initReading();
   void initTwikooComments();
   initAsideScrollSync();
   initContentWidgets();
+  initDrawers();
+  void initSlides();
 };

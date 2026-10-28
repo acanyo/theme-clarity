@@ -5,6 +5,7 @@ $breakpoint-widescreen: 1080px !default;
 
 #z-aside {
 	overflow: auto;
+	overscroll-behavior: contain;
 	padding: 0.5rem;
 
 	// 桌面端：固定定位
@@ -22,20 +23,30 @@ $breakpoint-widescreen: 1080px !default;
 
 	// 宽屏以下：默认隐藏，通过 .show 类显示
 	@media (max-width: $breakpoint-widescreen) {
-		display: none !important;
+		display: block;
 		position: fixed;
 		top: 0;
 		inset-inline-end: 0;
 		width: 320px;
-		height: 100%;
+		height: 100vh;
+		height: 100dvh;
 		max-width: 100%;
+		padding-bottom: calc(12rem + env(safe-area-inset-bottom, 0px));
+		visibility: hidden;
+		transform: var(--transform-end-far);
+		transition: transform 0.2s, visibility 0.2s;
 		background-color: var(--c-bg);
 		box-shadow: -0.5rem 0 2rem var(--ld-shadow);
 		z-index: 100;
 
 		// 显示状态
 		&.show {
-			display: block !important;
+			visibility: visible;
+			transform: none;
+		}
+
+		@media (min-width: 769px), (max-height: 528px) {
+			padding-bottom: calc(7rem + env(safe-area-inset-bottom, 0px));
 		}
 
 		// 滑入时的 widget 样式
@@ -61,7 +72,7 @@ $breakpoint-widescreen: 1080px !default;
 		display: none;
 	}
 
-	@media (min-width: $breakpoint-widescreen) {
+	@media (min-width: ($breakpoint-widescreen + 1px)) {
 		display: none;
 	}
 }

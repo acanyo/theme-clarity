@@ -1,4 +1,4 @@
-<div th:fragment="post-card(post)" class="article-card card">
+<div th:fragment="post-card(post)" class="article-card card" th:data-article-key="${post.status.permalink}">
   <a th:href="${post.status.permalink}">
     <img
       th:if="${not #strings.isEmpty(post.spec.cover)}"

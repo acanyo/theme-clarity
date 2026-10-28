@@ -1,0 +1,35 @@
+.multisite-keywords-region {
+  display: inline-flex;
+  align-items: baseline;
+  max-width: 72rem;
+  margin: 1rem auto;
+  padding: 0.75rem 1rem;
+  font-size: 0.75rem;
+  line-height: 1.8;
+  color: inherit;
+  opacity: 0.68;
+
+  &:not(:has([data-multisite-engine-keywords])) {
+    display: none;
+  }
+
+  > [data-multisite-engine-keywords] {
+    display: inline;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    font-size: inherit !important;
+    line-height: inherit !important;
+    color: inherit !important;
+    opacity: 1 !important;
+
+    > strong {
+      display: none;
+    }
+  }
+}
+
+.multisite-keywords-title {
+  flex-shrink: 0;
+  margin-right: 0.5rem;
+}

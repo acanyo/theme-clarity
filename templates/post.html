@@ -1,7 +1,7 @@
 <!doctype html>
 <html
   xmlns:th="https://www.thymeleaf.org"
-  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = ${theme.config.custom.enable_post_toc != false and #annotations.getOrDefault(post, 'toc', 'true') == 'true'}, pageTitle = null, head = ~{::head})}"
+  th:replace="~{modules/layout :: html(content = ~{::content}, showAside = ${post != null or (theme.config.custom.enable_post_toc != false and #annotations.getOrDefault(post, 'toc', 'true') == 'true')}, pageTitle = null, head = ~{::head})}"
 >
   <th:block th:fragment="content">
     <!-- 文章头部 -->
@@ -16,7 +16,7 @@
     <article class="article" th:utext="${post.content.content}"></article>
     <!-- 文章页脚 -->
     <th:block th:replace="~{modules/post/post-footer :: post-footer(post=${post}, theme=${theme})}" />
-    <!-- 文章导航 -->
+    <!-- 相邻文章导航保留分类上下文，并支持共享过渡和键盘切换。 -->
     <th:block
       th:replace="~{modules/post/cursor-post :: cursor-post(post=${post}, theme=${theme}, postFinder=${postFinder})}"
     />

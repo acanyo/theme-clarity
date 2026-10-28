@@ -105,31 +105,21 @@
     </th:block>
   </head>
   <body id="clarity-root">
-    <div
-      id="z-sidebar-bgmask"
-      class="hidden"
-      onclick="
-        document.getElementById('z-sidebar').classList.remove('show');
-        this.classList.add('hidden');
-        document.getElementById('toggle-sidebar')?.classList.remove('active');
-      "
-    ></div>
-
-    <div
-      id="z-aside-bgmask"
-      class="hidden"
-      onclick="
-        document.getElementById('z-aside').classList.remove('show');
-        this.classList.add('hidden');
-        document.getElementById('toggle-aside')?.classList.remove('active');
-      "
-    ></div>
+    <a class="skip-link" href="#main-content">跳转到正文</a>
+    <div id="z-sidebar-bgmask" class="hidden" aria-hidden="true"></div>
+    <div id="z-aside-bgmask" class="hidden" aria-hidden="true"></div>
 
     <th:block th:replace="~{modules/sidebar :: sidebar}" />
 
+    <div class="multisite-keywords-region">
+      <strong class="multisite-keywords-title" th:text="${theme.config.custom?.keywords_title ?: '关键词'}"
+        >关键词</strong
+      >
+      <div data-multisite-keywords-position="top"></div>
+    </div>
+
     <div id="content">
-      <main id="main-content">
-        <!-- 互动装扮依赖 interaction-plus 插件：主题开关开启但插件不可用时仅向管理员提示 -->
+      <main id="main-content" tabindex="-1">
         <th:block
           th:if="${theme.config.plugins?.interaction_plus?.enable != false and not pluginFinder.available('interaction-plus')}"
         >
@@ -138,61 +128,45 @@
           ></th:block>
         </th:block>
         <th:block th:replace="${content}" />
-
-        <th:block th:replace="~{modules/footer :: footer}" />
       </main>
 
-      <th:block th:if="${showAside == null or showAside}">
-        <th:block th:replace="~{modules/aside :: aside}" />
-      </th:block>
-      <th:block th:unless="${showAside == null or showAside}">
-        <aside id="z-aside" style="display: none"></aside>
-      </th:block>
+      <div id="z-aside-track" th:classappend="${showAside == null or showAside} ? 'has-aside'">
+        <th:block th:if="${showAside == null or showAside}">
+          <th:block th:replace="~{modules/aside :: aside}" />
+        </th:block>
+        <th:block th:unless="${showAside == null or showAside}">
+          <aside id="z-aside" style="display: none"></aside>
+        </th:block>
+      </div>
+      <div id="z-footer"><th:block th:replace="~{modules/footer :: footer}" /></div>
     </div>
 
-    <div id="z-panel">
-      <button
-        id="toggle-sidebar"
-        aria-label="切换菜单"
-        onclick="
-          (function (btn) {
-            var sb = document.getElementById('z-sidebar'),
-              mk = document.getElementById('z-sidebar-bgmask');
-            sb.classList.toggle('show');
-            mk.classList.toggle('hidden');
-            btn.classList.toggle('active');
-          })(this)
-        "
-      >
-        <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display: block"></span>
-      </button>
-      <button
-        th:if="${(showAside == null or showAside) and isLinksPage != true}"
-        id="toggle-aside"
-        aria-label="切换侧边栏"
-        onclick="
-          (function (btn) {
-            var as = document.getElementById('z-aside'),
-              mk = document.getElementById('z-aside-bgmask');
-            as.classList.toggle('show');
-            mk.classList.toggle('hidden');
-            btn.classList.toggle('active');
-          })(this)
-        "
-      >
-        <span class="icon-[ph--align-right-duotone] rtl-flip" style="display: block"></span>
-      </button>
-      <button
-        th:if="${isLinksPage == true and theme.config != null and theme.config.links != null and theme.config.links.enable_random != false}"
-        id="mobile-random-link-btn"
-        aria-label="随机穿梭"
-        onclick="randomVisitLink()"
-      >
-        <span class="icon-[ph--shuffle-bold]" style="display: block"></span>
-      </button>
-      <button id="back-to-top" aria-label="返回顶部" style="display: none">
-        <span class="icon-[ph--arrow-up-bold]" style="display: block"></span>
-      </button>
+    <div id="z-panel-anchor">
+      <div id="z-panel">
+        <button id="toggle-sidebar" aria-label="切换菜单" aria-controls="z-sidebar" aria-expanded="false">
+          <span class="icon-[ph--sidebar-duotone] rtl-flip" style="display: block"></span>
+        </button>
+        <button
+          th:if="${(showAside == null or showAside) and isLinksPage != true}"
+          id="toggle-aside"
+          aria-label="切换侧边栏"
+          aria-controls="z-aside"
+          aria-expanded="false"
+        >
+          <span class="icon-[ph--align-right-duotone] rtl-flip" style="display: block"></span>
+        </button>
+        <button
+          th:if="${isLinksPage == true and theme.config != null and theme.config.links != null and theme.config.links.enable_random != false}"
+          id="mobile-random-link-btn"
+          aria-label="随机穿梭"
+          onclick="randomVisitLink()"
+        >
+          <span class="icon-[ph--shuffle-bold]" style="display: block"></span>
+        </button>
+        <button id="back-to-top" aria-label="返回顶部" style="display: none">
+          <span class="icon-[ph--arrow-up-bold]" style="display: block"></span>
+        </button>
+      </div>
     </div>
 
     <button id="pc-back-to-top" class="pc-back-to-top" onclick="window.scrollTo({ top: 0, behavior: 'smooth' })">

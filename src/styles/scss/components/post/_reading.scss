@@ -1,0 +1,103 @@
+.article {
+	.reading-code, .reading-table, .reading-diagram {
+		min-width: 0;
+		max-width: 100%;
+		margin: 1.25rem 0;
+		overflow: clip;
+		border: 1px solid var(--c-border);
+		border-radius: 0.65rem;
+		background: var(--c-bg-2);
+		font-size: 0.8125rem;
+		line-height: 1.5;
+	}
+
+	.reading-toolbar {
+		display: flex;
+		align-items: center;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+		padding: 0.45rem 0.65rem;
+		border-bottom: 1px solid var(--c-border);
+		font-family: var(--font-sans);
+		font-size: 0.75rem;
+		color: var(--c-text-2);
+	}
+
+	.reading-label { flex: 1; overflow-wrap: anywhere; }
+	.reading-action {
+		padding: 0.3rem 0.5rem;
+		border-radius: 0.35rem;
+		white-space: nowrap;
+		&:hover, &[aria-pressed="true"] { color: var(--c-primary); background: var(--c-primary-soft); }
+		&:focus-visible { outline: 2px solid var(--c-primary); outline-offset: 1px; }
+		&[hidden] { display: none; }
+	}
+	.reading-status { color: var(--c-text-3); &:empty { display: none; } }
+
+	.reading-code-scroll, .reading-table-scroll, .reading-diagram-scroll {
+		overflow: auto;
+		max-width: 100%;
+		overscroll-behavior-inline: contain;
+		&:focus-visible { outline: 2px solid var(--c-primary); outline-offset: -2px; }
+	}
+
+	.reading-code-content { display: flex; width: max-content; min-width: 100%; }
+	.reading-code pre {
+		flex: 1;
+		overflow: visible;
+		margin: 0;
+		padding: 0.9rem 1rem;
+		border-radius: 0;
+		font-size: inherit;
+		line-height: inherit;
+		white-space: pre;
+		&[data-language]::before { display: none; }
+	}
+	.reading-line-numbers {
+		position: sticky;
+		inset-inline-start: 0;
+		flex: 0 0 auto;
+		min-width: 3em;
+		padding: 0.9rem 0.75rem;
+		border-inline-end: 1px solid var(--c-border);
+		background: var(--c-bg-2);
+		color: var(--c-text-3);
+		font-family: var(--font-monospace);
+		white-space: pre;
+		text-align: end;
+		user-select: none;
+	}
+	.reading-code.is-collapsed .reading-code-scroll { max-height: 18em; }
+	.reading-code-expand { display: block; width: 100%; padding: 0.55rem; border-top: 1px solid var(--c-border); }
+	.reading-code.is-wrapped {
+		.reading-code-content { width: 100%; }
+		.reading-line-numbers { display: none; }
+		pre, pre code { white-space: pre-wrap; overflow-wrap: anywhere; }
+	}
+
+	.reading-table-scroll { max-height: 70vh; max-height: 70dvh; }
+	.reading-table table {
+		width: max-content;
+		min-width: 100%;
+		margin: 0;
+		overflow: visible;
+		border-radius: 0;
+		font-size: inherit;
+		white-space: nowrap;
+	}
+	.reading-table thead { position: sticky; top: 0; z-index: 1; background: var(--c-bg-2); }
+	.reading-table caption { padding: 0.65rem; text-align: start; }
+	.reading-table.is-wrapped table { width: 100%; table-layout: fixed; white-space: normal; overflow-wrap: anywhere; }
+	.reading-table.is-wrapped :is(img, svg, math) { max-width: 100%; }
+
+	.reading-diagram-scroll { padding: 1rem; text-align: center; }
+	.reading-diagram-scroll > svg { display: block; max-width: 100%; height: auto; margin: auto; }
+	.reading-diagram.is-natural .reading-diagram-scroll > svg { width: var(--diagram-width, auto); max-width: none !important; }
+	.reading-diagram-status { padding: 1rem; color: var(--c-text-2); }
+	.reading-diagram details {
+		border-top: 1px solid var(--c-border);
+		summary { padding: 0.6rem 1rem; cursor: pointer; }
+		pre { margin: 0; border-radius: 0; }
+	}
+	text-diagram[data-type="mermaid"] { display: block; max-width: 100%; overflow: auto; }
+}

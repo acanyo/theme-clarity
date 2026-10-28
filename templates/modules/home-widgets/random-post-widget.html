@@ -8,19 +8,19 @@
   ></div>
 
   <div class="z-slide-body">
-    <div class="slide-list" id="random-post-scroll-container">
-      <th:block
-        th:with="postNumber = ${T(java.lang.Integer).parseInt(theme.config.post.random_post.post_number)},
+    <div class="slide-viewport" role="region" aria-roledescription="轮播" aria-label="随机文章" tabindex="0">
+      <div class="slide-list" id="random-post-scroll-container">
+        <th:block
+          th:with="postNumber = ${T(java.lang.Integer).parseInt(theme.config.post.random_post.post_number)},
                  posts = ${postFinder.random(postNumber)}"
-      >
-        <th:block th:each="post : ${posts}">
-          <div th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post})}"></div>
+        >
+          <th:block th:each="post : ${posts}">
+            <div th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post}, false)}"></div>
+          </th:block>
         </th:block>
-      </th:block>
+      </div>
     </div>
 
     <div th:replace="~{modules/home-widgets/slide-widget-base::footer('random-post-scroll-container')}"></div>
   </div>
-
-  <div th:replace="~{modules/home-widgets/slide-widget-base::script('random-post-scroll-container')}"></div>
 </div>

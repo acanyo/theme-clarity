@@ -1,4 +1,8 @@
-<footer th:fragment="footer" class="z-footer">
+<footer
+  th:fragment="footer"
+  class="z-footer"
+  th:with="filing = ${multiSiteFilingFinder != null ? multiSiteFilingFinder.getCurrent() : null}"
+>
   <nav class="footer-nav">
     <div
       class="footer-nav-group"
@@ -65,23 +69,16 @@
     <div class="footer-nav-group">
       <h3>信息</h3>
       <menu>
-        <li>
-          <a href="https://halo.run" target="_blank">
-            <span class="icon-[ph--cube-bold]"></span>
-            <span class="nav-text" th:if="${!theme.config.footer.halo_version}">架构于 Halo</span>
-            <span class="nav-text" th:if="${theme.config.footer.halo_version}" th:text="'架构于 Halo ' + ${site.version}"></span>
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/acanyo/theme-clarity" target="_blank">
-            <span class="icon-[ph--mountains-bold]"></span>
-            <span class="nav-text" th:text="'驱动 Clarity ' + ${theme.spec.version}"></span>
-          </a>
-        </li>
         <li th:if="${not #strings.isEmpty(theme.config.footer.beian)}">
           <a href="https://beian.miit.gov.cn/" target="_blank">
             <img th:src="@{/assets/images/icp.webp}" alt="ICP" class="beian-icon" />
             <span class="nav-text" th:text="${theme.config.footer.beian}"></span>
+          </a>
+        </li>
+        <li th:if="${filing != null and filing.configured and not #strings.isEmpty(filing.icpNumber)}">
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noopener noreferrer" aria-label="ICP备案号">
+            <img th:src="@{/assets/images/icp.webp}" alt="ICP" class="beian-icon" />
+            <span class="nav-text" th:text="${filing.icpNumber}"></span>
           </a>
         </li>
         <li th:if="${not #strings.isEmpty(theme.config.footer.gongan_beian)}">

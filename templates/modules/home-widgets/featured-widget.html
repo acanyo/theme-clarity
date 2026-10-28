@@ -8,16 +8,19 @@
   ></div>
 
   <div class="z-slide-body">
-    <div class="slide-list" id="slide-scroll-container">
-      <th:block th:each="postName : ${theme.config.post.featured.posts}">
-        <th:block th:if="${!#strings.isEmpty(postName)}" th:with="post=${postFinder.getByName(postName)}">
-          <div th:if="${post != null}" th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post})}"></div>
+    <div class="slide-viewport" role="region" aria-roledescription="轮播" aria-label="精选文章" tabindex="0">
+      <div class="slide-list" id="slide-scroll-container">
+        <th:block th:each="postName : ${theme.config.post.featured.posts}">
+          <th:block th:if="${!#strings.isEmpty(postName)}" th:with="post=${postFinder.getByName(postName)}">
+            <div
+              th:if="${post != null}"
+              th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post}, false)}"
+            ></div>
+          </th:block>
         </th:block>
-      </th:block>
+      </div>
     </div>
 
     <div th:replace="~{modules/home-widgets/slide-widget-base::footer('slide-scroll-container')}"></div>
   </div>
-
-  <div th:replace="~{modules/home-widgets/slide-widget-base::script('slide-scroll-container')}"></div>
 </div>

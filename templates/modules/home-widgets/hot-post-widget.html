@@ -1,30 +1,29 @@
-<div
-  class="z-slide"
+<th:block
   th:fragment="hot-post"
   th:if="${theme.config.post.hot_post != null and T(java.lang.Integer).parseInt(theme.config.post.hot_post.post_number) > 0}"
 >
-  <div
-    th:replace="~{modules/home-widgets/slide-widget-base::header(${theme.config.post.hot_post.title ?: '热门文章'})}"
-  ></div>
+  <th:block
+    th:with="postNumber = ${T(java.lang.Integer).parseInt(theme.config.post.hot_post.post_number)},
+             posts = ${multiSitePostFinder != null
+               ? multiSitePostFinder.popular(postNumber)
+               : postFinder.list({page: 1, size: postNumber, sort: {'stats.visit,desc', 'metadata.creationTimestamp,asc'}})}"
+  >
+    <div class="z-slide" th:if="${not #lists.isEmpty(posts?.items)}">
+      <div
+        th:replace="~{modules/home-widgets/slide-widget-base::header(${theme.config.post.hot_post.title ?: '热门文章'})}"
+      ></div>
 
-  <div class="z-slide-body">
-    <div class="slide-list" id="hot-post-scroll-container">
-      <th:block
-        th:with="postNumber = ${T(java.lang.Integer).parseInt(theme.config.post.hot_post.post_number)},
-                 posts = ${postFinder.list({
-                   page: 1,
-                   size: postNumber,
-                   sort: {'stats.visit,desc', 'metadata.creationTimestamp,asc'}
-                 })}"
-      >
-        <th:block th:each="post : ${posts.items}">
-          <div th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post})}"></div>
-        </th:block>
-      </th:block>
+      <div class="z-slide-body">
+        <div class="slide-viewport" role="region" aria-roledescription="轮播" aria-label="热门文章" tabindex="0">
+          <div class="slide-list" id="hot-post-scroll-container">
+            <th:block th:each="post : ${posts.items}">
+              <div th:replace="~{modules/home-widgets/slide-widget-base::post-item(${post}, true)}"></div>
+            </th:block>
+          </div>
+        </div>
+
+        <div th:replace="~{modules/home-widgets/slide-widget-base::footer('hot-post-scroll-container')}"></div>
+      </div>
     </div>
-
-    <div th:replace="~{modules/home-widgets/slide-widget-base::footer('hot-post-scroll-container')}"></div>
-  </div>
-
-  <div th:replace="~{modules/home-widgets/slide-widget-base::script('hot-post-scroll-container')}"></div>
-</div>
+  </th:block>
+</th:block>

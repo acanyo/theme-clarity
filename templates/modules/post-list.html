@@ -1,9 +1,11 @@
 <div class="post-list" th:fragment="list(posts, caller)" th:with="fromCategory=${fromCategory ?: false}">
-  <th:block th:replace="~{modules/order-toggle :: toolbar}" />
-
   <menu class="posts-container proper-height">
     <th:block th:each="post,iterStat : ${posts.items}">
-      <article class="article-card card" th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'">
+      <article
+        class="article-card card"
+        th:data-article-key="${post.status.permalink}"
+        th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'"
+      >
         <a th:href="${post.status.permalink + (fromCategory ? '?from=category' : '')}">
           <img
             th:if="${not #strings.isEmpty(post.spec.cover)}"

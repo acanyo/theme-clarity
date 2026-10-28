@@ -1,0 +1,78 @@
+// Shared snapshots are separate from the existing whole-page/theme transitions.
+html[data-article-transition]:not([data-theme-transition]) {
+	scroll-behavior: auto;
+
+	[data-article-shared] { view-transition-name: article-hero; }
+	#main-content { view-transition-name: article-body; }
+	#z-sidebar { view-transition-name: article-sidebar; }
+	#z-aside:not([style*="display: none"]) { view-transition-name: article-aside; }
+	#z-panel { view-transition-name: article-panel; }
+	#z-footer { view-transition-name: article-footer; }
+
+	.swup-content, .article-card, .article-item, .post-header {
+		animation: none !important;
+	}
+
+	.swup-loading #main-content { opacity: 1; }
+	#z-panel, #main-content { transition: none; }
+
+	&::view-transition { pointer-events: none; }
+	&::view-transition-group(*) {
+		animation-duration: 0.3s;
+		animation-timing-function: ease-out;
+	}
+
+	&::view-transition-old(root), &::view-transition-new(root),
+	&::view-transition-old(article-sidebar), &::view-transition-new(article-sidebar),
+	&::view-transition-old(article-panel), &::view-transition-new(article-panel),
+	&::view-transition-old(article-footer), &::view-transition-new(article-footer) {
+		animation: none;
+		mix-blend-mode: normal;
+	}
+
+	&::view-transition-old(root), &::view-transition-old(article-sidebar),
+	&::view-transition-old(article-panel), &::view-transition-old(article-footer) { display: none; }
+
+	&::view-transition-old(article-body), &::view-transition-old(article-aside), &::view-transition-old(article-hero) {
+		animation: article-content-in 0.1s ease reverse both;
+	}
+	&::view-transition-new(article-body), &::view-transition-new(article-aside), &::view-transition-new(article-hero) {
+		animation: article-content-in 0.3s ease-out both;
+	}
+	&::view-transition-image-pair(article-hero) {
+		overflow: clip;
+		border-radius: var(--article-radius-to, 0);
+		animation: article-radius 0.3s ease-out both;
+	}
+}
+
+@keyframes article-content-in { from { opacity: 0; } }
+@keyframes article-radius {
+	from { border-radius: var(--article-radius-from, 0); }
+	to { border-radius: var(--article-radius-to, 0); }
+}
+
+// WebKit currently renders nested snapshots inconsistently; use the whole-page fallback.
+@supports (-webkit-nbsp-mode: space) {
+	html[data-article-transition] {
+		* { view-transition-name: none !important; }
+		&::view-transition-old(root) { display: block; animation: article-content-in 0.15s ease reverse both; }
+		&::view-transition-new(root) { animation: article-content-in 0.2s ease both; }
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	html {
+		scroll-behavior: auto !important;
+		@view-transition { navigation: none; }
+		*, *::before, *::after {
+			animation-duration: 0.01ms !important;
+			animation-iteration-count: 1 !important;
+			transition-duration: 0.01ms !important;
+			scroll-behavior: auto !important;
+		}
+		&::view-transition-group(*), &::view-transition-old(*), &::view-transition-new(*) {
+			animation: none !important;
+		}
+	}
+}
