@@ -1,4 +1,5 @@
 import type Alpine from "alpinejs";
+import type { MomentPosterData, MomentPosterResult } from "../utils/moment-poster";
 
 declare module "@alpinejs/collapse";
 
@@ -23,6 +24,7 @@ declare global {
     mountWeather: (container: HTMLElement, apiKey: string, iconBase: string) => void;
     generateQRCode: (container: HTMLElement, url: string) => Promise<void>;
     generatePoster: (element: HTMLElement, title: string, defaultCover?: string) => Promise<void>;
+    generateMomentPoster: (data: MomentPosterData) => Promise<MomentPosterResult>;
     openShuttle: (options: ShuttleOptions) => void;
     goToPageNumber: (button: HTMLElement) => void;
     MUSIC_CONFIG?: MusicConfig;

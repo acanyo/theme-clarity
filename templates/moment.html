@@ -56,6 +56,7 @@
               <span th:text="${moment.stats.approvedComment ?: 0}"></span>
             </a>
             <th:block th:replace="~{modules/moment/common :: share-button(url='')}"></th:block>
+            <th:block th:replace="~{modules/moment/common :: poster-button}"></th:block>
           </div>
         </footer>
       </article>
@@ -108,10 +109,15 @@
               <span th:text="${moment.stats.approvedComment ?: 0}"></span>
             </a>
             <th:block th:replace="~{modules/moment/common :: share-button(url='')}"></th:block>
+            <th:block th:replace="~{modules/moment/common :: poster-button}"></th:block>
           </div>
         </footer>
       </article>
     </th:block>
+
+    <!-- 瞬间海报弹窗 -->
+    <th:block th:replace="~{modules/moment/poster-modal :: poster-modal}" />
+    <th:block th:replace="~{modules/moment/poster-script :: poster-script}" />
 
     <!-- 评论区 -->
     <th:block
