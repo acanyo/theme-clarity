@@ -1,0 +1,202 @@
+.equipment-shelf {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 2rem 1.25rem;
+  margin: 2rem 0;
+  padding: 0;
+  list-style: none;
+}
+.equipment-card {
+  min-width: 0;
+}
+.equipment-open {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  text-align: start;
+  border-radius: 0.7rem;
+}
+.equipment-media {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  aspect-ratio: 5 / 4;
+  padding: 1.7rem;
+  overflow: hidden;
+  border-radius: 0.7rem 0.7rem 0.3rem 0.3rem;
+  background: var(--c-bg-1);
+  isolation: isolate;
+  // A shallow ledge gives objects a shared baseline without cropping them.
+  &::after {
+    position: absolute;
+    inset: auto 0 0;
+    height: 0.55rem;
+    border-top: 1px solid var(--c-border);
+    background: var(--c-bg-2);
+    box-shadow: 0 -8px 18px var(--ld-shadow);
+    content: "";
+    z-index: -1;
+  }
+  .equipment-page & > img {
+    position: absolute;
+    inset: 0;
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    padding: inherit;
+    object-fit: contain;
+    filter: drop-shadow(0 12px 8px var(--ld-shadow));
+    transition: transform 0.25s ease;
+  }
+  .equipment-placeholder {
+    display: none;
+  }
+  &.is-empty {
+    img {
+      display: none;
+    }
+    .equipment-placeholder {
+      display: block;
+    }
+  }
+}
+.equipment-placeholder {
+  color: var(--c-text-3);
+  font-size: 3.5rem;
+}
+.equipment-peek {
+  position: absolute;
+  top: 0.65rem;
+  right: 0.65rem;
+  display: grid;
+  place-items: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 50%;
+  background: var(--c-bg);
+  color: var(--c-text-2);
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.equipment-caption {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  width: 100%;
+  padding: 1rem 0.2rem 0.5rem;
+  min-width: 0;
+}
+.equipment-category {
+  margin-bottom: 0.45rem;
+  color: var(--c-text-2);
+  font-size: 0.7rem;
+}
+.equipment-name {
+  color: var(--c-text);
+  font-size: 1rem;
+  font-weight: 650;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.equipment-spec {
+  margin-top: 0.35rem;
+  color: var(--c-text-2);
+  font-family: var(--font-monospace);
+  font-size: 0.72rem;
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.equipment-description {
+  display: -webkit-box;
+  margin-top: 0.65rem;
+  overflow: hidden;
+  color: var(--c-text-2);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  white-space: pre-line;
+}
+.equipment-detail-hint {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  align-self: flex-start;
+  margin-top: auto;
+  padding-top: 0.8rem;
+  color: var(--c-primary);
+  font-size: 0.7rem;
+}
+.equipment-open:is(:hover, :focus-visible) {
+  .equipment-media img {
+    transform: translateY(-5px);
+  }
+  .equipment-peek {
+    opacity: 1;
+  }
+}
+[data-equipment-page][data-view="list"] {
+  .equipment-shelf {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+    margin-top: 0.5rem;
+  }
+  .equipment-card + .equipment-card {
+    border-top: 1px solid var(--c-border);
+  }
+  .equipment-open {
+    display: grid;
+    grid-template-columns: 9rem minmax(0, 1fr);
+    align-items: center;
+    gap: 1.5rem;
+    padding-block: 1.25rem;
+  }
+  .equipment-media {
+    aspect-ratio: 1;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  .equipment-media::after {
+    display: none;
+  }
+  .equipment-caption {
+    padding: 0;
+  }
+  .equipment-description {
+    -webkit-line-clamp: 2;
+  }
+}
+@media (max-width: 960px) {
+  .equipment-shelf {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 528px) {
+  .equipment-shelf {
+    gap: 1.5rem 0.85rem;
+    margin-top: 1.5rem;
+  }
+  .equipment-media {
+    padding: 0.85rem;
+    aspect-ratio: 1;
+  }
+  .equipment-name {
+    font-size: 0.9rem;
+  }
+  .equipment-caption {
+    padding-top: 0.8rem;
+  }
+  .equipment-spec {
+    font-size: 0.68rem;
+  }
+  .equipment-peek {
+    display: none;
+  }
+  [data-equipment-page][data-view="list"] .equipment-open {
+    grid-template-columns: 5.5rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+}

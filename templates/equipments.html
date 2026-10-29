@@ -3,214 +3,127 @@
   xmlns:th="https://www.thymeleaf.org"
   th:replace="~{modules/layout :: html(content = ~{::content}, showAside = false, pageTitle = (${theme.config.plugins?.equipments?.title} ?: '装备'), head = ~{::head})}"
 >
-  <th:block th:fragment="head">
-    <th:block th:replace="~{modules/head :: equipments-head}" />
-  </th:block>
+  <th:block th:fragment="head"><th:block th:replace="~{modules/head :: equipments-head}" /></th:block>
   <th:block th:fragment="content">
-    <div class="page-header equipment-page-header">
-      <h1 class="page-title text-creative">
-        <span class="icon-[ph--devices-bold]"></span>
-        <span th:text="${theme.config.plugins?.equipments?.title} ?: '装备'">装备</span>
-      </h1>
-      <p
-        class="page-desc"
-        th:text="${theme.config.plugins?.equipments?.description} ?: '记录正在使用和推荐的设备、软件与工具'"
-      >
-        记录正在使用和推荐的设备、软件与工具
-      </p>
-    </div>
-
-    <div class="photos-container equipments-container">
-      <th:block th:if="${groups != null and not #lists.isEmpty(groups)}">
-        <div class="photo-tabs">
-          <a
-            th:href="@{/equipments}"
-            th:class="${param.group == null or #lists.isEmpty(param.group) ? 'photo-tab active' : 'photo-tab'}"
-          >
-            <span class="icon-[ph--squares-four-bold]"></span>
-            <span>全部</span>
-            <span class="tab-count" th:text="${#lists.size(equipmentFinder.listAll())}">0</span>
+    <div
+      class="equipment-page"
+      data-equipment-page
+      data-view="shelf"
+      th:with="currentGroup=${param.group != null and not #lists.isEmpty(param.group) ? param.group[0] : ''}"
+    >
+      <header class="equipment-heading">
+        <div>
+          <h1 class="text-creative" th:text="${theme.config.plugins?.equipments?.title} ?: '装备'">装备</h1>
+          <p th:text="${theme.config.plugins?.equipments?.description} ?: '记录正在使用和推荐的设备、软件与工具'">
+            记录正在使用和推荐的设备、软件与工具
+          </p>
+        </div>
+        <span class="equipment-total" th:if="${equipments != null}"
+          ><strong th:text="${equipments.total}">0</strong><span>件装备</span></span
+        >
+      </header>
+      <div class="equipment-toolbar">
+        <nav class="equipment-groups" aria-label="装备分组" th:if="${groups != null and not #lists.isEmpty(groups)}">
+          <a th:href="@{/equipments}" th:attr="aria-current=${#strings.isEmpty(currentGroup) ? 'page' : null}">
+            全部<span th:text="${#lists.size(equipmentFinder.listAll())}">0</span>
           </a>
           <a
             th:each="group : ${groups}"
             th:href="@{/equipments(group=${group.metadata.name})}"
-            th:class="${param.group != null and not #lists.isEmpty(param.group) and param.group[0] == group.metadata.name ? 'photo-tab active' : 'photo-tab'}"
+            th:attr="aria-current=${currentGroup == group.metadata.name ? 'page' : null}"
           >
-            <span class="icon-[ph--images-bold]"></span>
-            <span th:text="${group.spec.displayName}">分组名称</span>
+            <th:block th:text="${group.spec.displayName}">分组名称</th:block>
             <span
-              class="tab-count"
               th:text="${group.status?.equipmentCount != null ? group.status.equipmentCount : (group.equipments != null ? #lists.size(group.equipments) : 0)}"
               >0</span
             >
           </a>
+        </nav>
+        <div class="equipment-view" role="group" aria-label="展示方式" data-equipment-views hidden>
+          <button type="button" data-equipment-view="shelf" aria-pressed="true" aria-label="展架视图" title="展架视图">
+            <span class="icon-[ph--squares-four-bold]" aria-hidden="true"></span><span>展架</span>
+          </button>
+          <button type="button" data-equipment-view="list" aria-pressed="false" aria-label="清单视图" title="清单视图">
+            <span class="icon-[ph--list-bullets-bold]" aria-hidden="true"></span><span>清单</span>
+          </button>
         </div>
-      </th:block>
-
-      <th:block th:if="${equipments != null and not #lists.isEmpty(equipments.items)}">
-        <div class="photo-masonry">
-          <figure
-            th:each="equipment, iterStat : ${equipments.items}"
-            class="photo-item equipment-item"
-            role="button"
-            tabindex="0"
-            th:style="'--delay: ' + (${iterStat.index} * 0.05) + 's'"
-            th:data-title="${equipment.spec.displayName}"
-            th:data-specification="${equipment.spec.specification}"
-            th:data-description="${equipment.spec.description}"
-            th:data-cover="${equipment.spec.cover}"
-            th:data-url="${equipment.spec.url}"
+      </div>
+      <p
+        class="equipment-group-note"
+        th:each="group : ${groups}"
+        th:if="${currentGroup == group.metadata.name and not #strings.isEmpty(group.spec.description)}"
+        th:text="${group.spec.description}"
+      ></p>
+      <ul
+        class="equipment-shelf"
+        th:if="${equipments != null and not #lists.isEmpty(equipments.items)}"
+        aria-label="装备列表"
+      >
+        <li
+          th:each="equipment : ${equipments.items}"
+          class="equipment-card"
+          data-equipment-item
+          th:data-equipment-id="${equipment.metadata.name}"
+          th:data-cover="${equipment.spec.cover}"
+          th:data-url="${equipment.spec.url}"
+        >
+          <button
+            type="button"
+            class="equipment-open"
+            data-equipment-open
+            aria-haspopup="dialog"
+            aria-controls="equipment-detail-dialog"
             th:aria-label="|查看 ${equipment.spec.displayName} 详情|"
-            onclick="openEquipmentDialog(this)"
-            onkeydown="if (event.key === 'Enter' || event.key === ' ') { event.preventDefault(); openEquipmentDialog(this); }"
           >
-            <img
-              th:if="${equipment.spec.cover != null and not #strings.isEmpty(equipment.spec.cover)}"
-              th:src="${equipment.spec.cover}"
-              th:alt="${equipment.spec.displayName}"
-              loading="lazy"
-              referrerpolicy="no-referrer"
-            />
-            <span
-              th:unless="${equipment.spec.cover != null and not #strings.isEmpty(equipment.spec.cover)}"
-              class="equipment-cover-placeholder icon-[ph--cube-bold]"
-              aria-hidden="true"
-            ></span>
-            <figcaption
-              th:if="${equipment.spec.displayName != null and not #strings.isEmpty(equipment.spec.displayName)}"
-            >
-              <span th:text="${equipment.spec.displayName}">装备名称</span>
-              <p
-                th:if="${equipment.spec.specification != null and not #strings.isEmpty(equipment.spec.specification)}"
+            <span class="equipment-media" th:classappend="${#strings.isEmpty(equipment.spec.cover) ? 'is-empty' : ''}">
+              <img
+                th:if="${not #strings.isEmpty(equipment.spec.cover)}"
+                th:src="${equipment.spec.cover}"
+                alt=""
+                loading="lazy"
+                decoding="async"
+                referrerpolicy="no-referrer"
+              />
+              <span class="equipment-placeholder icon-[ph--cube-light]" aria-hidden="true"></span>
+              <span class="equipment-peek" aria-hidden="true"
+                ><span class="icon-[ph--arrows-out-simple-bold]"></span
+              ></span>
+            </span>
+            <span class="equipment-caption">
+              <span
+                class="equipment-category"
+                th:each="group : ${groups}"
+                th:if="${group.metadata.name == equipment.spec.groupName}"
+                th:text="${group.spec.displayName}"
+              ></span>
+              <strong class="equipment-name" th:text="${equipment.spec.displayName}">装备名称</strong>
+              <span
+                class="equipment-spec"
+                th:if="${not #strings.isEmpty(equipment.spec.specification)}"
                 th:text="${equipment.spec.specification}"
-              >
-                装备规格
-              </p>
-              <p
-                th:if="${equipment.spec.description != null and not #strings.isEmpty(equipment.spec.description)}"
+              ></span>
+              <span
+                class="equipment-description"
+                th:if="${not #strings.isEmpty(equipment.spec.description)}"
                 th:text="${equipment.spec.description}"
-              >
-                装备描述
-              </p>
-            </figcaption>
-          </figure>
-        </div>
-
-        <th:block th:replace="~{modules/pagination :: pagination(data=${equipments})}"></th:block>
-      </th:block>
-
-      <div th:if="${equipments == null or #lists.isEmpty(equipments.items)}" class="empty-state">
-        <span class="icon-[ph--package-bold]"></span>
-        <p>暂无装备</p>
+              ></span>
+              <span class="equipment-detail-hint" aria-hidden="true"
+                >查看详情<span class="icon-[ph--arrow-up-right-bold]"></span
+              ></span>
+            </span>
+          </button>
+        </li>
+      </ul>
+      <div class="equipment-empty" th:if="${equipments == null or #lists.isEmpty(equipments.items)}">
+        <span class="icon-[ph--cube-light]" aria-hidden="true"></span>
+        <h2>这里还没有装备</h2>
+        <p>设备、软件和工具，慢慢收集在这里。</p>
+        <a th:if="${not #strings.isEmpty(currentGroup)}" th:href="@{/equipments}"
+          >查看全部装备<span class="icon-[ph--arrow-right-bold]"></span
+        ></a>
       </div>
+      <th:block th:if="${equipments != null}" th:replace="~{modules/pagination :: pagination(data=${equipments})}" />
+      <th:block th:replace="~{modules/equipments/detail :: detail}" />
     </div>
-
-    <dialog class="equipment-dialog" id="equipment-detail-dialog">
-      <div class="equipment-dialog-card">
-        <button class="equipment-dialog-close" type="button" aria-label="关闭详情" onclick="closeEquipmentDialog()">
-          <span class="icon-[ph--x-bold]"></span>
-        </button>
-
-        <div class="equipment-dialog-media">
-          <img data-equipment-dialog-cover alt="" referrerpolicy="no-referrer" />
-          <span class="equipment-dialog-placeholder icon-[ph--cube-bold]" data-equipment-dialog-placeholder></span>
-        </div>
-
-        <div class="equipment-dialog-content">
-          <span class="equipment-dialog-label">装备详情</span>
-          <h2 data-equipment-dialog-title>装备名称</h2>
-          <p class="equipment-dialog-spec" data-equipment-dialog-specification></p>
-          <p class="equipment-dialog-desc" data-equipment-dialog-description></p>
-          <a class="equipment-dialog-link" data-equipment-dialog-link target="_blank" rel="noopener noreferrer">
-            <span>访问链接</span>
-            <span class="icon-[ph--arrow-up-right-bold]"></span>
-          </a>
-        </div>
-      </div>
-    </dialog>
-
-    <script>
-      (() => {
-        if (window.__equipmentDialogReady) return;
-        window.__equipmentDialogReady = true;
-
-        const getDialog = () => document.getElementById("equipment-detail-dialog");
-
-        window.openEquipmentDialog = (trigger) => {
-          const dialog = getDialog();
-          if (!dialog || !trigger) return;
-
-          const title = trigger.dataset.title || "装备详情";
-          const specification = trigger.dataset.specification || "";
-          const description = trigger.dataset.description || "";
-          const coverUrl = trigger.dataset.cover || "";
-          const url = trigger.dataset.url || "";
-
-          const cover = dialog.querySelector("[data-equipment-dialog-cover]");
-          const placeholder = dialog.querySelector("[data-equipment-dialog-placeholder]");
-          const titleNode = dialog.querySelector("[data-equipment-dialog-title]");
-          const specificationNode = dialog.querySelector("[data-equipment-dialog-specification]");
-          const descriptionNode = dialog.querySelector("[data-equipment-dialog-description]");
-          const link = dialog.querySelector("[data-equipment-dialog-link]");
-
-          titleNode.textContent = title;
-          specificationNode.textContent = specification;
-          specificationNode.hidden = !specification;
-          descriptionNode.textContent = description || "这个装备还没有补充描述。";
-
-          if (coverUrl) {
-            cover.src = coverUrl;
-            cover.alt = title;
-            cover.hidden = false;
-            placeholder.hidden = true;
-          } else {
-            cover.removeAttribute("src");
-            cover.alt = "";
-            cover.hidden = true;
-            placeholder.hidden = false;
-          }
-
-          if (url) {
-            link.href = url;
-            link.hidden = false;
-          } else {
-            link.removeAttribute("href");
-            link.hidden = true;
-          }
-
-          if (dialog.open) return;
-
-          if (typeof dialog.showModal === "function") {
-            dialog.showModal();
-          } else {
-            dialog.setAttribute("open", "");
-          }
-        };
-
-        window.closeEquipmentDialog = () => {
-          const dialog = getDialog();
-          if (!dialog) return;
-
-          if (typeof dialog.close === "function") {
-            dialog.close();
-          } else {
-            dialog.removeAttribute("open");
-          }
-        };
-
-        document.addEventListener("keydown", (event) => {
-          if (event.key === "Escape") {
-            window.closeEquipmentDialog();
-          }
-        });
-
-        document.addEventListener("click", (event) => {
-          const dialog = getDialog();
-          if (dialog && event.target === dialog) {
-            window.closeEquipmentDialog();
-          }
-        });
-      })();
-    </script>
   </th:block>
 </html>

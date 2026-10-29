@@ -1,0 +1,196 @@
+.equipment-dialog {
+  position: fixed;
+  width: min(900px, calc(100% - 2rem));
+  max-width: none;
+  max-height: calc(100dvh - 3rem);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 1px solid var(--c-border);
+  border-radius: 1rem;
+  background: var(--c-bg);
+  color: var(--c-text-1);
+  box-shadow: 0 24px 80px #0003;
+  &::backdrop {
+    background: #10141c70;
+    backdrop-filter: blur(8px);
+  }
+  &[open] {
+    animation: equipment-reveal 0.2s ease-out;
+  }
+}
+.equipment-dialog-top {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--c-bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.75rem 1rem 0.75rem 1.5rem;
+  font-size: 0.8rem;
+  color: var(--c-text-2);
+  border-bottom: 1px solid var(--c-border);
+}
+.equipment-icon-button {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 2.5rem;
+  min-height: 2.5rem;
+  border-radius: 0.5rem;
+  color: var(--c-text-1);
+  font-size: 1.1rem;
+}
+.equipment-icon-button:hover:enabled {
+  color: var(--c-primary);
+  background: var(--c-primary-soft);
+}
+.equipment-icon-button:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+.equipment-dialog-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+}
+.equipment-dialog-media {
+  display: grid;
+  place-items: center;
+  min-height: 22rem;
+  padding: clamp(1.5rem, 5vw, 3.5rem);
+  background: var(--c-bg-1);
+  .equipment-page & > img {
+    display: block;
+    width: 100%;
+    height: 20rem;
+    object-fit: contain;
+    filter: drop-shadow(0 14px 12px var(--ld-shadow));
+  }
+  .equipment-placeholder {
+    display: none;
+  }
+  &.is-empty {
+    img {
+      display: none;
+    }
+    .equipment-placeholder {
+      display: block;
+    }
+  }
+}
+.equipment-dialog-notes {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 0;
+  padding: 2rem;
+}
+.equipment-dialog-notes h2 {
+  margin: 0;
+  color: var(--c-text);
+  font-size: 1.8rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.equipment-dialog-spec {
+  margin-top: 0.8rem;
+  font-family: var(--font-monospace);
+  font-size: 0.8rem;
+  line-height: 1.8;
+  color: var(--c-text-2);
+  overflow-wrap: anywhere;
+}
+.equipment-dialog-description {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--c-border);
+  color: var(--c-text-1);
+  font-size: 0.9rem;
+  line-height: 1.9;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.equipment-source {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 1.5rem;
+  color: var(--c-primary);
+  font-size: 0.8rem;
+  padding-block: 0.5rem;
+}
+.equipment-dialog-bottom {
+  position: sticky;
+  bottom: 0;
+  background: var(--c-bg);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  border-top: 1px solid var(--c-border);
+}
+.equipment-dialog-paging {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.equipment-dialog-paging > span {
+  min-width: 3rem;
+  text-align: center;
+  font-family: var(--font-monospace);
+  color: var(--c-text-2);
+  font-size: 0.75rem;
+}
+.equipment-share {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.5rem;
+  color: var(--c-text-2);
+  font-size: 0.75rem;
+}
+.equipment-share:hover {
+  color: var(--c-primary);
+}
+@media (max-width: 640px) {
+  .equipment-dialog {
+    width: calc(100% - 1rem);
+    max-height: calc(100dvh - 1rem);
+  }
+  .equipment-dialog-body {
+    grid-template-columns: 1fr;
+  }
+  .equipment-dialog-media {
+    min-height: 0;
+    padding: 1.5rem;
+  }
+  .equipment-page .equipment-dialog-media > img {
+    height: min(14rem, 32dvh);
+  }
+  .equipment-dialog-notes {
+    padding: 1.5rem;
+  }
+  .equipment-dialog-notes h2 {
+    font-size: 1.5rem;
+  }
+  .equipment-dialog-top {
+    padding-left: 1.25rem;
+  }
+  .equipment-dialog-bottom {
+    gap: 0.25rem;
+  }
+}
+@keyframes equipment-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

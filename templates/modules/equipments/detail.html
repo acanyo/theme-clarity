@@ -1,0 +1,47 @@
+<dialog
+  th:fragment="detail"
+  class="equipment-dialog"
+  id="equipment-detail-dialog"
+  aria-labelledby="equipment-detail-title"
+>
+  <div class="equipment-dialog-sheet">
+    <header class="equipment-dialog-top">
+      <span data-equipment-dialog-group>装备详情</span>
+      <button type="button" class="equipment-icon-button" data-equipment-close aria-label="关闭装备详情">
+        <span class="icon-[ph--x-bold]" aria-hidden="true"></span>
+      </button>
+    </header>
+    <div class="equipment-dialog-body">
+      <div class="equipment-dialog-media is-empty" data-equipment-dialog-media>
+        <img data-equipment-dialog-cover alt="" referrerpolicy="no-referrer" hidden /><span
+          class="equipment-placeholder icon-[ph--cube-light]"
+          aria-hidden="true"
+        ></span>
+      </div>
+      <div class="equipment-dialog-notes">
+        <h2 class="text-creative" id="equipment-detail-title" data-equipment-dialog-title></h2>
+        <p class="equipment-dialog-spec" data-equipment-dialog-spec hidden></p>
+        <div class="equipment-dialog-description" data-equipment-dialog-description hidden></div>
+        <a class="equipment-source" data-equipment-dialog-link target="_blank" rel="noopener noreferrer" hidden
+          >访问相关链接<span class="icon-[ph--arrow-up-right-bold]" aria-hidden="true"></span
+        ></a>
+      </div>
+    </div>
+    <footer class="equipment-dialog-bottom">
+      <div class="equipment-dialog-paging" aria-label="浏览本页装备">
+        <button type="button" class="equipment-icon-button" data-equipment-prev aria-label="上一件装备">
+          <span class="icon-[ph--arrow-left-bold]" aria-hidden="true"></span>
+        </button>
+        <span data-equipment-position aria-live="polite"></span>
+        <button type="button" class="equipment-icon-button" data-equipment-next aria-label="下一件装备">
+          <span class="icon-[ph--arrow-right-bold]" aria-hidden="true"></span>
+        </button>
+      </div>
+      <button type="button" class="equipment-share" data-equipment-share>
+        <span class="icon-[ph--link-bold]" aria-hidden="true"></span
+        ><span data-equipment-share-label>复制装备链接</span>
+      </button>
+      <span class="sr-only" role="status" data-equipment-status></span>
+    </footer>
+  </div>
+</dialog>

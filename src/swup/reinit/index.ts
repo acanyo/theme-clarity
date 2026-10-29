@@ -14,6 +14,7 @@ import { initAsideScrollSync } from "../../modules/aside-scroll-sync";
 import { initContentWidgets } from "./content-widgets";
 import { initSlides } from "../../modules/slide-loader";
 import { initDrawers } from "../../modules/drawers";
+import { initEquipments } from "../../modules/equipments";
 
 export { syncThemeConfig } from "./theme-config";
 export { reinitializeAlpineComponents } from "./alpine";
@@ -49,5 +50,6 @@ export const reinitializeComponents = () => {
   initAsideScrollSync();
   initContentWidgets();
   initDrawers();
+  initEquipments();
   void initSlides();
 };

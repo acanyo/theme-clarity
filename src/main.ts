@@ -18,6 +18,7 @@ import { initImageLoaded, initImageCaption } from "./utils/image";
 import { initSlides } from "./modules/slide-loader";
 import { initDrawers } from "./modules/drawers";
 import { initReading } from "./modules/reading";
+import { initEquipments } from "./modules/equipments";
 import {
   initDropdownMenus,
   initBackToTop,
@@ -69,6 +70,7 @@ const initPage = () => {
   initFloatingPagination();
   initDrawers();
   initReading();
+  initEquipments();
   void initSlides();
   initAsideScrollSync();
   initPluginHints();
