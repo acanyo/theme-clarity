@@ -59,8 +59,11 @@ interface MusicPlayerState {
   customParams?: string;
   dragState: DragState;
   playerPosition: { left: number | null; top: number | null };
+  preExpandPosition: { left: number; top: number } | null;
   isReady: boolean;
   enabledDrag?: boolean;
+  viewportClampTimer: number | null;
+  onViewportResize: (() => void) | null;
   readonly currentSong: Song | null;
   readonly progress: number;
 
@@ -98,6 +101,17 @@ interface MusicPlayerState {
   savePlayerPosition(this: MusicPlayerState): void;
   restorePlayerPosition(this: MusicPlayerState): void;
   resetPlayerPosition(this: MusicPlayerState): void;
+  clampPositionToViewport(
+    this: MusicPlayerState,
+    left: number,
+    top: number,
+    width?: number,
+    height?: number,
+  ): { left: number; top: number };
+  ensurePlayerInViewport(this: MusicPlayerState, persist?: boolean): void;
+  clampExpandedPosition(this: MusicPlayerState): void;
+  togglePlaylist(this: MusicPlayerState): void;
+  destroy(this: MusicPlayerState): void;
   $refs?: { audio?: HTMLAudioElement; player?: HTMLElement };
   $nextTick?: (callback: () => void) => void;
 }
@@ -108,6 +122,17 @@ const MAX_RESOLVE_ATTEMPTS = 2;
 const STATE_SAVE_INTERVAL_MS = 1000;
 const PLAYER_STATE_KEY = "clarity:music-player:state:v1";
 const PLAYER_POSITION_KEY = "clarity:music-player:position:v1";
+
+// 以下尺寸约束与 _music-player.scss 中 .music-capsule 的样式保持一致
+const PLAYER_COLLAPSED_HEIGHT = 48;
+const PLAYER_EXPANDED_WIDTH = 336;
+const PLAYER_EXPANDED_WIDTH_MOBILE = 320;
+const PLAYER_EXPANDED_WIDTH_RATIO = 0.92;
+const PLAYER_EXPANDED_MAX_HEIGHT_RATIO = 0.78;
+const PLAYER_MOBILE_BREAKPOINT = 768;
+const PLAYLIST_MAX_HEIGHT = 200;
+const PLAYLIST_ITEM_HEIGHT = 37;
+const EXPAND_TRANSITION_MS = 320;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null;
@@ -256,7 +281,10 @@ export function musicPlayer(): MusicPlayerState {
       initialTop: 0,
     },
     playerPosition: { left: null, top: null },
+    preExpandPosition: null,
     isReady: false,
+    viewportClampTimer: null,
+    onViewportResize: null,
 
     get currentSong(): Song | null {
       return this.playlist[this.currentIndex] ?? null;
@@ -282,6 +310,10 @@ export function musicPlayer(): MusicPlayerState {
         this.restorePlayerPosition();
       }
 
+      // 窗口可视区域变化（调整窗口大小、跨显示器移动、分辨率/DPI 变化）后重新校验位置
+      this.onViewportResize = () => this.ensurePlayerInViewport(false);
+      window.addEventListener("resize", this.onViewportResize);
+
       await this.loadPlaylist(config.server, config.type, config.id, this.apiUrl);
 
       const audio = this.$refs?.audio;
@@ -294,6 +326,8 @@ export function musicPlayer(): MusicPlayerState {
 
       // 延迟显示播放器，避免从默认位置瞬移的视觉效果
       this.$nextTick?.(() => {
+        // 显示前最后校验一次，确保播放器完整处于可视区域内
+        this.ensurePlayerInViewport(true);
         requestAnimationFrame(() => {
           this.isReady = true;
         });
@@ -552,6 +586,28 @@ export function musicPlayer(): MusicPlayerState {
 
     toggleExpand(this: MusicPlayerState) {
       this.expanded = !this.expanded;
+
+      const { left, top } = this.playerPosition;
+      if (this.expanded) {
+        // 展开前记录当前位置，收起时恢复，避免被边缘钳制"顶高"后回不去
+        this.preExpandPosition = left !== null && top !== null ? { left, top } : null;
+
+        // 靠近屏幕边缘展开时，面板增大后会溢出可视区域，需要按展开后的尺寸校验位置
+        this.clampExpandedPosition();
+      } else if (this.preExpandPosition) {
+        // 收起后回到展开前的位置
+        this.playerPosition = { ...this.preExpandPosition };
+        this.preExpandPosition = null;
+      }
+    },
+
+    togglePlaylist(this: MusicPlayerState) {
+      this.showPlaylist = !this.showPlaylist;
+
+      // 展开播放列表会进一步增高面板，需要重新校验下边界
+      if (this.showPlaylist && this.expanded) {
+        this.clampExpandedPosition();
+      }
     },
 
     formatTime(this: MusicPlayerState, seconds: number): string {
@@ -771,17 +827,15 @@ export function musicPlayer(): MusicPlayerState {
       const deltaX = pos.clientX - this.dragState.startX;
       const deltaY = pos.clientY - this.dragState.startY;
 
-      let newLeft = this.dragState.initialLeft + deltaX;
-      let newTop = this.dragState.initialTop + deltaY;
+      const newLeft = this.dragState.initialLeft + deltaX;
+      const newTop = this.dragState.initialTop + deltaY;
 
-      const maxLeft = window.innerWidth - player.offsetWidth;
-      const maxTop = window.innerHeight - player.offsetHeight;
+      const clamped = this.clampPositionToViewport(newLeft, newTop);
+      this.playerPosition.left = clamped.left;
+      this.playerPosition.top = clamped.top;
 
-      newLeft = Math.max(0, Math.min(newLeft, maxLeft));
-      newTop = Math.max(0, Math.min(newTop, maxTop));
-
-      this.playerPosition.left = newLeft;
-      this.playerPosition.top = newTop;
+      // 用户手动拖拽后位置以新位置为准，展开前的位置不再恢复
+      this.preExpandPosition = null;
     },
 
     onDragEnd(this: MusicPlayerState) {
@@ -808,14 +862,24 @@ export function musicPlayer(): MusicPlayerState {
     restorePlayerPosition(this: MusicPlayerState) {
       try {
         const saved = localStorage.getItem(PLAYER_POSITION_KEY);
-        if (saved) {
-          const position = JSON.parse(saved);
-          if (typeof position.left === "number" && typeof position.top === "number") {
-            this.playerPosition = {
-              left: Math.max(0, position.left),
-              top: Math.max(0, position.top),
-            };
-          }
+        if (!saved) return;
+
+        const position: unknown = JSON.parse(saved);
+        if (!isRecord(position)) return;
+
+        const { left, top } = position;
+        if (typeof left !== "number" || typeof top !== "number" || !Number.isFinite(left) || !Number.isFinite(top)) {
+          return;
+        }
+
+        // 打开前校验可视区域边界：恢复的位置若超出当前窗口（所在显示器的可视区域）
+        // 的任意边界，则修正坐标，确保播放器完整显示在可视区域内
+        const clamped = this.clampPositionToViewport(left, top);
+        this.playerPosition = clamped;
+
+        // 位置被边界修正过时，同步修正持久化的值，避免每次打开都越界
+        if (clamped.left !== left || clamped.top !== top) {
+          this.savePlayerPosition();
         }
       } catch {
         console.error("Failed to restore player position");
@@ -824,10 +888,104 @@ export function musicPlayer(): MusicPlayerState {
 
     resetPlayerPosition(this: MusicPlayerState) {
       this.playerPosition = { left: null, top: null };
+      this.preExpandPosition = null;
       try {
         localStorage.removeItem(PLAYER_POSITION_KEY);
       } catch {
         console.error("Failed to reset player position");
+      }
+    },
+
+    clampPositionToViewport(
+      this: MusicPlayerState,
+      left: number,
+      top: number,
+      width?: number,
+      height?: number,
+    ): { left: number; top: number } {
+      // window.innerWidth/innerHeight 是当前浏览器窗口在其所在显示器上的可视区域，
+      // 且使用 CSS 像素，天然兼容不同分辨率与 DPI 缩放比例
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+
+      const player = this.$refs?.player ?? document.getElementById("music-player");
+      const playerWidth = width ?? player?.offsetWidth ?? 0;
+      const playerHeight = height ?? player?.offsetHeight ?? 0;
+
+      // 播放器比可视区域还大时退化为左上对齐，保证左上角可见
+      const maxLeft = Math.max(0, viewportWidth - playerWidth);
+      const maxTop = Math.max(0, viewportHeight - playerHeight);
+
+      return {
+        left: Math.min(Math.max(left, 0), maxLeft),
+        top: Math.min(Math.max(top, 0), maxTop),
+      };
+    },
+
+    ensurePlayerInViewport(this: MusicPlayerState, persist = false) {
+      const { left, top } = this.playerPosition;
+      if (left === null || top === null) return;
+
+      const clamped = this.clampPositionToViewport(left, top);
+      if (clamped.left !== left || clamped.top !== top) {
+        this.playerPosition = clamped;
+        if (persist) {
+          this.savePlayerPosition();
+        }
+      }
+    },
+
+    clampExpandedPosition(this: MusicPlayerState) {
+      const { left, top } = this.playerPosition;
+      if (left === null || top === null) return;
+
+      // 先按展开后的预估尺寸修正，避免展开动画期间溢出可视区域
+      this.$nextTick?.(() => {
+        const player = this.$refs?.player ?? document.getElementById("music-player");
+        const panel = player?.querySelector(".expand-panel");
+
+        const viewportWidth = window.innerWidth;
+        const viewportHeight = window.innerHeight;
+
+        const expandedWidth =
+          viewportWidth <= PLAYER_MOBILE_BREAKPOINT
+            ? Math.min(viewportWidth, PLAYER_EXPANDED_WIDTH_MOBILE)
+            : Math.min(viewportWidth * PLAYER_EXPANDED_WIDTH_RATIO, PLAYER_EXPANDED_WIDTH);
+
+        // x-collapse 动画期间面板自身高度在变化，但其 scrollHeight 始终是完整内容高度
+        const panelHeight = panel?.scrollHeight ?? 0;
+        const playlistHeight = this.showPlaylist
+          ? Math.min(PLAYLIST_MAX_HEIGHT, this.playlist.length * PLAYLIST_ITEM_HEIGHT)
+          : 0;
+        const expandedHeight = Math.min(
+          PLAYER_COLLAPSED_HEIGHT + panelHeight + playlistHeight,
+          viewportHeight * PLAYER_EXPANDED_MAX_HEIGHT_RATIO,
+        );
+
+        const clamped = this.clampPositionToViewport(left, top, expandedWidth, expandedHeight);
+        if (clamped.left !== this.playerPosition.left || clamped.top !== this.playerPosition.top) {
+          this.playerPosition = clamped;
+        }
+      });
+
+      // 展开动画结束后再按实际渲染尺寸校验一次，作为兜底
+      if (this.viewportClampTimer !== null) {
+        window.clearTimeout(this.viewportClampTimer);
+      }
+      this.viewportClampTimer = window.setTimeout(() => {
+        this.viewportClampTimer = null;
+        this.ensurePlayerInViewport(false);
+      }, EXPAND_TRANSITION_MS);
+    },
+
+    destroy(this: MusicPlayerState) {
+      if (this.onViewportResize) {
+        window.removeEventListener("resize", this.onViewportResize);
+        this.onViewportResize = null;
+      }
+      if (this.viewportClampTimer !== null) {
+        window.clearTimeout(this.viewportClampTimer);
+        this.viewportClampTimer = null;
       }
     },
   };
