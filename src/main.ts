@@ -25,6 +25,7 @@ import {
   initFloatingPagination,
   initActiveNavItem,
   initSearchShortcut,
+  openSearchWidget,
   initAsideScrollSync,
   initPluginHints,
 } from "./modules";
@@ -35,6 +36,7 @@ window.mountWeather = mountWeather;
 window.generateQRCode = generateQRCode;
 window.generatePoster = generatePoster;
 window.generateMomentPoster = generateMomentPoster;
+window.openSearchWidget = openSearchWidget;
 window.reinitializeComponents = reinitializeComponents;
 
 // 注册 Alpine.js 组件和插件

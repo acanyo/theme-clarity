@@ -1,6 +1,12 @@
 import { mountPanelAvoidance } from "./panel-avoidance";
 
 let cleanup: (() => void) | undefined;
+let closeActive: (focus?: boolean) => void = () => {};
+
+/** Close the currently open drawer, if any. */
+export function closeDrawers(focus = true) {
+  closeActive(focus);
+}
 
 /** Menu and aside share one state so their masks and focus never compete. */
 export function initDrawers() {
@@ -48,6 +54,7 @@ export function initDrawers() {
     }
     sync();
   };
+  closeActive = close;
 
   drawers.forEach((drawer) => {
     drawer.button?.addEventListener(
