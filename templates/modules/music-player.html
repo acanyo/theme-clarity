@@ -54,8 +54,13 @@
         <span class="time-duration" x-text="formatTime(duration)"></span>
       </div>
 
-      <div th:if="${theme.config.music.show_lrc != false}" class="lyrics-wrapper" x-show="lyrics.length > 0">
-        <div class="lyrics-scroll" :style="{ transform: `translateY(${lyricsOffset}px)` }">
+      <div
+        th:if="${theme.config.music.show_lrc != false}"
+        class="lyrics-wrapper"
+        x-show="lyrics.length > 0"
+        x-ref="lyricsWrapper"
+      >
+        <div class="lyrics-scroll" x-ref="lyricsScroll" :style="{ transform: `translateY(${lyricsOffset}px)` }">
           <template x-for="(line, index) in lyrics" :key="index">
             <p class="lyric-line" :class="{ 'active': index === currentLyricIndex }" x-text="line.text"></p>
           </template>

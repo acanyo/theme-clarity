@@ -87,6 +87,7 @@ interface MusicPlayerState {
   onEnded(this: MusicPlayerState): void;
   onError(this: MusicPlayerState): Promise<void>;
   updateLyrics(this: MusicPlayerState): void;
+  centerLyrics(this: MusicPlayerState): void;
   setupMediaSession(this: MusicPlayerState): void;
   updateMediaSession(this: MusicPlayerState): void;
   restoreState(this: MusicPlayerState): Promise<boolean>;
@@ -98,7 +99,12 @@ interface MusicPlayerState {
   savePlayerPosition(this: MusicPlayerState): void;
   restorePlayerPosition(this: MusicPlayerState): void;
   resetPlayerPosition(this: MusicPlayerState): void;
-  $refs?: { audio?: HTMLAudioElement; player?: HTMLElement };
+  $refs?: {
+    audio?: HTMLAudioElement;
+    player?: HTMLElement;
+    lyricsWrapper?: HTMLElement;
+    lyricsScroll?: HTMLElement;
+  };
   $nextTick?: (callback: () => void) => void;
 }
 
@@ -397,6 +403,7 @@ export function musicPlayer(): MusicPlayerState {
         const response = await fetch(fetchUrl);
         const lrcText = await response.text();
         this.lyrics = this.parseLrc(lrcText);
+        this.centerLyrics();
       } catch {
         this.lyrics = [];
       }
@@ -634,8 +641,28 @@ export function musicPlayer(): MusicPlayerState {
 
       if (nextIndex !== this.currentLyricIndex) {
         this.currentLyricIndex = nextIndex;
-        this.lyricsOffset = 30 - nextIndex * 24;
+        this.centerLyrics();
       }
+    },
+
+    centerLyrics(this: MusicPlayerState) {
+      this.$nextTick?.(() => {
+        const wrapper = this.$refs?.lyricsWrapper;
+        const scroll = this.$refs?.lyricsScroll;
+        if (!wrapper || !scroll) return;
+
+        const lines = Array.from(scroll.querySelectorAll<HTMLElement>(".lyric-line"));
+        if (lines.length === 0) return;
+
+        const index = Math.min(Math.max(this.currentLyricIndex, 0), lines.length - 1);
+        let offsetTop = 0;
+        for (let i = 0; i < index; i += 1) {
+          offsetTop += lines[i].offsetHeight;
+        }
+
+        // 以高亮行的实际高度与位置居中，避免固定行高在换行/字号变化时产生偏移
+        this.lyricsOffset = wrapper.clientHeight / 2 - offsetTop - lines[index].offsetHeight / 2;
+      });
     },
 
     setupMediaSession(this: MusicPlayerState) {
