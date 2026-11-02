@@ -108,7 +108,7 @@
       </div>
 
       <div class="playlist-toggle">
-        <button @click="showPlaylist = !showPlaylist" class="playlist-btn">
+        <button @click="togglePlaylist()" class="playlist-btn">
           <span class="icon-[ph--playlist-bold]"></span>
           <span x-text="'播放列表 (' + playlist.length + ')'"></span>
           <span class="icon-[ph--caret-down-bold]" :class="{ 'rotate': showPlaylist }"></span>
