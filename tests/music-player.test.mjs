@@ -14,6 +14,7 @@ function createHarness({
   viewportHeight = 720,
   playerWidth = 336,
   playerHeight = 48,
+  playerBorderHeight = 0,
   panelScrollHeight = 0,
   savedPosition = null,
 } = {}) {
@@ -29,6 +30,9 @@ function createHarness({
   const playerEl = {
     offsetWidth: playerWidth,
     offsetHeight: playerHeight,
+    get clientHeight() {
+      return this.offsetHeight - playerBorderHeight;
+    },
     querySelector: (selector) => (selector === ".expand-panel" ? panelEl : null),
     getBoundingClientRect: () => ({ left: 0, top: 0, width: playerWidth, height: playerHeight }),
   };
@@ -215,6 +219,39 @@ test("dragging while expanded discards the pre-expand position", () => {
   // 收起后保持拖拽后的位置，不回跳
   player.toggleExpand();
   assert.deepEqual(pos(player), { left: 510, top: 410 });
+});
+
+test("collapse keeps the restored position visible after the viewport shrinks", () => {
+  const { player, playerEl, windowMock, runTimers } = createHarness({
+    viewportWidth: 1280,
+    viewportHeight: 800,
+    panelScrollHeight: 380,
+    savedPosition: { left: 900, top: 700 },
+  });
+
+  player.restorePlayerPosition();
+  player.toggleExpand();
+  playerEl.offsetHeight = 428;
+  runTimers();
+
+  windowMock.innerWidth = 800;
+  windowMock.innerHeight = 600;
+  player.ensurePlayerInViewport(false);
+  player.toggleExpand();
+
+  assert.equal(player.expanded, false);
+  assert.deepEqual(pos(player), { left: 464, top: 552 });
+});
+
+test("collapse includes the player border when restoring a near-bottom position", () => {
+  const { player, playerEl } = createHarness({ playerBorderHeight: 2 });
+  player.expanded = true;
+  player.preExpandPosition = { left: 100, top: 700 };
+  playerEl.offsetHeight = 430;
+
+  player.toggleExpand();
+
+  assert.deepEqual(pos(player), { left: 100, top: 670 });
 });
 
 test("toggleExpand uses the mobile expanded width on narrow viewports", () => {

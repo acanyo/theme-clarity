@@ -595,8 +595,16 @@ export function musicPlayer(): MusicPlayerState {
         // 靠近屏幕边缘展开时，面板增大后会溢出可视区域，需要按展开后的尺寸校验位置
         this.clampExpandedPosition();
       } else if (this.preExpandPosition) {
-        // 收起后回到展开前的位置
-        this.playerPosition = { ...this.preExpandPosition };
+        // 窗口可能在展开期间缩小，恢复旧坐标时仍需按收起后的高度校验边界。
+        const player = this.$refs?.player ?? document.getElementById("music-player");
+        const bodyHeight = player?.querySelector<HTMLElement>(".capsule-body")?.offsetHeight ?? PLAYER_COLLAPSED_HEIGHT;
+        const borderHeight = player ? player.offsetHeight - player.clientHeight : 0;
+        this.playerPosition = this.clampPositionToViewport(
+          this.preExpandPosition.left,
+          this.preExpandPosition.top,
+          player?.offsetWidth,
+          bodyHeight + borderHeight,
+        );
         this.preExpandPosition = null;
       }
     },
