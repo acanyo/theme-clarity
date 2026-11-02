@@ -317,7 +317,10 @@ export function musicPlayer(): MusicPlayerState {
       }
 
       // 窗口可视区域变化（调整窗口大小、跨显示器移动、分辨率/DPI 变化）后重新校验位置
-      this.onViewportResize = () => this.ensurePlayerInViewport(false);
+      this.onViewportResize = () => {
+        this.ensurePlayerInViewport(false);
+        if (this.expanded) this.centerLyrics();
+      };
       window.addEventListener("resize", this.onViewportResize);
 
       await this.loadPlaylist(config.server, config.type, config.id, this.apiUrl);
@@ -601,6 +604,7 @@ export function musicPlayer(): MusicPlayerState {
 
         // 靠近屏幕边缘展开时，面板增大后会溢出可视区域，需要按展开后的尺寸校验位置
         this.clampExpandedPosition();
+        this.centerLyrics();
       } else if (this.preExpandPosition) {
         // 窗口可能在展开期间缩小，恢复旧坐标时仍需按收起后的高度校验边界。
         const player = this.$refs?.player ?? document.getElementById("music-player");
@@ -713,19 +717,17 @@ export function musicPlayer(): MusicPlayerState {
       this.$nextTick?.(() => {
         const wrapper = this.$refs?.lyricsWrapper;
         const scroll = this.$refs?.lyricsScroll;
-        if (!wrapper || !scroll) return;
+        if (!wrapper || !scroll || wrapper.clientHeight === 0) return;
 
         const lines = Array.from(scroll.querySelectorAll<HTMLElement>(".lyric-line"));
         if (lines.length === 0) return;
 
         const index = Math.min(Math.max(this.currentLyricIndex, 0), lines.length - 1);
-        let offsetTop = 0;
-        for (let i = 0; i < index; i += 1) {
-          offsetTop += lines[i].offsetHeight;
-        }
+        const line = lines[index].getBoundingClientRect();
+        const offsetTop = line.top - scroll.getBoundingClientRect().top;
 
-        // 以高亮行的实际高度与位置居中，避免固定行高在换行/字号变化时产生偏移
-        this.lyricsOffset = wrapper.clientHeight / 2 - offsetTop - lines[index].offsetHeight / 2;
+        // 两个矩形共享滚动变换，差值保留小数像素，避免逐行取整导致长歌词漂移。
+        this.lyricsOffset = wrapper.clientHeight / 2 - offsetTop - line.height / 2;
       });
     },
 
