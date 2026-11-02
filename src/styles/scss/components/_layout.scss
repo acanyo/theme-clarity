@@ -24,8 +24,9 @@ $breakpoint-widescreen: 1080px !default;
 
 #content {
 	display: grid;
-	grid-template-columns: minmax(0, 1fr) 280px;
-	column-gap: 1rem;
+	// The aside track contributes its own width and spacing; a hidden track takes neither.
+	grid-template-columns: minmax(0, 1fr) auto;
+	column-gap: 0;
 	align-items: start;
 	flex: 1;
 	max-width: $breakpoint-widescreen;
@@ -34,10 +35,6 @@ $breakpoint-widescreen: 1080px !default;
 	> main {
 		grid-area: 1 / 1;
 		min-width: 0;
-	}
-
-	&:not(:has(> #z-aside-track.has-aside)) {
-		grid-template-columns: minmax(0, 1fr);
 	}
 
 	@media (max-width: $breakpoint-widescreen) {
@@ -54,6 +51,7 @@ $breakpoint-widescreen: 1080px !default;
 	grid-area: 1 / 2;
 	align-self: stretch;
 	min-width: 0;
+	margin-inline-start: 1rem;
 	&:not(.has-aside) { display: none; }
 
 	@media (max-width: $breakpoint-widescreen) {

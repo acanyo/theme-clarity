@@ -2,7 +2,7 @@ import { readingButton } from "./controls";
 import { renderDiagram } from "./mermaid-renderer";
 
 const DIAGRAMS =
-  ".article text-diagram[data-type='mermaid'], .article pre.mermaid, .article pre:has(> code.language-mermaid), .article pre:has(> code.lang-mermaid)";
+  ".article text-diagram[data-type='mermaid'], .article pre.mermaid, .article pre > code.language-mermaid, .article pre > code.lang-mermaid";
 
 export function mountDiagrams(root: ParentNode): () => void {
   const abort = new AbortController();
@@ -22,7 +22,13 @@ export function mountDiagrams(root: ParentNode): () => void {
   );
   const redraw = new MutationObserver(() => renderers.forEach((render) => render()));
 
-  root.querySelectorAll<HTMLElement>(DIAGRAMS).forEach((original) => {
+  const originals = new Set<HTMLElement>();
+  root.querySelectorAll<HTMLElement>(DIAGRAMS).forEach((element) => {
+    const original = element.matches("code") ? element.parentElement : element;
+    if (original) originals.add(original);
+  });
+
+  originals.forEach((original) => {
     // A plugin may already own a rendered graph. Keep that graph and its listeners intact.
     if (original.querySelector("svg") || original.closest("shiki-code, .reading-diagram, [data-no-reading-enhance]"))
       return;

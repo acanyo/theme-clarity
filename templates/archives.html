@@ -5,6 +5,8 @@
 >
   <th:block th:fragment="content">
     <div class="archive proper-height">
+      <th:block th:replace="~{modules/order-toggle :: toolbar}" />
+
       <th:block th:each="yearGroup,yearStat : ${archives.items}">
         <section class="archive-group">
           <div class="archive-title">

@@ -43,12 +43,12 @@ Halo 版已保留 `.md-tech`、`.md-story` 和 `.text-story` 的样式片段，�
 
 原版首页可以按首级分类筛选，按创建/更新日期排序；升序入口由配置决定。首页将分类、排序、方向和页码绑定到 URL，切换分类回到第一页。更新日期排序时，卡片会优先展示更新日期。原版分类筛选并非任意标签与多分类联合过滤。
 
-Halo 版有分类/标签独立页面和分页，但没有这套首页联动工具栏；文章列表当前只显示发布日期。
+Halo 版有分类/标签独立页面和分页。2026-11-02 已恢复原有分类下拉入口，可跳转分类页面；仍没有这套首页筛选、排序与 URL 联动工具栏，文章列表当前只显示发布日期。
 
 迁移价值：高，文章较多时尤其明显。
 
 - 原版：[首页状态](https://github.com/L33Z22L11/blog-v3/blob/381f1c1648a53d6f7aa8e351d521311af6da998d/app/pages/index.vue#L10-L13)、[排序与筛选控件](https://github.com/L33Z22L11/blog-v3/blob/381f1c1648a53d6f7aa8e351d521311af6da998d/app/components/post/OrderToggle.vue)、[卡片日期](https://github.com/L33Z22L11/blog-v3/blob/381f1c1648a53d6f7aa8e351d521311af6da998d/app/components/post/Article.vue#L24-L40)。
-- 本地：`templates/modules/post-list.html:39`、`src/alpine/pagination.ts`；当前工作区还删除了旧 `templates/modules/order-toggle.html`。
+- 本地：`templates/modules/post-list.html`、`templates/modules/order-toggle.html`、`src/alpine/pagination.ts`。
 - 适配方向：先验证 Halo 当前版本的查询与分页契约。排序必须覆盖整个查询结果，不能只重排已加载的一页；URL 刷新、返回、第二页与 Swup 导航均须保持状态。
 
 ### 3. 归档密度与信息展示：基础归档已有，原版增强缺失

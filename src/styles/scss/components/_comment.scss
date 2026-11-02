@@ -394,3 +394,15 @@
   font-size: 0.875rem;
   line-height: 1.6;
 }
+
+@media (max-width: 768px), (hover: none) and (pointer: coarse) {
+  // The official widget scales its editor and identity fields to 0.875em inside Shadow DOM.
+  // Keep the resulting input text at least 16px, including compact moment comments.
+  :is(.z-comment, .moment-comment, .moment-comment-section) comment-widget {
+    --halo-cw-base-font-size: max(1rem, 18.2858px);
+  }
+
+  :is(.z-comment, .moment-comment, .moment-comment-section) :is(input, textarea, [contenteditable="true"]) {
+    font-size: max(1rem, 16px);
+  }
+}

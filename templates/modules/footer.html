@@ -69,6 +69,18 @@
     <div class="footer-nav-group">
       <h3>信息</h3>
       <menu>
+        <li>
+          <a href="https://halo.run" target="_blank" rel="noopener noreferrer">
+            <span class="icon-[ph--cube-bold]" aria-hidden="true"></span>
+            <span class="nav-text">架构于 Halo</span>
+          </a>
+        </li>
+        <li>
+          <a href="https://github.com/acanyo/theme-clarity" target="_blank" rel="noopener noreferrer">
+            <span class="icon-[ph--mountains-bold]" aria-hidden="true"></span>
+            <span class="nav-text" th:text="|驱动 Clarity ${theme.spec.version}|"></span>
+          </a>
+        </li>
         <li th:if="${not #strings.isEmpty(theme.config.footer.beian)}">
           <a href="https://beian.miit.gov.cn/" target="_blank">
             <img th:src="@{/assets/images/icp.webp}" alt="ICP" class="beian-icon" />

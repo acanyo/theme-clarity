@@ -19,6 +19,7 @@ import { initSlides } from "./modules/slide-loader";
 import { initDrawers } from "./modules/drawers";
 import { initReading } from "./modules/reading";
 import { initEquipments } from "./modules/equipments";
+import { runInitializers } from "./utils/component-initializers";
 import {
   initDropdownMenus,
   initBackToTop,
@@ -51,31 +52,26 @@ initSearchShortcut();
 
 // 页面初始加载；缓存恢复或开发入口可能在 DOMContentLoaded 后执行。
 const initPage = () => {
-  if (window.themeConfig?.custom?.enable_swup) {
-    try {
-      initSwup();
-    } catch (error) {
-      console.error("Swup 初始化失败:", error);
-    }
-  }
-
-  initDropdownMenus();
-  if (window.themeConfig?.custom?.enable_fancybox !== true) {
-    initFancybox();
-  }
-  initBackToTop();
-  initImageLoaded();
-  initImageCaption();
-  initActiveNavItem();
-  initActivityCalendar();
-  void initTwikooComments();
-  initFloatingPagination();
-  initDrawers();
-  initReading();
-  initEquipments();
-  void initSlides();
-  initAsideScrollSync();
-  initPluginHints();
+  runInitializers({
+    initSwup: () => {
+      if (window.themeConfig?.custom?.enable_swup) initSwup();
+    },
+    initDropdownMenus,
+    initFancybox: () => (window.themeConfig?.custom?.enable_fancybox !== true ? initFancybox() : undefined),
+    initBackToTop,
+    initImageLoaded,
+    initImageCaption,
+    initActiveNavItem,
+    initActivityCalendar,
+    initTwikooComments,
+    initFloatingPagination,
+    initDrawers,
+    initReading,
+    initEquipments,
+    initSlides,
+    initAsideScrollSync,
+    initPluginHints,
+  });
 };
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", initPage, { once: true });
@@ -83,8 +79,6 @@ else initPage();
 
 window.addEventListener("swup:success", () => {
   window.setTimeout(() => {
-    initFloatingPagination();
-    initAsideScrollSync();
-    initPluginHints();
+    runInitializers({ initFloatingPagination, initAsideScrollSync, initPluginHints });
   }, 0);
 });

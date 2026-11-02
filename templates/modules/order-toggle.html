@@ -1,0 +1,63 @@
+<div class="toolbar category-toolbar" th:fragment="toolbar">
+  <details
+    class="category-dropdown"
+    x-data
+    @click.outside="$el.open = false"
+    @keydown.escape.stop.prevent="$el.open = false; $el.querySelector('summary').focus()"
+  >
+    <summary class="dropdown-trigger">
+      <th:block
+        th:with="iconVal=${category?.metadata?.annotations?.get('categoryIicon')}, colorVal=${category?.metadata?.annotations?.get('color')}"
+      >
+        <img th:if="${not #strings.isEmpty(iconVal)}" th:src="${iconVal}" alt="" />
+        <span th:if="${#strings.isEmpty(iconVal)}" class="icon-[ph--folder-bold]" aria-hidden="true"></span>
+        <span
+          th:text="${category != null ? category.spec.displayName : '全部分类'}"
+          th:style="${#strings.isEmpty(colorVal) ? null : 'color: ' + colorVal}"
+          >全部分类</span
+        >
+      </th:block>
+      <span class="dropdown-caret icon-[ph--caret-down-bold]" aria-hidden="true"></span>
+    </summary>
+    <ul class="category-options" aria-label="文章分类">
+      <li>
+        <a
+          href="/"
+          th:classappend="${category == null} ? 'active'"
+          th:attr="aria-current=${category == null ? 'page' : null}"
+        >
+          <span class="icon-[ph--squares-four-bold]" aria-hidden="true"></span>
+          全部分类
+        </a>
+      </li>
+      <th:block th:each="cat : ${categoryFinder.listAsTree()}">
+        <th:block th:replace="~{modules/order-toggle :: catItem(cat=${cat}, level=0)}" />
+      </th:block>
+    </ul>
+  </details>
+</div>
+
+<th:block th:fragment="catItem(cat, level)">
+  <li>
+    <a
+      th:href="@{${cat.status.permalink}}"
+      th:classappend="${category != null and category.metadata.name == cat.metadata.name} ? 'active'"
+      th:attr="aria-current=${category != null and category.metadata.name == cat.metadata.name ? 'page' : null}"
+      th:style="'--category-depth: ' + ${level}"
+    >
+      <th:block
+        th:with="iconVal=${cat.metadata?.annotations?.get('categoryIicon')}, colorVal=${cat.metadata?.annotations?.get('color')}"
+      >
+        <img th:if="${not #strings.isEmpty(iconVal)}" th:src="${iconVal}" alt="" />
+        <span th:if="${#strings.isEmpty(iconVal)}" class="icon-[ph--folder]" aria-hidden="true"></span>
+        <span
+          th:text="${cat.spec.displayName}"
+          th:style="${#strings.isEmpty(colorVal) ? null : 'color: ' + colorVal}"
+        ></span>
+      </th:block>
+    </a>
+  </li>
+  <th:block th:each="child : ${cat.children}">
+    <th:block th:replace="~{modules/order-toggle :: catItem(cat=${child}, level=${level + 1})}" />
+  </th:block>
+</th:block>

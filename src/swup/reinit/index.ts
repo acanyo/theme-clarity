@@ -15,6 +15,7 @@ import { initContentWidgets } from "./content-widgets";
 import { initSlides } from "../../modules/slide-loader";
 import { initDrawers } from "../../modules/drawers";
 import { initEquipments } from "../../modules/equipments";
+import { runInitializers } from "../../utils/component-initializers";
 
 export { syncThemeConfig } from "./theme-config";
 export { reinitializeAlpineComponents } from "./alpine";
@@ -31,25 +32,25 @@ export { initContentWidgets } from "./content-widgets";
  * 活动导航项、链接提交、Fancybox（如果启用）、自定义元素、时间标签、主题配置和Mermaid图表
  */
 export const reinitializeComponents = () => {
-  reinitializeAlpineComponents();
-  initImageLoaded();
-  initImageCaption();
-  initBackToTop();
-  initDropdownMenus();
-  initActiveNavItem();
-  initLinkSubmit();
-  if (window.themeConfig?.custom?.enable_fancybox !== true) {
-    initFancybox();
-  }
-  mountCustomElements();
-  momentsTags();
-  initActivityCalendar();
-  syncThemeConfig();
-  initReading();
-  void initTwikooComments();
-  initAsideScrollSync();
-  initContentWidgets();
-  initDrawers();
-  initEquipments();
-  void initSlides();
+  runInitializers({
+    reinitializeAlpineComponents,
+    initImageLoaded,
+    initImageCaption,
+    initBackToTop,
+    initDropdownMenus,
+    initActiveNavItem,
+    initLinkSubmit,
+    initFancybox: () => (window.themeConfig?.custom?.enable_fancybox !== true ? initFancybox() : undefined),
+    mountCustomElements,
+    momentsTags,
+    initActivityCalendar,
+    syncThemeConfig,
+    initReading,
+    initTwikooComments,
+    initAsideScrollSync,
+    initContentWidgets,
+    initDrawers,
+    initEquipments,
+    initSlides,
+  });
 };

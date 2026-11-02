@@ -1,4 +1,6 @@
 <div class="post-list" th:fragment="list(posts, caller)" th:with="fromCategory=${fromCategory ?: false}">
+  <th:block th:replace="~{modules/order-toggle :: toolbar}" />
+
   <menu class="posts-container proper-height">
     <th:block th:each="post,iterStat : ${posts.items}">
       <article
