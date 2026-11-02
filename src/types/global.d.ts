@@ -25,6 +25,7 @@ declare global {
     generateQRCode: (container: HTMLElement, url: string) => Promise<void>;
     generatePoster: (element: HTMLElement, title: string, defaultCover?: string) => Promise<void>;
     generateMomentPoster: (data: MomentPosterData) => Promise<MomentPosterResult>;
+    openSearchWidget: () => void;
     openShuttle: (options: ShuttleOptions) => void;
     goToPageNumber: (button: HTMLElement) => void;
     MUSIC_CONFIG?: MusicConfig;
