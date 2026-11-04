@@ -1,4 +1,8 @@
-<div class="post-list" th:fragment="list(posts, caller)" th:with="fromCategory=${fromCategory ?: false}">
+<div
+  class="post-list"
+  th:fragment="list(posts, caller)"
+  th:with="fromCategory=${fromCategory ?: false}, showModified=${showModified ?: false}, fromUpdate=${fromUpdate ?: false}"
+>
   <th:block th:replace="~{modules/order-toggle :: toolbar}" />
 
   <menu class="posts-container proper-height">
@@ -8,7 +12,7 @@
         th:data-article-key="${post.status.permalink}"
         th:style="'--delay: ' + ${iterStat.index * 0.05} + 's'"
       >
-        <a th:href="${post.status.permalink + (fromCategory ? '?from=category' : '')}">
+        <a th:href="${post.status.permalink + (fromCategory ? '?from=category' : (fromUpdate ? '?from=update' : ''))}">
           <img
             th:if="${not #strings.isEmpty(post.spec.cover)}"
             th:src="${post.spec.cover}"
@@ -30,7 +34,7 @@
         <div class="article-body">
           <h2 class="article-title text-creative">
             <a
-              th:href="${post.status.permalink + (fromCategory ? '?from=category' : '')}"
+              th:href="${post.status.permalink + (fromCategory ? '?from=category' : (fromUpdate ? '?from=update' : ''))}"
               th:text="${post.spec.title}"
               th:title="${post.spec.title}"
             ></a>
@@ -40,9 +44,17 @@
           <p th:if="${post.status.excerpt}" class="article-description" th:text="${post.status.excerpt}"></p>
 
           <div class="article-info">
-            <span class="info-item">
-              <span class="icon-[ph--calendar-dots-bold]"></span>
-              <time th:text="${#temporals.format(post.spec.publishTime, 'yyyy-MM-dd')}"></time>
+            <span
+              class="info-item"
+              th:classappend="${showModified} ? 'use-updated' : ''"
+              th:title="${showModified} ? '最后更新' : null"
+            >
+              <span
+                th:class="${showModified} ? 'icon-[ph--clock-clockwise-bold]' : 'icon-[ph--calendar-dots-bold]'"
+              ></span>
+              <time
+                th:text="${#temporals.format(showModified ? (post.status.lastModifyTime ?: post.spec.publishTime) : post.spec.publishTime, 'yyyy-MM-dd')}"
+              ></time>
             </span>
 
             <span
@@ -78,6 +90,7 @@
     <th:block th:replace="~{modules/pagination :: pagination(data=${posts})}" />
   </th:block>
   <th:block th:if="${caller == 'index'}">
-    <th:block th:replace="~{modules/pagination :: pagination(data=${posts})}" />
+    <!-- 首页统一走表达式分页：默认模式 pageQuery 为空串，最近更新模式携带 ?sort=update -->
+    <th:block th:replace="~{modules/pagination :: pagination(data=${posts}, pageQuery=${sortQuery ?: ''})}" />
   </th:block>
 </div>
