@@ -4,23 +4,34 @@
 -->
 
 <th:block th:fragment="pagination(data)">
+  <!--
+    pageQuery（可选）：调用方携带的查询串（如首页 ?sort=update）。
+    传入后 prev/next 改用表达式构造（首页 /page/N 路由），以适配无 prevUrl/nextUrl 的普通 ListResult；
+    数字页码与跳页由前端基于当前 URL 构造，自动保留查询参数。
+  -->
   <th:block
     th:with="sideCountStr=${theme.config.custom.page_side_count},
                      sideCount=${sideCountStr != null ? T(java.lang.Integer).parseInt(sideCountStr) : 5},
                      showFirstPage=${data.page - sideCount > 1},
                      showStartEllipsis=${data.page - sideCount > 2},
                      showLastPage=${data.page + sideCount < data.totalPages},
-                     showEndEllipsis=${data.page + sideCount < data.totalPages - 1}"
+                     showEndEllipsis=${data.page + sideCount < data.totalPages - 1},
+                     exprNav=${pageQuery != null},
+                     queryStr=${pageQuery ?: ''},
+                     exprPrevUrl=${data.hasPrevious ? (((data.page - 1) == 1) ? '/' : ('/page/' + (data.page - 1))) + queryStr : null},
+                     exprNextUrl=${data.hasNext ? ('/page/' + (data.page + 1)) + queryStr : null},
+                     prevHref=${exprNav ? exprPrevUrl : data.prevUrl},
+                     nextHref=${exprNav ? exprNextUrl : data.nextUrl}"
   >
     <nav
       class="pagination-wrapper sticky-pagination"
       th:if="${data.totalPages > 1}"
       th:aria-label="|第${data.page}页，共${data.totalPages}页|"
-      th:attr="data-prev-url=${data.hasPrevious ? data.prevUrl : ''}, data-next-url=${data.hasNext ? data.nextUrl : ''}, data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-page-count=${sideCount * 2 + 1}"
+      th:attr="data-prev-url=${data.hasPrevious ? prevHref : ''}, data-next-url=${data.hasNext ? nextHref : ''}, data-current-page=${data.page}, data-total-pages=${data.totalPages}, data-page-count=${sideCount * 2 + 1}"
     >
       <a
         th:if="${data.hasPrevious}"
-        th:href="${data.prevUrl}"
+        th:href="${prevHref}"
         class="button pagination-button rtl-flip"
         aria-label="上一页"
       >
@@ -80,12 +91,7 @@
         onclick="goToPageNumber(this)"
       ></button>
 
-      <a
-        th:if="${data.hasNext}"
-        th:href="${data.nextUrl}"
-        class="button pagination-button rtl-flip"
-        aria-label="下一页"
-      >
+      <a th:if="${data.hasNext}" th:href="${nextHref}" class="button pagination-button rtl-flip" aria-label="下一页">
         <span class="icon-[ph--arrow-fat-right-duotone]"></span>
       </a>
       <button

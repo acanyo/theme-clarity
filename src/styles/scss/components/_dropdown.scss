@@ -1,6 +1,23 @@
 .category-toolbar {
   justify-content: flex-end;
+  gap: 1rem;
   margin-bottom: 0.5rem;
+}
+
+// 排序切换（首页：最新发布 / 最近更新，样式对齐上游 blog-v3）
+.sort-toggle {
+  display: inline-flex;
+  align-items: center;
+  color: var(--c-text-2);
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--c-primary);
+  }
+
+  .order-text {
+    margin-inline-start: 0.2em;
+  }
 }
 
 .category-dropdown {

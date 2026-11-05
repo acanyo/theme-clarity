@@ -42,6 +42,20 @@
     <!-- 首页顶部小组件 -->
     <th:block th:replace="~{modules/home :: home}" />
 
-    <th:block th:replace="~{modules/post-list :: list(posts=${posts}, caller='index')}" />
+    <!-- 文章列表：支持 ?sort=update 切换「最近更新」排序（按最后修改时间，走索引查询） -->
+    <th:block
+      th:with="
+        currentSort=${#lists.isEmpty(param.sort) ? 'latest' : param.sort[0]},
+        isUpdate=${currentSort == 'update'},
+        sortQuery=${isUpdate ? '?sort=update' : ''},
+        routePosts=${posts},
+        updatePosts=${postFinder.list({page: routePosts.page, size: routePosts.size, sort: {'status.lastModifyTime,desc'}})},
+        posts=${isUpdate ? updatePosts : routePosts}
+      "
+    >
+      <th:block
+        th:replace="~{modules/post-list :: list(posts=${posts}, caller='index', showModified=${isUpdate}, fromUpdate=${isUpdate})}"
+      />
+    </th:block>
   </th:block>
 </html>
