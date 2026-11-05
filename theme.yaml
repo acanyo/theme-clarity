@@ -5,7 +5,7 @@ metadata:
 spec:
   displayName: Clarity
   author:
-    name: Handsome&纸鹿
+    name: Handsome&纸鹿&呀哈喽
     website: https://www.xhhao.com
   description: 一款注重阅读体验的三栏博客主题，用清晰的设计让阅读回归本真
   logo: /themes/theme-clarity/assets/images/logo.svg
@@ -14,7 +14,7 @@ spec:
   issues: https://github.com/acanyo/theme-clarity/issues
   settingName: "theme-clarity-setting"
   configMapName: "theme-clarity-configMap"
-  version: "1.6.18"
+  version: "1.6.19"
   requires: ">=2.26.0"
   customTemplates:
     page:
