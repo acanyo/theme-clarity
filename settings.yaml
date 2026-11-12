@@ -1176,6 +1176,11 @@ spec:
           label: 显示可访问性状态
           value: true
           help: 在友链卡片上显示站点在线/离线状态指示（需 Links 插件支持并执行过检测）
+        - $formkit: switch
+          name: hide_comment
+          label: 隐藏评论区
+          value: false
+          help: 开启后友链页面将不显示评论区
         - $formkit: group
           name: my_info
           label: 我的博客信息
