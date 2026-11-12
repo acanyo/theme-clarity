@@ -15,7 +15,7 @@
     </div>
   </div>
 
-  <a x-show="ready && !currentUser" x-cloak href="/login" class="user-entry">
+  <a x-show="ready && !currentUser" x-cloak :href="loginUrl" class="user-entry">
     <div class="avatar-wrapper">
       <span class="icon-[ph--user-circle-bold] default-avatar-icon"></span>
     </div>
@@ -45,7 +45,7 @@
       <span class="icon-[ph--gear-six-bold]"></span>
       <span>管理中心</span>
     </a>
-    <a href="/logout" class="user-menu-item logout">
+    <a :href="logoutUrl" class="user-menu-item logout">
       <span class="icon-[ph--sign-out-bold]"></span>
       <span>退出登录</span>
     </a>

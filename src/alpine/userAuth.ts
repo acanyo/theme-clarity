@@ -11,9 +11,27 @@ export function registerUserAuth(alpine: typeof Alpine) {
     currentUser: null as UserInfo | null,
     showMenu: false,
     ready: false,
+    redirectUri: "",
 
     init() {
+      this.updateRedirectUri();
       this.checkLoginStatus();
+      // swup 切换页面后更新 redirectUri
+      window.addEventListener("swup:success", () => {
+        this.updateRedirectUri();
+      });
+    },
+
+    updateRedirectUri() {
+      this.redirectUri = window.location.pathname + window.location.search;
+    },
+
+    get loginUrl() {
+      return `/login?redirect_uri=${encodeURIComponent(this.redirectUri)}`;
+    },
+
+    get logoutUrl() {
+      return `/logout?redirect_uri=${encodeURIComponent(this.redirectUri)}`;
     },
 
     async checkLoginStatus() {
