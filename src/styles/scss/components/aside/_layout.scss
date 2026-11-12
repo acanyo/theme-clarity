@@ -13,8 +13,8 @@ $breakpoint-widescreen: 1080px !default;
 	top: 0;
 	flex-shrink: 0;
 	width: 280px;
-	height: 100vh;
-	height: 100dvh;
+	height: 100%;
+	max-height: 100dvh;
 	// 隐藏滚动条但保持可滚动
 	scrollbar-width: none;
 	&::-webkit-scrollbar {
