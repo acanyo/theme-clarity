@@ -20,9 +20,11 @@
       <!-- 更新友链弹窗 -->
       <div th:replace="~{modules/links/LinksSubmit-lywq/update-modal}"></div>
       <!-- 评论区 -->
-      <th:block
-        th:replace="~{modules/common/comment :: comment(title='评论区', haloComment=${ {group: 'plugin.halo.run', kind: 'Plugin', name: pluginName} })}"
-      ></th:block>
+      <th:block th:if="${theme.config.links?.hide_comment != true}">
+        <th:block
+          th:replace="~{modules/common/comment :: comment(title='评论区', haloComment=${ {group: 'plugin.halo.run', kind: 'Plugin', name: pluginName} })}"
+        ></th:block>
+      </th:block>
     </div>
     <!-- 随机友链按钮 -->
     <div th:replace="~{modules/links/random-btn}"></div>
