@@ -6,6 +6,20 @@ interface UserInfo {
   roleDisplayName?: string;
 }
 
+// 认证流程页面不能作为登录/登出后的回跳目标，否则会再次回到登录、注册、重置密码等页面
+const AUTH_ROUTE_BLACKLIST = [
+  "/login",
+  "/logout",
+  "/signup",
+  "/password-reset",
+  "/complete-profile",
+  "/challenges",
+  "/setup",
+];
+
+const isAuthRoute = (pathname: string) =>
+  AUTH_ROUTE_BLACKLIST.some((route) => pathname === route || pathname.startsWith(`${route}/`));
+
 export function registerUserAuth(alpine: typeof Alpine) {
   alpine.data("userAuth", () => ({
     currentUser: null as UserInfo | null,
@@ -23,7 +37,9 @@ export function registerUserAuth(alpine: typeof Alpine) {
     },
 
     updateRedirectUri() {
-      this.redirectUri = window.location.pathname + window.location.search;
+      const { pathname, search } = window.location;
+      // 处于认证流程页面时回退到首页，避免登录/登出后再次回到这些页面
+      this.redirectUri = isAuthRoute(pathname) ? "/" : pathname + search;
     },
 
     get loginUrl() {
