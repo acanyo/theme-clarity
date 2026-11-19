@@ -11,7 +11,9 @@
     haloCommentComponent=${theme.config.comment?.halo_component ?: 'official'},
     useCommentNextAnchor=${commentProvider == 'halo' and haloCommentComponent == 'next'},
     twikooEnvId=${theme.config.comment?.twikoo?.env_id ?: ''},
-    twikooCustomUrl=${theme.config.comment?.twikoo?.custom_js_url ?: '/themes/theme-clarity/assets/libs/twikoo/twikoo.min.js'}
+    twikooCustomUrl=${theme.config.comment?.twikoo?.custom_js_url ?: '/themes/theme-clarity/assets/libs/twikoo/twikoo.min.js'},
+    avatarMirrorRaw=${theme.config?.comment?.avatar_mirror == 'custom' ? theme.config?.comment?.avatar_mirror_custom : theme.config?.comment?.avatar_mirror},
+    avatarMirror=${#strings.isEmpty(avatarMirrorRaw) ? 'https://cravatar.cn/avatar' : (#strings.endsWith(avatarMirrorRaw, '/') ? #strings.substring(avatarMirrorRaw, 0, #strings.length(avatarMirrorRaw) - 1) : avatarMirrorRaw)}
   "
 >
   <hgroup class="widget-title">
@@ -31,6 +33,7 @@
         >
           <li
             th:each="comment : ${comments.items}"
+            th:with="emailHash=${comment.spec.owner?.annotations['email-hash']}"
             class="recent-comment-item"
             th:data-comment-name="${comment.metadata.name}"
           >
@@ -42,9 +45,18 @@
                   th:src="${comment.owner.avatar}"
                   th:alt="${comment.owner.displayName}"
                   loading="lazy"
+                  referrerpolicy="no-referrer"
+                />
+                <img
+                  th:if="${showAvatar and (comment.owner == null or #strings.isEmpty(comment.owner.avatar)) and not #strings.isEmpty(emailHash)}"
+                  class="comment-avatar-img"
+                  th:src="|${avatarMirror}/${emailHash}?s=40&d=identicon|"
+                  th:alt="${comment.owner != null and not #strings.isEmpty(comment.owner.displayName) ? comment.owner.displayName : (comment.spec.owner != null ? comment.spec.owner.displayName : '匿名')}"
+                  loading="lazy"
+                  referrerpolicy="no-referrer"
                 />
                 <span
-                  th:if="${showAvatar and (comment.owner == null or #strings.isEmpty(comment.owner.avatar))}"
+                  th:if="${showAvatar and (comment.owner == null or #strings.isEmpty(comment.owner.avatar)) and #strings.isEmpty(emailHash)}"
                   class="comment-avatar-text"
                   th:text="${#strings.substring(comment.owner != null and not #strings.isEmpty(comment.owner.displayName) ? comment.owner.displayName : (comment.spec.owner != null ? comment.spec.owner.displayName : '匿名'), 0, 1)}"
                   >匿</span
@@ -123,16 +135,30 @@
             </th:block>
             <div class="comment-replies" th:if="${showReplies and comment.status.replyCount > 0}">
               <th:block th:with="replies = ${commentFinder.listReply(comment.metadata.name, 1, replyCount)}">
-                <div th:each="reply : ${replies.items}" class="reply-item" th:data-reply-name="${reply.metadata.name}">
+                <div
+                  th:each="reply : ${replies.items}"
+                  th:with="emailHash=${reply.spec.owner?.annotations['email-hash']}"
+                  class="reply-item"
+                  th:data-reply-name="${reply.metadata.name}"
+                >
                   <img
                     th:if="${showAvatar and reply.owner != null and not #strings.isEmpty(reply.owner.avatar)}"
                     class="reply-avatar-img"
                     th:src="${reply.owner.avatar}"
                     th:alt="${reply.owner.displayName}"
                     loading="lazy"
+                    referrerpolicy="no-referrer"
+                  />
+                  <img
+                    th:if="${showAvatar and (reply.owner == null or #strings.isEmpty(reply.owner.avatar)) and not #strings.isEmpty(emailHash)}"
+                    class="reply-avatar-img"
+                    th:src="|${avatarMirror}/${emailHash}?s=32&d=identicon|"
+                    th:alt="${reply.owner != null and not #strings.isEmpty(reply.owner.displayName) ? reply.owner.displayName : (reply.spec.owner != null ? reply.spec.owner.displayName : '匿名')}"
+                    loading="lazy"
+                    referrerpolicy="no-referrer"
                   />
                   <span
-                    th:if="${showAvatar and (reply.owner == null or #strings.isEmpty(reply.owner.avatar))}"
+                    th:if="${showAvatar and (reply.owner == null or #strings.isEmpty(reply.owner.avatar)) and #strings.isEmpty(emailHash)}"
                     class="reply-avatar-text"
                     th:text="${#strings.substring(reply.owner != null and not #strings.isEmpty(reply.owner.displayName) ? reply.owner.displayName : (reply.spec.owner != null ? reply.spec.owner.displayName : '匿名'), 0, 1)}"
                     >匿</span
