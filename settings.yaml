@@ -1094,6 +1094,31 @@ spec:
       label: 评论系统
       formSchema:
         - $formkit: select
+          name: avatar_mirror
+          id: avatar_mirror
+          label: 访客头像服务
+          value: https://cravatar.cn/avatar
+          options:
+            - value: https://cravatar.cn/avatar
+              label: Cravatar（国内推荐）
+            - value: https://gravatar.com/avatar
+              label: Gravatar 官方
+            - value: https://weavatar.com/avatar
+              label: WeAvatar
+            - value: https://cdn.sep.cc/avatar
+              label: sep.cc 镜像
+            - value: custom
+              label: 自定义镜像
+          help: 访客评论不提供头像，主题使用评论邮箱的 SHA-256 向所选 Gravatar 兼容服务请求头像（这是给侧边栏评论列表显示的）
+        - $formkit: url
+          name: avatar_mirror_custom
+          id: avatar_mirror_custom
+          label: 自定义头像镜像地址
+          value: ""
+          placeholder: https://example.com/avatar
+          help: Gravatar 兼容服务地址，末尾不要带 /；仅在上方选择「自定义镜像」后生效，留空时回退 Cravatar。
+          if: "$get(avatar_mirror).value === 'custom'"
+        - $formkit: select
           name: provider
           id: provider
           label: 评论系统
