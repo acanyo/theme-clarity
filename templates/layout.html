@@ -1,0 +1,6 @@
+<!doctype html>
+<html
+  xmlns:th="https://www.thymeleaf.org"
+  th:fragment="html (head, content)"
+  th:replace="~{modules/layout :: html(content = ${content}, showAside = true, pageTitle = null, head = ${head}, includeDefaultTitle = ${head == null})}"
+></html>

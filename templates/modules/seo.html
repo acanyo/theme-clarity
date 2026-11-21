@@ -1,25 +1,25 @@
-<th:block th:fragment="seo(pageTitle)">
+<th:block th:fragment="seo(pageTitle, includeDefaultTitle)">
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title
-    th:if="${pageTitle != null}"
+    th:if="${includeDefaultTitle != false and pageTitle != null}"
     th:text="${pageTitle} + (${theme.config.custom.title_type == 'across' ? ' - ' : ' | '}) + ${site.title}"
   ></title>
   <title
-    th:if="${pageTitle == null and post != null}"
+    th:if="${includeDefaultTitle != false and pageTitle == null and post != null}"
     th:text="${post.spec.title} + (${theme.config.custom.title_type == 'across' ? ' - ' : ' | '}) + ${site.title}"
   ></title>
   <title
-    th:if="${pageTitle == null and singlePage != null and post == null}"
+    th:if="${includeDefaultTitle != false and pageTitle == null and singlePage != null and post == null}"
     th:text="${singlePage.spec.title} + (${theme.config.custom.title_type == 'across' ? ' - ' : ' | '}) + ${site.title}"
   ></title>
   <title
-    th:if="${pageTitle == null and author != null and post == null and singlePage == null}"
+    th:if="${includeDefaultTitle != false and pageTitle == null and author != null and post == null and singlePage == null}"
     th:text="${author.spec.displayName} + ' 的文章' + (${theme.config.custom.title_type == 'across' ? ' - ' : ' | '}) + ${site.title}"
   ></title>
   <title
-    th:if="${pageTitle == null and post == null and singlePage == null and author == null}"
+    th:if="${includeDefaultTitle != false and pageTitle == null and post == null and singlePage == null and author == null}"
     th:text="${site.subtitle} ? (${site.title} + (${theme.config.custom.title_type == 'across' ? ' - ' : ' | '}) + ${site.subtitle}) : ${site.title}"
   ></title>
   <meta name="description" th:if="${post != null}" th:content="${post.status.excerpt ?: site.subtitle}" />
