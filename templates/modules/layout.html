@@ -1,12 +1,12 @@
 <!doctype html>
 <html
   lang="zh-CN"
-  th:fragment="html (content, showAside, pageTitle, head)"
+  th:fragment="html (content, showAside, pageTitle, head, includeDefaultTitle)"
   th:data-page-transition="${theme.config.style.page_transition ?: 'fade-scale'}"
   th:data-nav-active="${theme.config.style.nav_active_indicator != false}"
 >
   <head>
-    <th:block th:replace="~{modules/seo :: seo(pageTitle=${pageTitle})}" />
+    <th:block th:replace="~{modules/seo :: seo(pageTitle=${pageTitle}, includeDefaultTitle=${includeDefaultTitle})}" />
 
     <th:block th:if="${head} != null">
       <th:block th:replace="${head}" />
